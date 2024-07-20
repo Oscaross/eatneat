@@ -1,16 +1,20 @@
-# application
+# 📦 My Pantry App
 
-A new Flutter project.
+Welcome to **My Pantry App** – a seamless and intuitive Flutter application that helps you keep track of your pantry items, add new items with details, and navigate through different sections with ease.
 
-## Getting Started
+![Pantry App Screenshot](screenshot.png)
 
-This project is a starting point for a Flutter application.
+## 📱 Screenshots
 
-A few resources to get you started if this is your first Flutter project:
+![Add Item](screenshots/add_item.png)
+![Pantry List](screenshots/pantry_list.png)
+![Expiry Date Picker](screenshots/expiry_date_picker.png)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 📝 License
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## 🌟 Acknowledgements
+
+- [Flutter](https://flutter.dev/)
+- [Provider](https://pub.dev/packages/provider)
