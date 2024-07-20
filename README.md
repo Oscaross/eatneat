@@ -1,6 +1,6 @@
-# 📦 My Pantry App
+# 📦 EatNeat
 
-Welcome to **My Pantry App** – a seamless and intuitive Flutter application that helps you keep track of your pantry items, add new items with details, and navigate through different sections with ease.
+An application designed in Flutter which aims to reduce food waste and make shopping, storage and cooking much simpler and easier to organise.
 
 ![Pantry App Screenshot](screenshot.png)
 
