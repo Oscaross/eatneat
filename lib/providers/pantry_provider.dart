@@ -15,4 +15,8 @@ class PantryProvider with ChangeNotifier {
     _items.remove(item);
     notifyListeners();
   }
+
+  bool isEmpty() {
+    return _items.isEmpty;
+  }
 }

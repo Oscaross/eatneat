@@ -17,7 +17,7 @@ class PantryPage extends StatelessWidget {
       ),
       body: Consumer<PantryProvider>(
         builder: (context, pantryProvider, child) {
-          return pantryProvider.items.isEmpty
+          return pantryProvider.isEmpty()
               ? Center(
                   child: Text(
                     "No ingredients yet! Click the plus to add one.",
@@ -45,9 +45,9 @@ class PantryPage extends StatelessWidget {
             MaterialPageRoute(builder: (context) => AddItemPage()),
           );
         },
-        child: Icon(Icons.add),
         tooltip: 'Add Item',
         elevation: 5.0,
+        child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

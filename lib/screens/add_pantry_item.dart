@@ -11,10 +11,10 @@ class _AddItemPageState extends State<AddItemPage> {
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   
-  bool _quantity = true; // true for a quantity (ie. 3 chicken breast), false for kgs
+  bool _isQuantity = true; // true for a quantity (ie. 3 chicken breast), false for kgs
 
   // Expiry management system
-  DateTime _expires = DateTime.now();
+  DateTime? _expires;
 
   // Open the calendar dialog, at some point in the future we expect a date to be picked but no result back from this call - hence it is void.
   Future<void> selectDate(BuildContext context) async {
@@ -72,10 +72,10 @@ class _AddItemPageState extends State<AddItemPage> {
                     alignment: Alignment.centerRight,
                     child: ToggleButtons(
                       borderRadius: BorderRadius.circular(20),
-                      isSelected: [_quantity, !_quantity],
+                      isSelected: [_isQuantity, !_isQuantity],
                       onPressed: (int index) {
                         setState(() {
-                          _quantity = index == 0;
+                          _isQuantity = index == 0;
                         });
                       },
                       children: <Widget>[
@@ -93,17 +93,30 @@ class _AddItemPageState extends State<AddItemPage> {
                 ),
               ],
             ),
-            SizedBox(height: LABEL_SPACING),
-            ElevatedButton(
-              onPressed: () {
-                // Add item to pantry logic
-                print('Quantity: ${_quantityController.text}');
-                print('Unit: ${_quantity ? 'qty' : 'kgs'}');
-                Navigator.pop(context);
-              },
+            SizedBox(height: LABEL_SPACING*1.5),
+            InkWell(
+              onTap: () => selectDate(context),
+              child: InputDecorator(decoration: InputDecoration(
+                labelText: "Expires on",
+                border: OutlineInputBorder(),
+              ),
               child: Text(
-                textAlign: TextAlign.center,
-                'Add Item'),
+              _expires == null ? "None specified" : '${_expires!.day}/${_expires!.month}/${_expires!.year}',
+              ),
+              )
+            ),
+            SizedBox(height: LABEL_SPACING),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Add item to pantry logic
+                  print('Quantity: ${_quantityController.text}');
+                  print('Unit: ${_isQuantity ? 'qty' : 'kgs'}');
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Add Item'),
+              ),
             ),
           ],
         ),
