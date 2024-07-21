@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     NavigationRailDestination(
                       icon: Icon(Icons.inventory),
-                      label: Text('Test'),
+                      label: Text('Pantry'),
                     ),
                     NavigationRailDestination(
                       icon:Icon(Icons.book),

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinbox/material.dart';
+import 'package:namer_app/models/pantry_item.dart';
+import 'package:namer_app/providers/pantry_provider.dart';
+import 'package:provider/provider.dart';
 
 class AddItemPage extends StatefulWidget {
   @override
@@ -8,9 +12,9 @@ class AddItemPage extends StatefulWidget {
 class _AddItemPageState extends State<AddItemPage> {
   static const double LABEL_SPACING = 20;
 
-  final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   
+  double _qty = 0;
   bool _isQuantity = true; // true for a quantity (ie. 3 chicken breast), false for kgs
 
   // Expiry management system
@@ -58,14 +62,24 @@ class _AddItemPageState extends State<AddItemPage> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: TextField(
-                    controller: _quantityController,
+                  child: SpinBox(
+                    value: _qty,
+                    onChanged: (value) {
+                      setState(() {
+                        _qty = value;
+                      });
+                    },
                     decoration: InputDecoration(
                       labelText: 'Quantity',
                     ),
-                    keyboardType: TextInputType.number,
+                    min: 0,
+                    max:100000,
+                    // If we are entering a qty (quantity) then step by 1, otherwise for grams step by 100
+                    step: (_isQuantity) ? 1 : 100,
+                    decimals: 1,
                   ),
                 ),
+
                 SizedBox(width: 20),
                 Expanded(
                   child: Align(
@@ -85,7 +99,7 @@ class _AddItemPageState extends State<AddItemPage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('kgs'),
+                          child: Text('gram'),
                         ),
                       ],
                     ),
@@ -110,8 +124,16 @@ class _AddItemPageState extends State<AddItemPage> {
               child: ElevatedButton(
                 onPressed: () {
                   // Add item to pantry logic
-                  print('Quantity: ${_quantityController.text}');
-                  print('Unit: ${_isQuantity ? 'qty' : 'kgs'}');
+                  var name = _nameController.text;
+                  
+                  if(_qty != 0 && _qty > 0 && _expires != null) {
+                    var pantryItem = PantryItem(expiry: _expires!, name: name, quantity: _qty, isQuantity: _isQuantity);
+                    Provider.of<PantryProvider>(context, listen:false).addItem(pantryItem);
+                  }
+                  else {
+                    print("Error validating input to Pantry!");
+                  }
+                  
                   Navigator.pop(context);
                 },
                 child: Text(
