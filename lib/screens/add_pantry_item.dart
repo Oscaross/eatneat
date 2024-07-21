@@ -127,7 +127,7 @@ class _AddItemPageState extends State<AddItemPage> {
                   var name = _nameController.text;
                   
                   if(_qty != 0 && _qty > 0 && _expires != null) {
-                    var pantryItem = PantryItem(expiry: _expires!, name: name, quantity: _qty, isQuantity: _isQuantity);
+                    var pantryItem = PantryItem(expiry: _expires!, name: name, quantity: _qty, isQuantity: _isQuantity, added: DateTime.now());
                     Provider.of<PantryProvider>(context, listen:false).addItem(pantryItem);
                   }
                   else {

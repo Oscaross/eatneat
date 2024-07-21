@@ -8,34 +8,52 @@ class PantryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text('My Pantry'),
-        ],
-      ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text('My Pantry'),
+          ],
+        ),
       ),
       body: Consumer<PantryProvider>(
         builder: (context, pantryProvider, child) {
-          return pantryProvider.isEmpty()
-              ? Center(
-                  child: Text(
-                    "No ingredients yet! Click the plus to add one.",
-                    style: TextStyle(fontSize: 18),
+          return ListView.builder(
+            itemCount: pantryProvider.items.length,
+            itemBuilder: (context, index) {
+              final item = pantryProvider.items[index];
+              return ListTile(
+                leading: Icon(Icons.fastfood_outlined),
+                title: Text(
+                  item.name,
+                  style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                )
-              : ListView.builder(
-                  itemCount: pantryProvider.items.length,
-                  itemBuilder: (context, index) {
-                    final item = pantryProvider.items[index];
-                    return ListTile(
-                      leading: Icon(Icons.fastfood_outlined),
-                      title: Text(item.name),
-                      subtitle: Text('Quantity: ${item.quantity}, Expiry Date: ${item.expiry.toLocal()}'),
-                      trailing: item.isExpired() ? Icon(Icons.warning, color: Colors.red) : null,
-                    );
-                  },
-                );
+                subtitle: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Chip(
+                      label: Text(
+                        "${item.quantity} ${(item.isQuantity) ? "units" : "grams"}",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    ),
+                    Chip(
+                      label: Text(
+                        item.displayExpiry(),
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      backgroundColor: item.colorCodeExpiry(),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    ),
+                  ],
+                ),
+                trailing: item.isExpired()
+                    ? Icon(Icons.warning, color: Colors.red)
+                    : null,
+              );
+            },
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
