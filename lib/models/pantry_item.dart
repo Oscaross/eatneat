@@ -3,23 +3,52 @@ import 'package:flutter/material.dart';
 class PantryItem {
   
   // Name of the item (ie. chicken breast)
-  final String name;
+  String name;
   // Weight in grams or quantity as a number, depends on isQuantity
-  final double quantity;
+  double quantity;
   // Is this a weight or is this a quantity (number) of items?
-  final bool isQuantity;
+  bool isQuantity;
   // The predicted expiry date
-  final DateTime expiry;
+  DateTime expiry;
   // The date it was added
   final DateTime added;
-  // The predicted best before date
-  final DateTime? bestBefore;
 
-  const PantryItem({required this.name, required this.quantity, required this.expiry, required this.isQuantity, required this.added, this.bestBefore});
+  PantryItem({required this.name, required this.quantity, required this.expiry, required this.isQuantity, required this.added});
+
+  void setName(String name) {
+    this.name = name;
+  }
+
+  void setQuantity(double quantity) {
+    this.quantity = quantity;
+  }
+
+  void setIsQuantity(bool isQuantity) {
+    this.isQuantity = isQuantity;
+  }
+
+  void setExpiry(DateTime expiry) {
+    this.expiry = expiry;
+  }
 
   // Returns true iff this pantry item has expired according to the expiry date set.
   bool isExpired() {
     return expiry.compareTo(DateTime.now()) <= 0;
+  }
+
+  // Nicely formats the time until expiry (ie. 1y, 2mo, 3d)
+  String formatExpiryTime() {
+    var daysUntil = expiry.difference(DateTime.now()).inDays;
+
+    if(daysUntil > 365) {
+      int years = (daysUntil / 365).floor();
+      return "${years}y";
+    } else if(daysUntil > 30) {
+      int months = (daysUntil / 30).floor();
+      return "${months}mo";
+    } else {
+      return "${daysUntil}d";
+    }
   }
 
   // Format the expiry from a DateTime object to a neat representation (ie. Aug 23, Mar 19)
@@ -54,7 +83,11 @@ class PantryItem {
       trunc = "Dec";
     }
 
-    return "$trunc ${expiry.day}";
+    // The number of days from now until when the product is set to expire
+    var daysUntil = expiry.difference(DateTime.now()).inDays;
+
+    // If there are more than 365 days until the product expires it should also show the year it will expire in
+    return (daysUntil < 365) ? "$trunc ${expiry.day}" : "$trunc ${expiry.day} ${expiry.year}";
   }
 
   // Returns a color code based on how soon the food will expire:

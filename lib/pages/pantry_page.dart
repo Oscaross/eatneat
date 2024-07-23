@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/screens/add_pantry_item.dart';
+import 'package:namer_app/screens/edit_pantry_item.dart';
 import 'package:provider/provider.dart';
 import '../providers/pantry_provider.dart';
 
@@ -17,10 +19,18 @@ class PantryPage extends StatelessWidget {
       ),
       body: Consumer<PantryProvider>(
         builder: (context, pantryProvider, child) {
+
+          if(pantryProvider.items.isEmpty) {
+            return Text(
+              "No items to display! Click the + to add your first item...",
+              textAlign: TextAlign.center,
+              );
+          }
           return ListView.builder(
             itemCount: pantryProvider.items.length,
             itemBuilder: (context, index) {
               final item = pantryProvider.items[index];
+
               return ListTile(
                 leading: Icon(Icons.fastfood_outlined),
                 title: Text(
@@ -40,7 +50,7 @@ class PantryPage extends StatelessWidget {
                     ),
                     Chip(
                       label: Text(
-                        item.displayExpiry(),
+                        item.formatExpiryTime(),
                         style: TextStyle(color: Colors.black),
                       ),
                       backgroundColor: item.colorCodeExpiry(),
@@ -48,12 +58,30 @@ class PantryPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                trailing: item.isExpired()
-                    ? Icon(Icons.warning, color: Colors.red)
-                    : null,
+                trailing: PopupMenuButton<String>(
+                  onSelected: (String value) {
+                    if (value == 'Edit') {
+                      // Edit item logic
+                      _editItem(context, item);
+                    } else if (value == 'Delete') {
+                      // Delete item logic
+                      _deleteItem(context, pantryProvider, item);
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                      value: 'Edit',
+                      child: Text('Edit'),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'Delete',
+                      child: Text('Delete'),
+                    ),
+                  ],
+                ),
               );
             },
-          );
+          ); 
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -69,5 +97,16 @@ class PantryPage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
+  }
+
+  void _editItem(BuildContext context, PantryItem item) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => EditItemPage(item: item)),
+    );
+  }
+
+  void _deleteItem(BuildContext context, PantryProvider provider, PantryItem item) {
+    provider.removeItem(item);
   }
 }
