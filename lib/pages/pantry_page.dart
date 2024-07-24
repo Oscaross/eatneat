@@ -49,11 +49,12 @@ class PantryPage extends StatelessWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
                     Chip(
+                      avatar: Icon(Icons.timer, color: Colors.black),
                       label: Text(
                         item.formatExpiryTime(),
                         style: TextStyle(color: Colors.black),
                       ),
-                      backgroundColor: item.colorCodeExpiry(),
+                      backgroundColor: item.colorCodeExpiry(context),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
                   ],

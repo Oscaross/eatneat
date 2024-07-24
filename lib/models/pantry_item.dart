@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class PantryItem {
-  
   // Name of the item (ie. chicken breast)
   String name;
   // Weight in grams or quantity as a number, depends on isQuantity
@@ -38,7 +37,12 @@ class PantryItem {
 
   // Nicely formats the time until expiry (ie. 1y, 2mo, 3d)
   String formatExpiryTime() {
-    var daysUntil = expiry.difference(DateTime.now()).inDays;
+    var now = DateTime.now();
+    // The date time object must be relative to 00:00 local timezone otherwise we will encounter issues
+    var daysUntil = expiry.difference(DateTime(now.year, now.month, now.day)).inDays;
+
+    if(daysUntil == 1) return "Tomorrow";
+    if(daysUntil == 0) return "Today";
 
     if(daysUntil > 365) {
       int years = (daysUntil / 365).floor();
@@ -93,7 +97,7 @@ class PantryItem {
   // Returns a color code based on how soon the food will expire:
   // Based on a percentage of time from when the food was added (added) to expires (expiry).
   // 50% = yellow, 75% = amber and 90% for red
-  Color colorCodeExpiry() {
+  Color colorCodeExpiry(BuildContext context) {
     // Total days from added to expiry
     var total = expiry.difference(added);
     // Get the days since added
@@ -102,7 +106,7 @@ class PantryItem {
     double delta = since.inDays / total.inDays;
 
     if(delta < 0.5) {
-      return Colors.white;
+      return Theme.of(context).scaffoldBackgroundColor;
     }
     else if(delta < 0.75) {
       return Colors.yellow;
