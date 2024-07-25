@@ -56,18 +56,14 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (selectedIndex) {
       case 0:
         page = Placeholder(); // Update this to your actual home page widget
-        break;
       case 1:
         page = PantryPage();
-        break;
       case 2:
         // Recipe book to add recipes
         page = Placeholder(); // Update this to your actual recipe book widget
-        break;
       case 3:
         // Settings page
         page = PreferencesPage();
-        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }

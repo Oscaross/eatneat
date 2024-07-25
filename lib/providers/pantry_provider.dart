@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/screens/edit_pantry_item.dart';
 import '../models/pantry_item.dart';
 
 class PantryProvider with ChangeNotifier {

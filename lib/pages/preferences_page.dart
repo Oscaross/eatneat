@@ -19,7 +19,7 @@ class PreferencesPage extends StatelessWidget {
           ElevatedButton.icon(
             icon: Icon(Icons.brightness_1_outlined),
             label: Text("Appearance"),
-            onPressed: (() => null),
+            onPressed: (() {}),
           )
         ]
       )

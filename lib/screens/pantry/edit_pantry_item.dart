@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:namer_app/models/pantry_item.dart';
 import 'package:provider/provider.dart';
-import '../providers/pantry_provider.dart';
+import '../../providers/pantry_provider.dart';
 
 class EditItemPage extends StatefulWidget {
   final PantryItem item;
@@ -34,10 +34,11 @@ class _EditItemPageState extends State<EditItemPage> {
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
-    if (picked != null && picked != _expires)
+    if (picked != null && picked != _expires) {
       setState(() {
         _expires = picked;
       });
+    }
   }
 
   @override
