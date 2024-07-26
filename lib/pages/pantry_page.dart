@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:namer_app/models/pantry_item.dart';
+import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/screens/pantry/add_pantry_item.dart';
 import 'package:namer_app/screens/pantry/add_pantry_label.dart';
 import 'package:namer_app/screens/pantry/edit_pantry_item.dart';
@@ -7,23 +8,6 @@ import 'package:provider/provider.dart';
 import '../providers/pantry_provider.dart';
 
 class PantryPage extends StatelessWidget {
-  static const ButtonStyle labelStyle = ButtonStyle(
-    backgroundColor: WidgetStatePropertyAll<Color>(Colors.transparent),
-    foregroundColor: WidgetStatePropertyAll<Color>(Colors.blueAccent),
-    padding: WidgetStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0)),
-    shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
-      RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-      ),
-    ),
-    side: WidgetStatePropertyAll<BorderSide>(
-      BorderSide(color: Colors.blueAccent, width: 2.0),
-    ),
-    textStyle: WidgetStatePropertyAll<TextStyle>(
-      TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
-    ),
-    elevation: WidgetStatePropertyAll<double>(0.0), // Set elevation to 0 for flat design
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -36,22 +20,38 @@ class PantryPage extends StatelessWidget {
           ],
         ),
       ),
-      body: Consumer<PantryProvider>(
-        builder: (context, pantryProvider, child) {
+      body: Consumer2<PantryProvider, LabelProvider>(
+        builder: (context, pantryProvider, labelProvider, child) {
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: ElevatedButton(
-                  child: Text("Add Label"),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(pageBuilder:(context, animation, secondaryAnimation) => AddLabelPage(),)
-                    );
-                  },
-                  style: labelStyle,
-                )
+                padding: const EdgeInsets.all(8.0),
+                child:
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 10,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(pageBuilder:(context, animation, secondaryAnimation) => AddLabelPage(),)
+                          );
+                        },
+                        style: labelProvider.addButtonStyle,
+                        child: Text("Add Label"),
+                      ),
+                      ...labelProvider.labels.map((label) {
+                        return ElevatedButton(
+                          onPressed: () {
+                            print("Clicked label ${label.name}");
+                          },
+                          style: label.generateButtonStyle(),
+                          child: Text(label.name),
+                        );
+                      }).toList(),
+                  ]
+                ),
               ),
               Expanded(
                 child: pantryProvider.items.isEmpty

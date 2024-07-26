@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:namer_app/pages/preferences_page.dart';
+import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'providers/pantry_provider.dart';
@@ -11,6 +12,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => PantryProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => LabelProvider()),
       ],
       child: MyApp(),
     ),
@@ -24,16 +26,10 @@ class MyApp extends StatelessWidget {
       builder: (context, themeProvider, child) {
         return MaterialApp(
           theme: ThemeData(
-            primaryColor: themeProvider.primary,
-            primarySwatch: themeProvider.primarySwatch,
-            secondaryHeaderColor: themeProvider.secondary,
-            scaffoldBackgroundColor: themeProvider.background,
-            appBarTheme: themeProvider.appBar,
-            bottomNavigationBarTheme: BottomNavigationBarThemeData(
-              backgroundColor: themeProvider.background,
-              selectedItemColor: themeProvider.primary,
-              unselectedItemColor: Colors.grey,
-            ),
+            primaryColor: themeProvider.primaryColor,
+            appBarTheme: AppBarTheme(
+              color: themeProvider.primaryColor,
+            )
           ),
           home: MyHomePage(),
         );
@@ -55,12 +51,12 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (selectedIndex) {
       case 0:
-        page = Placeholder(); // Update this to your actual home page widget
+        page = Placeholder(); 
       case 1:
         page = PantryPage();
       case 2:
         // Recipe book to add recipes
-        page = Placeholder(); // Update this to your actual recipe book widget
+        page = Placeholder();
       case 3:
         // Settings page
         page = PreferencesPage();
