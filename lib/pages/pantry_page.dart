@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:namer_app/models/label_item.dart';
 import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/screens/pantry/add_pantry_item.dart';
@@ -7,7 +8,14 @@ import 'package:namer_app/screens/pantry/edit_pantry_item.dart';
 import 'package:provider/provider.dart';
 import '../providers/pantry_provider.dart';
 
-class PantryPage extends StatelessWidget {
+class PantryPage extends StatefulWidget {
+  @override
+  _PantryPageState createState() => _PantryPageState();
+}
+
+class _PantryPageState extends State<PantryPage> {
+  // The label that we want to display
+  LabelItem? _selectedLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -26,35 +34,38 @@ class PantryPage extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child:
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 10,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(pageBuilder:(context, animation, secondaryAnimation) => AddLabelPage(),)
-                          );
-                        },
-                        style: labelProvider.addButtonStyle,
-                        child: Text("+"),
-                      ),
-                      ...labelProvider.labels.map((label) {
-                        return ElevatedButton(
-                          onPressed: () {
-                            print("Clicked label ${label.name}");
-                          },
-                          style: label.generateButtonStyle(),
-                          child: Text(label.name),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 10,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => AddLabelPage(),
+                          ),
                         );
-                      }).toList(),
-                  ]
+                      },
+                      style: labelProvider.addButtonStyle,
+                      child: Text("+"),
+                    ),
+                    ...labelProvider.labels.map((label) {
+                      return ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedLabel = label;
+                          });
+                        },
+                        style: label.generateButtonStyle(),
+                        child: Text(label.name),
+                      );
+                    }).toList(),
+                  ],
                 ),
               ),
               Expanded(
-                child: pantryProvider.items.isEmpty
+                child: pantryProvider.filterBy(_selectedLabel).isEmpty
                     ? Center(
                         child: Text(
                           "No items to display! Click the + to add your first item...",
@@ -62,9 +73,9 @@ class PantryPage extends StatelessWidget {
                         ),
                       )
                     : ListView.builder(
-                        itemCount: pantryProvider.items.length,
+                        itemCount: pantryProvider.filterBy(_selectedLabel).length,
                         itemBuilder: (context, index) {
-                          final item = pantryProvider.items[index];
+                          final item = pantryProvider.filterBy(_selectedLabel)[index];
 
                           return ListTile(
                             leading: Icon(Icons.fastfood_outlined),
