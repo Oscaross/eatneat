@@ -16,7 +16,7 @@ class _AddLabelPageState extends State<AddLabelPage> {
     "Green": Colors.green,
     "Red": Colors.red,
     "Orange": Colors.orange,
-    "Yellow": Colors.yellow,
+    "Yellow": Color.fromARGB(255, 237, 219, 49),
     "Pink": Colors.pink,
     "Purple": Colors.purple,
   };
@@ -82,7 +82,9 @@ class _AddLabelPageState extends State<AddLabelPage> {
               child: ElevatedButton(
                 onPressed: () {
                   // Instantiate the label in memory and add it to the app's list
-                  var label = LabelItem(name: _nameController.text, color: namedColors[_selectedColor]!);
+                  var name = _nameController.text;
+
+                  var label = LabelItem(name: (name == "") ? "Label" : name, color: namedColors[_selectedColor]!);
                   Provider.of<LabelProvider>(context, listen: false).createNewLabel(label);
 
                   Navigator.pop(context);

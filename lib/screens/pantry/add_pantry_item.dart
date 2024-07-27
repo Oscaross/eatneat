@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
+import 'package:namer_app/models/label_item.dart';
 import 'package:namer_app/models/pantry_item.dart';
+import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -36,8 +38,12 @@ class _AddItemPageState extends State<AddItemPage> {
     }
   }
 
+  LabelItem? selectedLabel;
+
   @override
   Widget build(BuildContext context) {
+    var labelProvider = Provider.of<LabelProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Add New Pantry Item'),
@@ -120,6 +126,36 @@ class _AddItemPageState extends State<AddItemPage> {
               )
             ),
             SizedBox(height: LABEL_SPACING),
+
+            DropdownButton<LabelItem>(
+                value: selectedLabel,
+                items: labelProvider.labels.map((label) {
+                  return DropdownMenuItem<LabelItem>(
+                    value: label,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 15,
+                          height: 15,
+                          decoration: BoxDecoration(
+                            color: label.color,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Text(label.name, style: TextStyle(fontSize: 15)),
+                      ],
+                    ),
+                  );
+                }).toList(),
+                onChanged: (LabelItem? newLabel) {
+                  setState(() {
+                    selectedLabel = newLabel;
+                  });
+                },
+              ),
+
+            SizedBox(height:LABEL_SPACING),
             Center(
               child: ElevatedButton(
                 onPressed: () {
@@ -127,7 +163,7 @@ class _AddItemPageState extends State<AddItemPage> {
                   var name = _nameController.text;
                   
                   if(_qty != 0 && _qty > 0 && _expires != null) {
-                    var pantryItem = PantryItem(expiry: _expires!, name: name, quantity: _qty, isQuantity: _isQuantity, added: DateTime.now());
+                    var pantryItem = PantryItem(expiry: _expires!, name: name, quantity: _qty, isQuantity: _isQuantity, added: DateTime.now(), label: selectedLabel);
                     Provider.of<PantryProvider>(context, listen:false).addItem(pantryItem);
                   }
                   else {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:namer_app/models/label_item.dart';
 
 class PantryItem {
   // Name of the item (ie. chicken breast)
@@ -9,10 +10,12 @@ class PantryItem {
   bool isQuantity;
   // The predicted expiry date
   DateTime expiry;
+  // The label the user has assigned to the item, null if none
+  LabelItem? label;
   // The date it was added
   final DateTime added;
 
-  PantryItem({required this.name, required this.quantity, required this.expiry, required this.isQuantity, required this.added});
+  PantryItem({required this.name, required this.quantity, required this.expiry, required this.isQuantity, required this.added, this.label});
 
   void setName(String name) {
     this.name = name;

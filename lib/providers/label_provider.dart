@@ -18,14 +18,13 @@ class LabelProvider with ChangeNotifier {
       BorderSide(color: Colors.blueAccent, width: 2.0),
     ),
     textStyle: WidgetStatePropertyAll<TextStyle>(
-      TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+      TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
     ),
     elevation: WidgetStatePropertyAll<double>(0.0),
   );
   
   void createNewLabel(LabelItem label) {
     _labels.add(label);
-    print("Label added internally ${label.name} ${label.color}");
     notifyListeners();
   }
 }

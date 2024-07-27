@@ -39,7 +39,7 @@ class PantryPage extends StatelessWidget {
                           );
                         },
                         style: labelProvider.addButtonStyle,
-                        child: Text("Add Label"),
+                        child: Text("+"),
                       ),
                       ...labelProvider.labels.map((label) {
                         return ElevatedButton(
