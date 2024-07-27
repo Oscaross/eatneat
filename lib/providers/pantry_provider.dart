@@ -10,8 +10,6 @@ class PantryProvider with ChangeNotifier {
   // Return all items in the pantry that are labelled with the given label parameter.
   List<PantryItem> filterBy(LabelItem? label) {
 
-    print("Trying to filter labels " + label.toString());
-
     if(label == null) return List.empty();
 
     List<PantryItem> ret = List.empty(growable: true);
@@ -21,8 +19,6 @@ class PantryProvider with ChangeNotifier {
         ret.add(i);
         }
     }
-
-    print(ret);
 
     return ret;
   }

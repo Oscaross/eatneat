@@ -5,6 +5,7 @@ import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/screens/pantry/add_pantry_item.dart';
 import 'package:namer_app/screens/pantry/add_pantry_label.dart';
 import 'package:namer_app/screens/pantry/edit_pantry_item.dart';
+import 'package:namer_app/util/shake.dart';
 import 'package:provider/provider.dart';
 import '../providers/pantry_provider.dart';
 
@@ -54,7 +55,13 @@ class _PantryPageState extends State<PantryPage> {
                       return ElevatedButton(
                         onPressed: () {
                           setState(() {
+                            if(_selectedLabel != null) {
+                              _selectedLabel!.hide();
+                            }
                             _selectedLabel = label;
+                            _selectedLabel!.show();
+
+                            Shaker.vibrate(20);
                           });
                         },
                         style: label.generateButtonStyle(),
