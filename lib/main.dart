@@ -4,7 +4,7 @@ import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'providers/pantry_provider.dart';
-import 'pages/pantry_page.dart'; // Ensure the path is correct
+import 'pages/pantry/pantry_page.dart'; // Ensure the path is correct
 
 void main() {
   runApp(
