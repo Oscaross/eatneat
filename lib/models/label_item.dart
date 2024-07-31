@@ -10,11 +10,11 @@ class LabelItem {
   LabelItem({required this.name, required this.color});
 
   void show() {
-    this.isShowing = true;
+    isShowing = true;
   }
 
   void hide() {
-    this.isShowing = false;
+    isShowing = false;
   }
 
   // Generates the styling required to render the button with the correct color, background and styling on the pantry page.
