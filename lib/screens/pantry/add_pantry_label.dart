@@ -83,12 +83,12 @@ class _AddLabelPageState extends State<AddLabelPage> {
                 onPressed: () {
                   // Instantiate the label in memory and add it to the app's list
                   var name = _nameController.text;
-
                   var label = LabelItem(name: (name == "") ? "Label" : name, color: namedColors[_selectedColor]!);
                   Provider.of<LabelProvider>(context, listen: false).createNewLabel(label);
 
                   Navigator.pop(context);
-                },
+                  
+                  },
                 child: Text('Add Label'),
               ),
             ),

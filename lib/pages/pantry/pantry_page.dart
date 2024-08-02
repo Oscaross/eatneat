@@ -62,8 +62,12 @@ class _PantryPageState extends State<PantryPage> {
                             _selectedLabel!.show();
                           });
                         },
+                        // If we are in long press mode we should be editing the label
+                        onLongPress: () {
+                          final String? option;
+                        },
                         style: label.generateButtonStyle(),
-                        child: Text(label.name),
+                        child: Text(label.getName()),
                       );
                     }).toList(),
                   ],
@@ -107,16 +111,5 @@ class _PantryPageState extends State<PantryPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
-  }
-
-  void _editItem(BuildContext context, PantryItem item) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => EditItemPage(item: item)),
-    );
-  }
-
-  void _deleteItem(BuildContext context, PantryProvider provider, PantryItem item) {
-    provider.removeItem(item);
   }
 }

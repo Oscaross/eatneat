@@ -17,6 +17,15 @@ class LabelItem {
     isShowing = false;
   }
 
+  // Truncates the label name if necessary to ensure it does not break the UI
+  String getName() {
+    if(name.length > 11) {
+      return "${name.substring(0, 12)}...";
+    }
+
+    return name;
+  }
+
   // Generates the styling required to render the button with the correct color, background and styling on the pantry page.
   ButtonStyle generateButtonStyle() {
     return ButtonStyle(

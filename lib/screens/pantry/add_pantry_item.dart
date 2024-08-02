@@ -143,7 +143,7 @@ class _AddItemPageState extends State<AddItemPage> {
                           ),
                         ),
                         SizedBox(width: 8),
-                        Text(label.name, style: TextStyle(fontSize: 15)),
+                        Text(label.getName(), style: TextStyle(fontSize: 15)),
                       ],
                     ),
                   );
