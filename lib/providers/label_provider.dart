@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:namer_app/models/label_item.dart';
 
 class LabelProvider with ChangeNotifier {
+  // The label that is selected on the pantry page
+  LabelItem? selectedLabel;
   List<LabelItem> _labels = [];
   List<LabelItem> get labels => _labels;
 

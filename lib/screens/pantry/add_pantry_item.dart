@@ -43,6 +43,7 @@ class _AddItemPageState extends State<AddItemPage> {
   @override
   Widget build(BuildContext context) {
     var labelProvider = Provider.of<LabelProvider>(context);
+    selectedLabel = labelProvider.selectedLabel;
 
     return Scaffold(
       appBar: AppBar(

@@ -36,7 +36,12 @@ class PantryProvider with ChangeNotifier {
   void triggerUpdate() {
     notifyListeners();
   }
+
   bool isEmpty() {
-    return _items.isEmpty;
+    return itemCount() == 0;
+  }
+
+  int itemCount() {
+    return _items.length;
   }
 }

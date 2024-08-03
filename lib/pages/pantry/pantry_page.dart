@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:namer_app/models/label_item.dart';
-import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/pages/pantry/pantry_item_card.dart';
 import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/screens/pantry/add_pantry_item.dart';
 import 'package:namer_app/screens/pantry/add_pantry_label.dart';
-import 'package:namer_app/screens/pantry/edit_pantry_item.dart';
 import 'package:provider/provider.dart';
 
 class PantryPage extends StatefulWidget {
@@ -60,6 +58,8 @@ class _PantryPageState extends State<PantryPage> {
                             }
                             _selectedLabel = label;
                             _selectedLabel!.show();
+
+                            labelProvider.selectedLabel = _selectedLabel;
                           });
                         },
                         // If we are in long press mode we should be editing the label

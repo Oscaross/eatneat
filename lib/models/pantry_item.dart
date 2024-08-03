@@ -8,12 +8,14 @@ class PantryItem {
   double quantity;
   // Is this a weight or is this a quantity (number) of items?
   bool isQuantity;
+  // If the user tells us the item is expired before we expect it to be expired we should consider it expired
+  bool expired = false;
   // The predicted expiry date
   DateTime expiry;
   // The label the user has assigned to the item, null if none
   LabelItem? label;
   // The date it was added
-  final DateTime added;
+  DateTime added;
 
   PantryItem({required this.name, required this.quantity, required this.expiry, required this.isQuantity, required this.added, this.label});
 
@@ -33,9 +35,16 @@ class PantryItem {
     this.expiry = expiry;
   }
 
-  // Returns true iff this pantry item has expired according to the expiry date set.
+  // Returns true iff this pantry item has expired according to the expiry date set, OR if the user has told us the item is expired.
   bool isExpired() {
-    return expiry.compareTo(DateTime.now()) <= 0;
+    return expiry.compareTo(DateTime.now()) <= 0 || expired;
+  }
+
+  // Allows the user to 'restock' the item by ammending the expiry date
+  void restock(DateTime expiry) {
+    expired = false;
+    setExpiry(expiry);
+    added = DateTime.now();
   }
 
   // Nicely formats the time until expiry (ie. 1y, 2mo, 3d)
