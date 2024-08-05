@@ -5,6 +5,7 @@ import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/screens/pantry/add_pantry_item.dart';
 import 'package:namer_app/screens/pantry/add_pantry_label.dart';
+import 'package:namer_app/util/debug.dart';
 import 'package:provider/provider.dart';
 
 class PantryPage extends StatefulWidget {
@@ -15,6 +16,7 @@ class PantryPage extends StatefulWidget {
 class _PantryPageState extends State<PantryPage> {
   // The label that we want to display
   LabelItem? _selectedLabel;
+   // Set up debug
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class _PantryPageState extends State<PantryPage> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
+                        Debug().configure(Provider.of<PantryProvider>(context, listen: false), Provider.of<LabelProvider>(context, listen:false));
                         Navigator.push(
                           context,
                           PageRouteBuilder(

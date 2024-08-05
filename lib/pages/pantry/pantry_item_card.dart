@@ -3,6 +3,7 @@ import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/screens/pantry/edit_pantry_item.dart';
 import 'package:namer_app/util/shake.dart';
+import 'package:namer_app/util/static_button_styles.dart';
 import 'package:provider/provider.dart';
 
 class PantryItemCard extends StatelessWidget {
@@ -99,51 +100,56 @@ class PantryItemCard extends StatelessWidget {
   // Called on long press of a card, responsible for spawning the correct popup menu in the correct spot
   void _showCardDialog(BuildContext context, LongPressStartDetails? lp) {
 
-    // Can't show a dialog if we don't have a valid long press
-    if(lp == null) return;
+  // Can't show a dialog if we don't have a valid long press
+  if (lp == null) return;
 
-    // The card we are invoking dialog on
-    final RenderBox card = context.findRenderObject() as RenderBox;
-    // The global position of such card
-    final Offset cardPos = card.localToGlobal(Offset.zero);
-    final Size cardSize = card.size;
+  // The card we are invoking dialog on
+  final RenderBox card = context.findRenderObject() as RenderBox;
+  // The global position of such card
+  final Offset cardPos = card.localToGlobal(Offset.zero);
+  final Size cardSize = card.size;
 
-    // The details of the box we must spawn to display the options. 
-    // It should be spawned directly below the card's RenderBox 
-    final RelativeRect boxPos = RelativeRect.fromLTRB(
-      cardPos.dx,
-      cardPos.dy + cardSize.height,
-      cardPos.dx + cardSize.width,
-      cardPos.dy + cardSize.height
-    );
+  // The details of the box we must spawn to display the options. 
+  // It should be spawned directly below the card's RenderBox 
+  final RelativeRect boxPos = RelativeRect.fromLTRB(
+    cardPos.dx,
+    cardPos.dy + cardSize.height,
+    cardPos.dx + cardSize.width,
+    cardPos.dy + cardSize.height,
+  );
 
-    showMenu<String>(
-      context: context,
-      position: boxPos,
-      items: [
-        PopupMenuItem<String>(
-          value: "Delete",
-          child: IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              _deleteItem(item, Provider.of<PantryProvider>(context, listen:false));
-            }
-          ),
+  showMenu<String>(
+    color: Colors.transparent,
+    elevation: 0,
+    context: context,
+    position: boxPos,
+    items: [
+      PopupMenuItem<String>( 
+        padding: const EdgeInsets.all(0),
+        value: "Delete",
+        child: ElevatedButton.icon(
+          icon: Icon(Icons.delete, color: Colors.black87, size: 20),
+          label: Text("Delete Item", style: TextStyle(fontWeight: FontWeight.bold)),
+          style: StaticButtonStyles.deleteButtonStyle,
+          onPressed: () {
+            _deleteItem(item, Provider.of<PantryProvider>(context, listen: false));
+          },
         ),
-
-        PopupMenuItem<String>(
-          value: "Edit",
-          child: IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              _editItem(context, item);
-            }
-            
-          )
+      ),
+      PopupMenuItem<String>(
+        padding: const EdgeInsets.all(0),
+        value: "Edit",
+        child: ElevatedButton.icon(
+          icon: Icon(Icons.edit),
+          label: Text("Edit Item"),
+          onPressed: () {
+            _editItem(context, item);
+          },
         ),
-      ]
-    );
-  }
+      ),
+    ],
+  );
+}
 
   void _editItem(BuildContext context, PantryItem item) {
 

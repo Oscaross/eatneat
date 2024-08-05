@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 
 class ThemeProvider with ChangeNotifier {
 
+  Color defaultSecondaryColor = Color(0xFFF1570E);
+
   Color? primaryColor = Color(0xFF0ea8f1);
   Color? secondaryColor = Color(0xFFF1570E);
+
+  Color getSecondary() {
+    return (secondaryColor == null) ? defaultSecondaryColor : secondaryColor!;
+  }
   // static const defaultPrimaryColor = Color.fromARGB(255, 100, 200, 246);
   // static const Map<int, Color> _primarySwatch = {
   //   50: Color(0xFFFCE4EC),
