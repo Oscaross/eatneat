@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:namer_app/models/label_item.dart';
 import 'package:namer_app/pages/pantry/pantry_item_card.dart';
 import 'package:namer_app/providers/label_provider.dart';
@@ -17,6 +18,8 @@ class PantryPage extends StatefulWidget {
 class _PantryPageState extends State<PantryPage> {
   // The label that we want to display
   LabelItem? _selectedLabel;
+  // The result of scanning a barcode
+  String? _scanResult;
    // Set up debug
 
   @override
@@ -108,8 +111,11 @@ class _PantryPageState extends State<PantryPage> {
           SpeedDialChild(
             child: Icon(Icons.barcode_reader),
             label: "Scan Barcode",
-            onTap: () {
+            onTap: () async {
               print("Attempting to open the scanner!");
+              // Scan our barcode and don't move on until we have a result
+              await _scanBarcode();
+              print(_scanResult);
             }
           ),
           SpeedDialChild(
@@ -123,11 +129,32 @@ class _PantryPageState extends State<PantryPage> {
               );
             }
           )
-          
         ]
-       
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
+  }
+
+  // Testing ID: 5000168203393 to try and fetch product data from OFF
+
+  Future<void> _scanBarcode() async {
+    try {
+      String barcode = await FlutterBarcodeScanner.scanBarcode(
+        '#ff6666', // Color for the scan line
+        'Cancel', // Text for the cancel button
+        true, // Whether to show the flash icon
+        ScanMode.BARCODE, // Scan mode (QR code or Barcode)
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        _scanResult = barcode != '-1' ? barcode : 'Scan cancelled';
+      });
+    } catch (e) {
+      setState(() {
+        _scanResult = 'Failed to get scan result';
+      });
+    }
   }
 }
