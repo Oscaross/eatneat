@@ -7,6 +7,7 @@ import 'package:namer_app/screens/pantry/add_pantry_item.dart';
 import 'package:namer_app/screens/pantry/add_pantry_label.dart';
 import 'package:namer_app/util/debug.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class PantryPage extends StatefulWidget {
   @override
@@ -101,16 +102,30 @@ class _PantryPageState extends State<PantryPage> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddItemPage()),
-          );
-        },
-        tooltip: 'Add Item',
-        elevation: 5.0,
-        child: Icon(Icons.add),
+      floatingActionButton: SpeedDial(
+        icon: Icons.add,
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.barcode_reader),
+            label: "Scan Barcode",
+            onTap: () {
+              print("Attempting to open the scanner!");
+            }
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.plus_one),
+            label: "Manually Add",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder:(context) => AddItemPage(),
+                )
+              );
+            }
+          )
+          
+        ]
+       
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
