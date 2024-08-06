@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/screens/pantry/edit_pantry_item.dart';
@@ -9,6 +10,8 @@ import 'package:provider/provider.dart';
 class PantryItemCard extends StatelessWidget {
   final PantryItem item;
   LongPressStartDetails? pointOfContact;
+
+  bool _showPopupMenu = false;
 
   PantryItemCard({required this.item});
 
@@ -24,6 +27,7 @@ class PantryItemCard extends StatelessWidget {
         onLongPress: () {
           // Handle long press
           _showCardDialog(context, pointOfContact);
+
           // Shake the device
           Shaker.vibrate(15);
         },
@@ -100,9 +104,6 @@ class PantryItemCard extends StatelessWidget {
   // Called on long press of a card, responsible for spawning the correct popup menu in the correct spot
   void _showCardDialog(BuildContext context, LongPressStartDetails? lp) {
 
-  // Can't show a dialog if we don't have a valid long press
-  if (lp == null) return;
-
   // The card we are invoking dialog on
   final RenderBox card = context.findRenderObject() as RenderBox;
   // The global position of such card
@@ -118,37 +119,44 @@ class PantryItemCard extends StatelessWidget {
     cardPos.dy + cardSize.height,
   );
 
-  showMenu<String>(
-    color: Colors.transparent,
-    elevation: 0,
-    context: context,
-    position: boxPos,
-    items: [
-      PopupMenuItem<String>( 
-        padding: const EdgeInsets.all(0),
-        value: "Delete",
-        child: ElevatedButton.icon(
-          icon: Icon(Icons.delete, color: Colors.black87, size: 20),
-          label: Text("Delete Item", style: TextStyle(fontWeight: FontWeight.bold)),
-          style: StaticButtonStyles.deleteButtonStyle,
-          onPressed: () {
-            _deleteItem(item, Provider.of<PantryProvider>(context, listen: false));
-          },
-        ),
-      ),
-      PopupMenuItem<String>(
-        padding: const EdgeInsets.all(0),
-        value: "Edit",
-        child: ElevatedButton.icon(
-          icon: Icon(Icons.edit),
-          label: Text("Edit Item"),
-          onPressed: () {
-            _editItem(context, item);
-          },
-        ),
-      ),
-    ],
+  SpeedDial(
+
+
   );
+
+  // showMenu<String>(
+  //   color: Colors.transparent,
+  //   elevation: 0,
+  //   context: context,
+  //   position: boxPos,
+  //   items: [
+  //     PopupMenuItem<String>( 
+  //       padding: const EdgeInsets.all(0),
+  //       value: "Delete",
+  //       child: ElevatedButton.icon(
+  //         icon: Icon(Icons.delete, color: Colors.black87, size: 20),
+  //         label: Text("Delete Item", style: TextStyle(fontWeight: FontWeight.bold)),
+  //         style: StaticButtonStyles.deleteButtonStyle,
+  //         onPressed: () {
+  //           _deleteItem(item, Provider.of<PantryProvider>(context, listen: false));
+  //         },
+  //       ),
+  //     ),
+  //     PopupMenuItem<String>(
+  //       padding: const EdgeInsets.all(0),
+  //       value: "Edit",
+  //       child: ElevatedButton.icon(
+  //         icon: Icon(Icons.edit),
+  //         label: Text("Edit Item"),
+  //         onPressed: () {
+  //           _editItem(context, item);
+  //         },
+  //       ),
+  //     ),
+  //   ],
+  // );
+
+
 }
 
   void _editItem(BuildContext context, PantryItem item) {
