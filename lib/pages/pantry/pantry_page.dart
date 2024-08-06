@@ -135,6 +135,7 @@ class _PantryPageState extends State<PantryPage> {
                 }
                 catch(e) {
                   print(e.toString());
+                  onScanFailure();
                 }
                 // If and only if the CURRENT build widget tree contains this context should we send the request to add the pantry item
                 if(context.mounted)
@@ -150,7 +151,7 @@ class _PantryPageState extends State<PantryPage> {
                     // The item is null so scanning was unsuccessful. We can retry the scan or just give the option to add manually.
                     else 
                     {
-                      // TODO: Show alert dialog to get the user to retry the scan or add manually
+                      onScanFailure();
                     }
                   
                 }
@@ -166,6 +167,19 @@ class _PantryPageState extends State<PantryPage> {
                 context,
                 MaterialPageRoute(builder:(context) => AddItemPage(),
                 )
+              );
+            }
+          ),
+
+          // Debug
+
+          SpeedDialChild(
+            child: Icon(Icons.tab),
+            label: "[DEBUG] Item Add Page",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PantryBarcodeAddPage(item: PantryItem(added: DateTime.now(), expiry: DateTime.now().add( const Duration(days:20)), name: "Chicken Breast", quantity: 200, isQuantity: false)))
               );
             }
           )
@@ -270,5 +284,12 @@ class _PantryPageState extends State<PantryPage> {
     double number = double.parse(asStr);
 
     return (isKilos) ? number * 1000 : number;
+  }
+
+  // Code to handle a barcode scan failure
+  void onScanFailure() {
+    // TODO: Implement scan failure logic
+    print("Barcode scan failed!");
+
   }
 }

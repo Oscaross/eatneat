@@ -4,8 +4,6 @@ import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/screens/pantry/edit_pantry_item.dart';
 import 'package:namer_app/util/shake.dart';
-import 'package:namer_app/util/static_button_styles.dart';
-import 'package:provider/provider.dart';
 
 class PantryItemCard extends StatelessWidget {
   final PantryItem item;
