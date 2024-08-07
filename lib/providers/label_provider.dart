@@ -7,6 +7,9 @@ class LabelProvider with ChangeNotifier {
   List<LabelItem> _labels = [];
   List<LabelItem> get labels => _labels;
 
+  // A list of the labels the user has selected - this object must be a set as we cannot have two instances of the same LabelItem selected at once.
+  Set<LabelItem> selectedLabels = {};
+
   final ButtonStyle addButtonStyle = ButtonStyle(
     backgroundColor: WidgetStatePropertyAll<Color>(Colors.transparent),
     foregroundColor: WidgetStatePropertyAll<Color>(Colors.blueAccent),
@@ -29,4 +32,19 @@ class LabelProvider with ChangeNotifier {
     _labels.add(label);
     notifyListeners();
   }
+
+  void toggleLabel(LabelItem label) {
+    // If the label is already selected, remove it and set its boolean flag to deselected
+    if(selectedLabels.contains(label)) {
+      selectedLabels.remove(label);
+      label.isSelected = false;
+    }
+    // Otherwise select it
+    else {
+      selectedLabels.add(label);
+      label.isSelected = true;
+    }
+  }
+
+
 }

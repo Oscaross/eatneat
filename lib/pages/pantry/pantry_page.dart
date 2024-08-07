@@ -10,6 +10,7 @@ import 'package:namer_app/screens/pantry/add_pantry_item.dart';
 import 'package:namer_app/screens/pantry/add_pantry_label.dart';
 import 'package:namer_app/util/debug.dart';
 import 'package:namer_app/util/exceptions/exception_barcode_not_found.dart';
+import 'package:namer_app/widgets/label_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
@@ -21,8 +22,6 @@ class PantryPage extends StatefulWidget {
 }
 
 class _PantryPageState extends State<PantryPage> {
-  // The label that we want to display
-  LabelItem? _selectedLabel;
   // The result of scanning a barcode
   String? _scanResult;
   // Is this our first time scanning?
@@ -45,51 +44,11 @@ class _PantryPageState extends State<PantryPage> {
         builder: (context, pantryProvider, labelProvider, child) {
           return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 10,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Debug().configure(Provider.of<PantryProvider>(context, listen: false), Provider.of<LabelProvider>(context, listen:false));
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => AddLabelPage(),
-                          ),
-                        );
-                      },
-                      style: labelProvider.addButtonStyle,
-                      child: Text("+"),
-                    ),
-                    ...labelProvider.labels.map((label) {
-                      return ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            if(_selectedLabel != null) {
-                              _selectedLabel!.hide();
-                            }
-                            _selectedLabel = label;
-                            _selectedLabel!.show();
-
-                            labelProvider.selectedLabel = _selectedLabel;
-                          });
-                        },
-                        // If we are in long press mode we should be editing the label
-                        onLongPress: () {
-                          final String? option;
-                        },
-                        style: label.generateButtonStyle(),
-                        child: Text(label.getName()),
-                      );
-                    }).toList(),
-                  ],
-                ),
-              ),
+              // Display the label bar
+              LabelBar(),
+              // Display pantry items
               Expanded(
-                child: pantryProvider.filterBy(_selectedLabel).isEmpty
+                child: pantryProvider.filterBy(labelProvider.selectedLabels).isEmpty
                     ? Center(
                         child: Text(
                           "No items to display! Click the + to add your first item...",
@@ -102,9 +61,9 @@ class _PantryPageState extends State<PantryPage> {
                           mainAxisSpacing: 8.0,
                           crossAxisSpacing: 8.0,
                         ),
-                        itemCount: pantryProvider.filterBy(_selectedLabel).length,
+                        itemCount: pantryProvider.filterBy(labelProvider.selectedLabels).length,
                         itemBuilder: (context, index) {
-                          final item = pantryProvider.filterBy(_selectedLabel)[index];
+                          final item = pantryProvider.filterBy(labelProvider.selectedLabels)[index];
                           return PantryItemCard(item: item);
                         },
                       ),
@@ -172,7 +131,6 @@ class _PantryPageState extends State<PantryPage> {
           ),
 
           // Debug
-
           SpeedDialChild(
             child: Icon(Icons.tab),
             label: "[DEBUG] Item Add Page",
@@ -251,7 +209,7 @@ class _PantryPageState extends State<PantryPage> {
         quantity: qty,
         expiry: expiry,
         isQuantity: false,
-        label: _selectedLabel,
+        label: null,
         added: DateTime.now(),
       );
     }

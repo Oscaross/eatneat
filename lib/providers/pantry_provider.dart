@@ -7,17 +7,27 @@ class PantryProvider with ChangeNotifier {
 
   List<PantryItem> get items => _items;
 
-  // Return all items in the pantry that are labelled with the given label parameter.
-  List<PantryItem> filterBy(LabelItem? label) {
+  // Return all items in the pantry that satisfy all of the labels supplied in the set
+  List<PantryItem> filterBy(Set<LabelItem> labelSet) {
 
-    if(label == null) return List.empty();
+    if(labelSet.isEmpty) return List.empty();
 
     List<PantryItem> ret = List.empty(growable: true);
 
-    for(PantryItem i in items) {
-      if(i.label == label) {
-        ret.add(i);
+    for(int i = 0; i < _items.length; i++) {
+
+      var curr = _items[i];
+      bool valid = true;
+
+      for(int ii = 0; ii < labelSet.length; ii++) {
+        // If the label in the set doesn't match then we need to move onto the next pantry item as this one doesn't satisfy the criteria
+        if(curr.label != labelSet.elementAt(ii)) {
+          valid = false;
+          break;
         }
+      }
+
+      if(valid) ret.add(curr);
     }
 
     return ret;
