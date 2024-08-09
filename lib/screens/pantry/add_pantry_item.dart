@@ -4,6 +4,7 @@ import 'package:namer_app/models/label_item.dart';
 import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
+import 'package:namer_app/widgets/label_bar.dart';
 import 'package:provider/provider.dart';
 
 class AddItemPage extends StatefulWidget {
@@ -128,33 +129,9 @@ class _AddItemPageState extends State<AddItemPage> {
             ),
             SizedBox(height: LABEL_SPACING),
 
-            DropdownButton<LabelItem>(
-                value: selectedLabel,
-                items: labelProvider.labels.map((label) {
-                  return DropdownMenuItem<LabelItem>(
-                    value: label,
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                            color: label.color,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Text(label.getName(), style: TextStyle(fontSize: 15)),
-                      ],
-                    ),
-                  );
-                }).toList(),
-                onChanged: (LabelItem? newLabel) {
-                  setState(() {
-                    selectedLabel = newLabel;
-                  });
-                },
-              ),
+            // TODO: Make it so that somehow the set of selected labels is applied to the pantry item in backend code
+
+            LabelBar(),
 
             SizedBox(height:LABEL_SPACING),
             Center(

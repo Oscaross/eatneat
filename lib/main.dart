@@ -26,9 +26,12 @@ class MyApp extends StatelessWidget {
       builder: (context, themeProvider, child) {
         return MaterialApp(
           theme: ThemeData(
-            primaryColor: themeProvider.primaryColor,
+            bottomNavigationBarTheme: BottomNavigationBarThemeData(
+              selectedItemColor: Colors.blueAccent,
+            ),
+            primaryColor: Colors.blue,
             appBarTheme: AppBarTheme(
-              color: themeProvider.primaryColor,
+              color: Colors.blue,
             )
           ),
           home: MyHomePage(),

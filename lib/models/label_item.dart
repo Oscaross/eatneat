@@ -31,8 +31,9 @@ class LabelItem {
         ),
       ),
       side: WidgetStatePropertyAll<BorderSide>(
-        BorderSide(color: color, width: (isSelected) ? 2 : 1.5),
+        BorderSide(color: color, width: (isSelected) ? 2.3 : 1.5),
       ),
+      fixedSize: WidgetStateProperty.all(Size.fromWidth(102)),
       textStyle: WidgetStatePropertyAll<TextStyle>(
         TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
       ),

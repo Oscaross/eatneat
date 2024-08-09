@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
+import 'package:namer_app/widgets/label_bar.dart';
 import 'package:provider/provider.dart';
 
 class PantryBarcodeAddPage extends StatefulWidget {
@@ -78,7 +79,7 @@ class _PantryBarcodeAddPage extends State<PantryBarcodeAddPage> {
             Text(
               item.name,
               textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
 
             // Divider
@@ -138,32 +139,77 @@ class _PantryBarcodeAddPage extends State<PantryBarcodeAddPage> {
 
             SizedBox(height: WIDGET_SPACING),
 
+            LabelBar(),
+
+            SizedBox(height: WIDGET_SPACING),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Button to add pantry item to pantry
-                ElevatedButton.icon(
-                  icon: Icon(Icons.check),
-                  label: Text("Yes, add to my pantry"),
-                  onPressed: () {
-                    // Add the PantryItem to the pantry and get out of this window
-                    item.expiry = _expiry;
-                    item.name = _name;
-                    item.quantity = _weight;
-
-                    Provider.of<PantryProvider>(context, listen: false)
-                        .addItem(item);
-
-                    Navigator.pop(context);
-                  },
+                Expanded(
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      side: BorderSide(
+                        color: Colors.blue,
+                        width: 1.75,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0), 
+                      ),
+                      elevation: 0,
+                      backgroundColor: Colors.green.withOpacity(0.2),
+                      foregroundColor: Colors.green, // Background color
+                      minimumSize: Size(double.infinity, MediaQuery.of(context).size.height / 14),
+                    ),
+                    icon: Icon(Icons.check),
+                    label: Text(
+                        "Yes, add to my pantry",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold)
+                      ),
+                    onPressed: () {
+                      // Add the PantryItem to the pantry and get out of this window
+                      item.expiry = _expiry;
+                      item.name = _name;
+                      item.quantity = _weight;
+                  
+                      Provider.of<PantryProvider>(context, listen: false)
+                          .addItem(item);
+                  
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
+
+                SizedBox(width: 8),
+
                 // Cancel adding the item and go back to the main pantry page.
-                ElevatedButton.icon(
-                  icon: Icon(Icons.close),
-                  label: Text("Cancel"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                Expanded(
+                  child: ElevatedButton.icon(
+                    icon: Icon(Icons.close),
+                    label: Text(
+                        "Cancel",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold)
+                      ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      side: BorderSide(
+                        color: Colors.red,
+                        width: 1.75,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0), 
+                      ),
+                      elevation: 0,
+                      backgroundColor: Colors.red.withOpacity(0.2),
+                      foregroundColor: Colors.red, // Background color
+                      minimumSize: Size(double.infinity, MediaQuery.of(context).size.height / 14),
+                    ),
+                  ),
                 ),
               ],
             ),

@@ -26,6 +26,8 @@ class _PantryPageState extends State<PantryPage> {
   String? _scanResult;
   // Is this our first time scanning?
   bool _isFirstScan = true;
+
+  SortByMode _selectedSortByMode = SortByMode.alphabetical;
   
   UserAgent? userAgent;
 
@@ -46,6 +48,38 @@ class _PantryPageState extends State<PantryPage> {
             children: [
               // Display the label bar
               LabelBar(),
+
+              // Display the 'sort by' box
+              DropdownButton(
+                value: _selectedSortByMode,
+                items: [
+                  DropdownMenuItem(
+                    value: SortByMode.alphabetical,
+                    child: Text("Alphabetical"),
+                  ),
+                  DropdownMenuItem(
+                    value: SortByMode.expiryDate,
+                    child: Text("Expiry date")
+                  ),
+                  DropdownMenuItem(
+                    value: SortByMode.dateAdded,
+                    child: Text("Date added")
+                  ),
+                  DropdownMenuItem(
+                    value: SortByMode.weight,
+                    child: Text("Weight")
+                  ),
+                ],
+
+                onChanged: (value) {
+                  setState(() {
+                    _selectedSortByMode = value!;
+                  });
+
+                  pantryProvider.sortBy(_selectedSortByMode);
+                }
+
+              ),
               // Display pantry items
               Expanded(
                 child: pantryProvider.filterBy(labelProvider.selectedLabels).isEmpty
@@ -140,7 +174,15 @@ class _PantryPageState extends State<PantryPage> {
                 MaterialPageRoute(builder: (context) => PantryBarcodeAddPage(item: PantryItem(added: DateTime.now(), expiry: DateTime.now().add( const Duration(days:20)), name: "Chicken Breast", quantity: 200, isQuantity: false)))
               );
             }
-          )
+          ),
+
+          SpeedDialChild(
+            child: Icon(Icons.tab),
+            label: "[DEBUG] Create test items",
+            onTap: () {
+              Debug().configure(Provider.of<PantryProvider>(context, listen:false), Provider.of<LabelProvider>(context, listen:false));
+            }
+          ),
         ]
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

@@ -7,8 +7,12 @@ class PantryProvider with ChangeNotifier {
 
   List<PantryItem> get items => _items;
 
+  SortByMode _currentSortingMode = SortByMode.alphabetical;
+
   // Return all items in the pantry that satisfy all of the labels supplied in the set
   List<PantryItem> filterBy(Set<LabelItem> labelSet) {
+
+    print("Trying to filter some labels!");
 
     if(labelSet.isEmpty) return List.empty();
 
@@ -33,13 +37,39 @@ class PantryProvider with ChangeNotifier {
     return ret;
   }
 
+  // Takes a mode and sorts the pantry by this mode, this function is only called if:
+  // a. the user changes the SortByMode
+  // b. the list of pantry items is changed
+  void sortBy(SortByMode mode) {
+
+    _currentSortingMode = mode;
+
+    switch(mode) {
+      case SortByMode.alphabetical:
+        items.sort((a, b) => a.name.compareTo(b.name));
+      case SortByMode.dateAdded:
+      // If a was added before b then return a 1, otherwise return a 0 and this allows for us to sort similarly to the compareTo operator
+        items.sort((a, b) => (a.added.isBefore(b.added) ? 1 : 0));
+      case SortByMode.expiryDate:
+        items.sort((a, b) => (a.expiry.isBefore(b.expiry) ? 1 : 0));
+      case SortByMode.weight:
+        items.sort((a, b) => a.quantity.compareTo(b.quantity));
+      default: 
+        throw ArgumentError("Attempted to sort items by a mode that does not exist?");
+    }
+  }
+
   void addItem(PantryItem item) {
     _items.add(item);
+    // We must re-sort the list
+    sortBy(_currentSortingMode);
     notifyListeners();
   }
 
   void removeItem(PantryItem item) {
     _items.remove(item);
+    // We must re-sort the list
+    sortBy(_currentSortingMode);
     notifyListeners();
   }
 
@@ -54,4 +84,11 @@ class PantryProvider with ChangeNotifier {
   int itemCount() {
     return _items.length;
   }
+}
+
+enum SortByMode {
+  dateAdded, 
+  expiryDate,
+  alphabetical,
+  weight,
 }
