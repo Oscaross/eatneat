@@ -14,7 +14,7 @@ class EditItemPage extends StatefulWidget {
 
 class _EditItemPageState extends State<EditItemPage> {
   late TextEditingController _nameController;
-  late TextEditingController _quantityController;
+  late TextEditingController _weightController;
   late bool _isQuantity;
   late DateTime _expires;
 
@@ -22,7 +22,7 @@ class _EditItemPageState extends State<EditItemPage> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.item.name);
-    _quantityController = TextEditingController(text: widget.item.quantity.toString());
+    _weightController = TextEditingController(text: widget.item.weight.toString());
     _isQuantity = widget.item.isQuantity;
     _expires = widget.item.expiry;
   }
@@ -56,7 +56,7 @@ class _EditItemPageState extends State<EditItemPage> {
               decoration: InputDecoration(labelText: 'Item Name'),
             ),
             TextField(
-              controller: _quantityController,
+              controller: _weightController,
               decoration: InputDecoration(labelText: 'Quantity'),
               keyboardType: TextInputType.number,
             ),
@@ -90,7 +90,7 @@ class _EditItemPageState extends State<EditItemPage> {
                 decoration: InputDecoration(
                   labelText: 'Expiry Date',
                 ),
-                child: Text(_expires == null ? 'None' : '${_expires.toLocal()}'.split(' ')[0]),
+                child: Text('${_expires.toLocal()}'.split(' ')[0]),
               ),
             ),
             SizedBox(height: 20),
@@ -98,7 +98,7 @@ class _EditItemPageState extends State<EditItemPage> {
               onPressed: () {
                 // Update item in pantry logic
                 widget.item.setName(_nameController.text);
-                widget.item.setQuantity(double.parse(_quantityController.text));
+                widget.item.setWeight(double.parse(_weightController.text));
                 widget.item.setIsQuantity(_isQuantity);
                 widget.item.setExpiry(_expires);
                 // Change state

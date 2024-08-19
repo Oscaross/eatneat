@@ -17,7 +17,7 @@ class _AddItemPageState extends State<AddItemPage> {
 
   final TextEditingController _nameController = TextEditingController();
   
-  double _qty = 0;
+  double _weight = 0;
   bool _isQuantity = true; // true for a quantity (ie. 3 chicken breast), false for kgs
 
   // Expiry management system
@@ -71,10 +71,10 @@ class _AddItemPageState extends State<AddItemPage> {
                 Expanded(
                   flex: 2,
                   child: SpinBox(
-                    value: _qty,
+                    value: _weight,
                     onChanged: (value) {
                       setState(() {
-                        _qty = value;
+                        _weight = value;
                       });
                     },
                     decoration: InputDecoration(
@@ -82,8 +82,8 @@ class _AddItemPageState extends State<AddItemPage> {
                     ),
                     min: 0,
                     max:100000,
-                    // If we are entering a qty (quantity) then step by 1, otherwise for grams step by 100
-                    step: (_isQuantity) ? 1 : 100,
+                    // TODO: Implement smart STEP
+                    step: 100,
                     decimals: 1,
                   ),
                 ),
@@ -139,9 +139,10 @@ class _AddItemPageState extends State<AddItemPage> {
                 onPressed: () {
                   // Add item to pantry logic
                   var name = _nameController.text;
+                  var amount = 0;
                   
-                  if(_qty != 0 && _qty > 0 && _expires != null) {
-                    var pantryItem = PantryItem(expiry: _expires!, name: name, quantity: _qty, isQuantity: _isQuantity, added: DateTime.now(), label: selectedLabel);
+                  if(_weight != 0 && _weight > 0 && _expires != null) {
+                    var pantryItem = PantryItem(expiry: _expires!, name: name, weight: _weight, isQuantity: _isQuantity, added: DateTime.now(), amount: amount,  label: selectedLabel);
                     Provider.of<PantryProvider>(context, listen:false).addItem(pantryItem);
                   }
                   else {

@@ -171,7 +171,7 @@ class _PantryPageState extends State<PantryPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PantryBarcodeAddPage(item: PantryItem(added: DateTime.now(), expiry: DateTime.now().add( const Duration(days:20)), name: "Chicken Breast", quantity: 200, isQuantity: false)))
+                MaterialPageRoute(builder: (context) => PantryBarcodeAddPage(item: PantryItem(added: DateTime.now(), expiry: DateTime.now().add( const Duration(days:20)), name: "Chicken Breast", weight: 200, isQuantity: false, amount: 1)))
               );
             }
           ),
@@ -244,14 +244,17 @@ class _PantryPageState extends State<PantryPage> {
       var name = (product.productName == null) ? " " : product.productName!;
       var qty = _parseQuantity(product.quantity);
       var expiry = (product.expirationDate == null) ? DateTime.now() : DateTime.parse(product.expirationDate!);
+      // TODO: Allow the user to modify this in the addition GUI
+      var amount = 1;
 
       return PantryItem(
         name: name,
         // quantity: double.parse(product.quantity!),
-        quantity: qty,
+        weight: qty,
         expiry: expiry,
         isQuantity: false,
         label: null,
+        amount: amount,
         added: DateTime.now(),
       );
     }
@@ -290,6 +293,5 @@ class _PantryPageState extends State<PantryPage> {
   void onScanFailure() {
     // TODO: Implement scan failure logic
     print("Barcode scan failed!");
-
   }
 }

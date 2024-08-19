@@ -30,7 +30,7 @@ class _PantryBarcodeAddPage extends State<PantryBarcodeAddPage> {
     // Initialize member variables to their values pulled from the API
     _expiry = item.expiry;
     _name = item.name;
-    _weight = item.quantity;
+    _weight = item.weight;
 
     super.initState();
   }
@@ -172,7 +172,7 @@ class _PantryBarcodeAddPage extends State<PantryBarcodeAddPage> {
                       // Add the PantryItem to the pantry and get out of this window
                       item.expiry = _expiry;
                       item.name = _name;
-                      item.quantity = _weight;
+                      item.weight = _weight;
                   
                       Provider.of<PantryProvider>(context, listen: false)
                           .addItem(item);

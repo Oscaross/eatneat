@@ -11,10 +11,10 @@ class Debug {
   LabelItem veg = LabelItem(name: "Veg", color: Colors.green);
   LabelItem carbs = LabelItem(name: "Carbs", color: Colors.orange);
 
-  PantryItem chicken = PantryItem(name: "Chicken Breast", added: DateTime.now(), quantity: 300, isQuantity: false, expiry: DateTime.now().add(const Duration(days:10)));
-  PantryItem steak = PantryItem(name: "Elephant Steak", added: DateTime.now(), quantity: 2, isQuantity: true, expiry: DateTime.now().add(const Duration(days:2)));
-  PantryItem pork = PantryItem(name: "Pork Chops", added: DateTime.now(), quantity: 300, isQuantity: false, expiry: DateTime.now().add(const Duration(days:30)));
-  PantryItem sweetcorn = PantryItem(name: "Sweetcorn", added: DateTime.now(), quantity: 2, isQuantity: true, expiry: DateTime.now().add(const Duration(days:7)));
+  PantryItem chicken = PantryItem(name: "Chicken Breast", added: DateTime.now(), weight: 300, isQuantity: false, expiry: DateTime.now().add(const Duration(days:10)), amount: 3);
+  PantryItem steak = PantryItem(name: "Elephant Steak", added: DateTime.now(), weight: 0, isQuantity: true, expiry: DateTime.now().add(const Duration(days:2)), amount:2);
+  PantryItem pork = PantryItem(name: "Pork Chops", added: DateTime.now(), weight: 300, isQuantity: false, expiry: DateTime.now().add(const Duration(days:30)), amount: 1);
+  PantryItem sweetcorn = PantryItem(name: "Sweetcorn", added: DateTime.now(), weight: 150, isQuantity: true, expiry: DateTime.now().add(const Duration(days:7)), amount: 3);
 
   void configure(PantryProvider provider, LabelProvider provider2) {
     chicken.label = meat;

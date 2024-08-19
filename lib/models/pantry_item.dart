@@ -2,29 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:namer_app/models/label_item.dart';
 
 class PantryItem {
+  // TODO: Make these items use Set<LabelItem> and implement logic for adding labels to a pantry item and removing it
+  // TODO: Remove 'quantity' isQuantity system, convert variable to weight and make it so you can have a count of PantryItem
   // Name of the item (ie. chicken breast)
   String name;
-  // Weight in grams or quantity as a number, depends on isQuantity
-  double quantity;
+  // Weight stored in metric units. 
+  double weight;
   // Is this a weight or is this a quantity (number) of items?
   bool isQuantity;
+  // The quantity of the unit, by default this is set to 1.
+  int amount = 1;
   // If the user tells us the item is expired before we expect it to be expired we should consider it expired
   bool expired = false;
   // The predicted expiry date
   DateTime expiry;
   // The label the user has assigned to the item, null if none
   LabelItem? label;
+  // The set of all labels that the user can assign
+  Set<LabelItem> labelSet = {};
   // The date it was added
   DateTime added;
 
-  PantryItem({required this.name, required this.quantity, required this.expiry, required this.isQuantity, required this.added, this.label});
+  PantryItem({required this.name, required this.weight, required this.expiry, required this.isQuantity, required this.added, required this.amount, this.label});
 
   void setName(String name) {
     this.name = name;
   }
 
-  void setQuantity(double quantity) {
-    this.quantity = quantity;
+  void setWeight(double weight) {
+    this.weight = weight;
   }
 
   void setIsQuantity(bool isQuantity) {
@@ -33,6 +39,14 @@ class PantryItem {
 
   void setExpiry(DateTime expiry) {
     this.expiry = expiry;
+  }
+
+  void setAmount(int amount) {
+    this.amount = amount;
+  }
+
+  void addLabel(Set<LabelItem> labelsToAdd) {
+    labelSet.addAll(labelsToAdd);
   }
 
   // Returns true iff this pantry item has expired according to the expiry date set, OR if the user has told us the item is expired.

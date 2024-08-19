@@ -70,7 +70,7 @@ class PantryItemCard extends StatelessWidget {
                           child: Row(
                             children: [
                               Icon(Icons.scale, size: 17),
-                              Text(" ${item.quantity.toString()} ${(item.isQuantity) ? "units" : "g"}"),
+                              Text(" ${item.weight.toString()} ${(item.isQuantity) ? "units" : "g"}"),
                             ],
                           ),
                         ),
