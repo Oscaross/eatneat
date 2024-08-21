@@ -23,7 +23,7 @@ class PantryItem {
   // The date it was added
   DateTime added;
 
-  PantryItem({required this.name, required this.weight, required this.expiry, required this.isQuantity, required this.added, required this.amount, this.label});
+  PantryItem({required this.name, required this.weight, required this.expiry, required this.isQuantity, required this.added, required this.amount, required this.labelSet});
 
   void setName(String name) {
     this.name = name;

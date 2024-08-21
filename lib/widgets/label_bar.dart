@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/models/label_item.dart';
 import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/screens/pantry/add_pantry_label.dart';
 import 'package:namer_app/util/shake.dart';
@@ -13,8 +12,8 @@ class LabelBar extends StatefulWidget {
 }
 
 class _LabelBarState extends State<LabelBar> {
-
-  @override
+ 
+  @override 
   Widget build(BuildContext context) {
 
     var labelProvider = Provider.of<LabelProvider>(context, listen:false);

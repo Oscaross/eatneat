@@ -11,9 +11,6 @@ class PantryProvider with ChangeNotifier {
 
   // Return all items in the pantry that satisfy all of the labels supplied in the set
   List<PantryItem> filterBy(Set<LabelItem> labelSet) {
-
-    print("Trying to filter some labels!");
-
     if(labelSet.isEmpty) return List.empty();
 
     List<PantryItem> ret = List.empty(growable: true);
@@ -21,17 +18,10 @@ class PantryProvider with ChangeNotifier {
     for(int i = 0; i < _items.length; i++) {
 
       var curr = _items[i];
-      bool valid = true;
 
-      for(int ii = 0; ii < labelSet.length; ii++) {
-        // If the label in the set doesn't match then we need to move onto the next pantry item as this one doesn't satisfy the criteria
-        if(curr.label != labelSet.elementAt(ii)) {
-          valid = false;
-          break;
-        }
+      if(curr.labelSet.containsAll(labelSet)) {
+        ret.add(curr);
       }
-
-      if(valid) ret.add(curr);
     }
 
     return ret;

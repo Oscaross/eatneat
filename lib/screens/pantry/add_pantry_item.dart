@@ -39,12 +39,13 @@ class _AddItemPageState extends State<AddItemPage> {
     }
   }
 
-  LabelItem? selectedLabel;
+  // The set of labels that need to be assigned to this item
+  Set<LabelItem>? selectedLabelSet;
 
   @override
   Widget build(BuildContext context) {
     var labelProvider = Provider.of<LabelProvider>(context);
-    selectedLabel = labelProvider.selectedLabel;
+    selectedLabelSet = labelProvider.selectedLabels;
 
     return Scaffold(
       appBar: AppBar(
@@ -142,7 +143,7 @@ class _AddItemPageState extends State<AddItemPage> {
                   var amount = 0;
                   
                   if(_weight != 0 && _weight > 0 && _expires != null) {
-                    var pantryItem = PantryItem(expiry: _expires!, name: name, weight: _weight, isQuantity: _isQuantity, added: DateTime.now(), amount: amount,  label: selectedLabel);
+                    var pantryItem = PantryItem(expiry: _expires!, name: name, weight: _weight, isQuantity: _isQuantity, added: DateTime.now(), amount: amount,  labelSet: selectedLabelSet!);
                     Provider.of<PantryProvider>(context, listen:false).addItem(pantryItem);
                   }
                   else {

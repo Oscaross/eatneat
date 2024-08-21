@@ -8,19 +8,25 @@ import 'package:namer_app/providers/pantry_provider.dart';
 
 class Debug {
   LabelItem meat = LabelItem(name: "Meat",color: Colors.red);
-  LabelItem veg = LabelItem(name: "Veg", color: Colors.green);
+  LabelItem cold = LabelItem(name: "Cold", color: Colors.blue);
   LabelItem carbs = LabelItem(name: "Carbs", color: Colors.orange);
 
-  PantryItem chicken = PantryItem(name: "Chicken Breast", added: DateTime.now(), weight: 300, isQuantity: false, expiry: DateTime.now().add(const Duration(days:10)), amount: 3);
-  PantryItem steak = PantryItem(name: "Elephant Steak", added: DateTime.now(), weight: 0, isQuantity: true, expiry: DateTime.now().add(const Duration(days:2)), amount:2);
-  PantryItem pork = PantryItem(name: "Pork Chops", added: DateTime.now(), weight: 300, isQuantity: false, expiry: DateTime.now().add(const Duration(days:30)), amount: 1);
-  PantryItem sweetcorn = PantryItem(name: "Sweetcorn", added: DateTime.now(), weight: 150, isQuantity: true, expiry: DateTime.now().add(const Duration(days:7)), amount: 3);
+  Set<LabelItem> setOne = {};
+  Set<LabelItem> setTwo = {};
 
   void configure(PantryProvider provider, LabelProvider provider2) {
-    chicken.label = meat;
-    steak.label = meat;
-    pork.label = meat;
-    sweetcorn.label = veg;
+    PantryItem chicken = PantryItem(name: "Chicken Breast", added: DateTime.now(), weight: 300, isQuantity: false, expiry: DateTime.now().add(const Duration(days:10)), amount: 3, labelSet: setOne);
+    PantryItem steak = PantryItem(name: "Elephant Steak", added: DateTime.now(), weight: 0, isQuantity: true, expiry: DateTime.now().add(const Duration(days:2)), amount:2, labelSet: setOne);
+    PantryItem pork = PantryItem(name: "No Label!", added: DateTime.now(), weight: 300, isQuantity: false, expiry: DateTime.now().add(const Duration(days:30)), amount: 1, labelSet: {});
+    PantryItem sweetcorn = PantryItem(name: "Sweetcorn", added: DateTime.now(), weight: 150, isQuantity: true, expiry: DateTime.now().add(const Duration(days:7)), amount: 3, labelSet: setTwo);
+
+    setOne.add(meat);
+    setOne.add(cold);
+    setTwo.add(carbs);
+
+    chicken.addLabel(setOne);
+    steak.addLabel(setOne);
+    pork.addLabel(setOne);
 
     provider.addItem(chicken);
     provider.addItem(steak);
@@ -28,7 +34,7 @@ class Debug {
     provider.addItem(sweetcorn);
 
     provider2.createNewLabel(meat);
-    provider2.createNewLabel(veg);
+    provider2.createNewLabel(cold);
     provider2.createNewLabel(carbs);
   }
 }

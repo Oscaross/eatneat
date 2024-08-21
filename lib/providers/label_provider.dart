@@ -45,8 +45,7 @@ class LabelProvider with ChangeNotifier {
       label.isSelected = true;
     }
 
-    // Then 
+    // Then notify the listeners of a change to the selected labels.
+    notifyListeners();
   }
-
-
 }

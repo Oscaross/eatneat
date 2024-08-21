@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:namer_app/models/label_item.dart';
 import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/pages/pantry/pantry_barcode_add.dart';
 import 'package:namer_app/pages/pantry/pantry_item_card.dart';
 import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/screens/pantry/add_pantry_item.dart';
-import 'package:namer_app/screens/pantry/add_pantry_label.dart';
 import 'package:namer_app/util/debug.dart';
 import 'package:namer_app/util/exceptions/exception_barcode_not_found.dart';
 import 'package:namer_app/widgets/label_bar.dart';
@@ -18,7 +16,6 @@ import 'package:openfoodfacts/openfoodfacts.dart';
 class PantryPage extends StatefulWidget {
   @override
   _PantryPageState createState() => _PantryPageState();
-  
 }
 
 class _PantryPageState extends State<PantryPage> {
@@ -171,7 +168,7 @@ class _PantryPageState extends State<PantryPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PantryBarcodeAddPage(item: PantryItem(added: DateTime.now(), expiry: DateTime.now().add( const Duration(days:20)), name: "Chicken Breast", weight: 200, isQuantity: false, amount: 1)))
+                MaterialPageRoute(builder: (context) => PantryBarcodeAddPage(item: PantryItem(added: DateTime.now(), expiry: DateTime.now().add( const Duration(days:20)), name: "Chicken Breast", weight: 200, isQuantity: false, amount: 1, labelSet: {})))
               );
             }
           ),
@@ -253,7 +250,8 @@ class _PantryPageState extends State<PantryPage> {
         weight: qty,
         expiry: expiry,
         isQuantity: false,
-        label: null,
+        // TODO: Scanned barcodes should be able to assign label sets but not sure on how that is possible yet so for now it is an empty.
+        labelSet: {},
         amount: amount,
         added: DateTime.now(),
       );
