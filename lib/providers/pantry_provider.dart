@@ -41,7 +41,7 @@ class PantryProvider with ChangeNotifier {
       // If a was added before b then return a 1, otherwise return a 0 and this allows for us to sort similarly to the compareTo operator
         items.sort((a, b) => (a.added.isBefore(b.added) ? 1 : 0));
       case SortByMode.expiryDate:
-        items.sort((a, b) => (a.expiry.isBefore(b.expiry) ? 1 : 0));
+        items.sort((a, b) => (b.expiry.isBefore(a.expiry) ? 1 : 0));
       case SortByMode.weight:
         items.sort((a, b) => a.weight.compareTo(b.weight));
       default: 

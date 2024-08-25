@@ -2,16 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:namer_app/models/label_item.dart';
 
 class PantryItem {
-  // TODO: Make these items use Set<LabelItem> and implement logic for adding labels to a pantry item and removing it
   // TODO: Remove 'quantity' isQuantity system, convert variable to weight and make it so you can have a count of PantryItem
   // Name of the item (ie. chicken breast)
   String name;
   // Weight stored in metric units. 
   double weight;
-  // Is this a weight or is this a quantity (number) of items?
-  bool isQuantity;
   // The quantity of the unit, by default this is set to 1.
-  int amount = 1;
+  int quantity = 1; 
   // If the user tells us the item is expired before we expect it to be expired we should consider it expired
   bool expired = false;
   // The predicted expiry date
@@ -23,7 +20,7 @@ class PantryItem {
   // The date it was added
   DateTime added;
 
-  PantryItem({required this.name, required this.weight, required this.expiry, required this.isQuantity, required this.added, required this.amount, required this.labelSet});
+  PantryItem({required this.name, required this.weight, required this.expiry, required this.added, required this.quantity, required this.labelSet});
 
   void setName(String name) {
     this.name = name;
@@ -32,17 +29,13 @@ class PantryItem {
   void setWeight(double weight) {
     this.weight = weight;
   }
-
-  void setIsQuantity(bool isQuantity) {
-    this.isQuantity = isQuantity;
-  }
-
+  
   void setExpiry(DateTime expiry) {
     this.expiry = expiry;
   }
 
-  void setAmount(int amount) {
-    this.amount = amount;
+  void setQuantity(int quantity) {
+    this.quantity = quantity;
   }
 
   void addLabel(Set<LabelItem> labelsToAdd) {
@@ -67,8 +60,8 @@ class PantryItem {
     // The date time object must be relative to 00:00 local timezone otherwise we will encounter issues
     var daysUntil = expiry.difference(DateTime(now.year, now.month, now.day)).inDays;
 
-    if(daysUntil == 1) return "Tomorrow";
-    if(daysUntil == 0) return "Today";
+    // TODO: Not sure if this is best but "Tomorrow" will almost always overflow our card so there isn't really an alternative...
+    if(daysUntil <= 1) return "Soon";
 
     if(daysUntil > 365) {
       int years = (daysUntil / 365).floor();
@@ -143,5 +136,14 @@ class PantryItem {
     else {
       return Colors.red;
     }
+  }
+
+  String weightFormatted() {
+    if(weight >= 1000) {
+      // As kilograms, rounded to only 1 decimal place
+      return "${(weight / 1000).toStringAsFixed(1)}kg";
+    }
+
+    return "${weight.truncate()}g";
   }
 }

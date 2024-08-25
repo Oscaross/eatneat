@@ -15,10 +15,10 @@ class Debug {
   Set<LabelItem> setTwo = {};
 
   void configure(PantryProvider provider, LabelProvider provider2) {
-    PantryItem chicken = PantryItem(name: "Chicken Breast", added: DateTime.now(), weight: 300, isQuantity: false, expiry: DateTime.now().add(const Duration(days:10)), amount: 3, labelSet: setOne);
-    PantryItem steak = PantryItem(name: "Elephant Steak", added: DateTime.now(), weight: 0, isQuantity: true, expiry: DateTime.now().add(const Duration(days:2)), amount:2, labelSet: setOne);
-    PantryItem pork = PantryItem(name: "No Label!", added: DateTime.now(), weight: 300, isQuantity: false, expiry: DateTime.now().add(const Duration(days:30)), amount: 1, labelSet: {});
-    PantryItem sweetcorn = PantryItem(name: "Sweetcorn", added: DateTime.now(), weight: 150, isQuantity: true, expiry: DateTime.now().add(const Duration(days:7)), amount: 3, labelSet: setTwo);
+    PantryItem chicken = PantryItem(name: "Chicken Breast", added: DateTime.now(), weight: 300, expiry: DateTime.now().add(const Duration(days:10)), quantity: 3, labelSet: setOne);
+    PantryItem steak = PantryItem(name: "Elephant Steak", added: DateTime.now(), weight: 0, expiry: DateTime.now().add(const Duration(days:2)), quantity:2, labelSet: setOne);
+    PantryItem pork = PantryItem(name: "No Label!", added: DateTime.now(), weight: 300, expiry: DateTime.now().add(const Duration(days:30)), quantity: 1, labelSet: {});
+    PantryItem sweetcorn = PantryItem(name: "Sweetcorn", added: DateTime.now(), weight: 150, expiry: DateTime.now().add(const Duration(days:7)), quantity: 3, labelSet: setTwo);
 
     setOne.add(meat);
     setOne.add(cold);

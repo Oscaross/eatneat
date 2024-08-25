@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/pages/pantry/pantry_barcode_add.dart';
-import 'package:namer_app/pages/pantry/pantry_item_card.dart';
+import 'package:namer_app/pages/pantry/pantry_card/pantry_item_card.dart';
 import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/screens/pantry/add_pantry_item.dart';
@@ -110,9 +110,6 @@ class _PantryPageState extends State<PantryPage> {
             child: Icon(Icons.barcode_reader),
             label: "Scan Barcode",
             onTap: () async {
-              // Avoid synchronisation issues by getting the context before we send the barcode & API request and then check context later to prevent issues
-              BuildContext contextBeforeAsync = context;
-
               // Scan our barcode and don't move on until we have a result
               await _scanBarcode();
 
@@ -168,7 +165,7 @@ class _PantryPageState extends State<PantryPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PantryBarcodeAddPage(item: PantryItem(added: DateTime.now(), expiry: DateTime.now().add( const Duration(days:20)), name: "Chicken Breast", weight: 200, isQuantity: false, amount: 1, labelSet: {})))
+                MaterialPageRoute(builder: (context) => PantryBarcodeAddPage(item: PantryItem(added: DateTime.now(), expiry: DateTime.now().add( const Duration(days:20)), name: "Chicken Breast", weight: 200, quantity: 1, labelSet: {})))
               );
             }
           ),
@@ -242,17 +239,16 @@ class _PantryPageState extends State<PantryPage> {
       var qty = _parseQuantity(product.quantity);
       var expiry = (product.expirationDate == null) ? DateTime.now() : DateTime.parse(product.expirationDate!);
       // TODO: Allow the user to modify this in the addition GUI
-      var amount = 1;
+      var quantity = 1;
 
       return PantryItem(
         name: name,
         // quantity: double.parse(product.quantity!),
         weight: qty,
         expiry: expiry,
-        isQuantity: false,
         // TODO: Scanned barcodes should be able to assign label sets but not sure on how that is possible yet so for now it is an empty.
         labelSet: {},
-        amount: amount,
+        quantity: quantity,
         added: DateTime.now(),
       );
     }

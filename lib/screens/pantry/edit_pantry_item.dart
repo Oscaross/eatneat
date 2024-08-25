@@ -15,7 +15,6 @@ class EditItemPage extends StatefulWidget {
 class _EditItemPageState extends State<EditItemPage> {
   late TextEditingController _nameController;
   late TextEditingController _weightController;
-  late bool _isQuantity;
   late DateTime _expires;
 
   @override
@@ -23,7 +22,6 @@ class _EditItemPageState extends State<EditItemPage> {
     super.initState();
     _nameController = TextEditingController(text: widget.item.name);
     _weightController = TextEditingController(text: widget.item.weight.toString());
-    _isQuantity = widget.item.isQuantity;
     _expires = widget.item.expiry;
   }
 
@@ -60,30 +58,6 @@ class _EditItemPageState extends State<EditItemPage> {
               decoration: InputDecoration(labelText: 'Quantity'),
               keyboardType: TextInputType.number,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Quantity Type:'),
-                ToggleButtons(
-                  isSelected: [_isQuantity, !_isQuantity],
-                  onPressed: (int index) {
-                    setState(() {
-                      _isQuantity = index == 0;
-                    });
-                  },
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text('Units'),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text('Grams'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
             InkWell(
               onTap: () => _selectDate(context),
               child: InputDecorator(
@@ -99,7 +73,6 @@ class _EditItemPageState extends State<EditItemPage> {
                 // Update item in pantry logic
                 widget.item.setName(_nameController.text);
                 widget.item.setWeight(double.parse(_weightController.text));
-                widget.item.setIsQuantity(_isQuantity);
                 widget.item.setExpiry(_expires);
                 // Change state
                 Provider.of<PantryProvider>(context, listen:false).triggerUpdate();

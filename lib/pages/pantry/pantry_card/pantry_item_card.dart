@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:namer_app/models/pantry_item.dart';
+import 'package:namer_app/pages/pantry/pantry_card/card_popup_dialog.dart';
+import 'package:namer_app/pages/pantry/pantry_card/pantry_item_more_info.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/screens/pantry/edit_pantry_item.dart';
 import 'package:namer_app/util/shake.dart';
 
 class PantryItemCard extends StatelessWidget {
   final PantryItem item;
-  LongPressStartDetails? pointOfContact;
-
-  bool _showPopupMenu = false;
-
   PantryItemCard({required this.item});
 
   @override
@@ -18,15 +15,23 @@ class PantryItemCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0), // Vertical padding
       child: GestureDetector(
-        onLongPressStart: (details) {
-          // Tells our app details such as when, where and how the button was pressed
-          pointOfContact = details;
+        // If we tap the item go to its page
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PantryMoreInfoPage(item: item),)
+            );
         },
+        // Spawn the item card dialog
         onLongPress: () {
-          // Handle long press
-          _showCardDialog(context, pointOfContact);
-
-          // Shake the device
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Dialog(
+                child: PantryItemCardDialog(item: item, card: this),
+              );
+            },
+          );
           Shaker.vibrate(15);
         },
         child: Stack(
@@ -70,7 +75,8 @@ class PantryItemCard extends StatelessWidget {
                           child: Row(
                             children: [
                               Icon(Icons.scale, size: 17),
-                              Text(" ${item.weight.toString()} ${(item.isQuantity) ? "units" : "g"}"),
+                              // If the item has a weight of 0 we just care about its arbitrary quantity (ie. 2 "large" chicken breasts)
+                              Text(" ${item.quantity}x${item.weight == 0 ? "" : item.weightFormatted()}"),
                             ],
                           ),
                         ),
@@ -99,71 +105,12 @@ class PantryItemCard extends StatelessWidget {
     );
   }
 
-  // Called on long press of a card, responsible for spawning the correct popup menu in the correct spot
-  void _showCardDialog(BuildContext context, LongPressStartDetails? lp) {
-
-  // The card we are invoking dialog on
-  final RenderBox card = context.findRenderObject() as RenderBox;
-  // The global position of such card
-  final Offset cardPos = card.localToGlobal(Offset.zero);
-  final Size cardSize = card.size;
-
-  // The details of the box we must spawn to display the options. 
-  // It should be spawned directly below the card's RenderBox 
-  final RelativeRect boxPos = RelativeRect.fromLTRB(
-    cardPos.dx,
-    cardPos.dy + cardSize.height,
-    cardPos.dx + cardSize.width,
-    cardPos.dy + cardSize.height,
-  );
-
-  SpeedDial(
-
-
-  );
-
-  // showMenu<String>(
-  //   color: Colors.transparent,
-  //   elevation: 0,
-  //   context: context,
-  //   position: boxPos,
-  //   items: [
-  //     PopupMenuItem<String>( 
-  //       padding: const EdgeInsets.all(0),
-  //       value: "Delete",
-  //       child: ElevatedButton.icon(
-  //         icon: Icon(Icons.delete, color: Colors.black87, size: 20),
-  //         label: Text("Delete Item", style: TextStyle(fontWeight: FontWeight.bold)),
-  //         style: StaticButtonStyles.deleteButtonStyle,
-  //         onPressed: () {
-  //           _deleteItem(item, Provider.of<PantryProvider>(context, listen: false));
-  //         },
-  //       ),
-  //     ),
-  //     PopupMenuItem<String>(
-  //       padding: const EdgeInsets.all(0),
-  //       value: "Edit",
-  //       child: ElevatedButton.icon(
-  //         icon: Icon(Icons.edit),
-  //         label: Text("Edit Item"),
-  //         onPressed: () {
-  //           _editItem(context, item);
-  //         },
-  //       ),
-  //     ),
-  //   ],
-  // );
-
-
-}
-
-  void _editItem(BuildContext context, PantryItem item) {
+  void editItem(BuildContext context, PantryItem item) {
 
     Navigator.push(context, MaterialPageRoute(builder: (context) => EditItemPage(item: item)));
   }
 
-  void _deleteItem(PantryItem item, PantryProvider provider) {
-
+  void deleteItem(PantryItem item, PantryProvider provider) {
     provider.removeItem(item);
   }
 }

@@ -140,10 +140,10 @@ class _AddItemPageState extends State<AddItemPage> {
                 onPressed: () {
                   // Add item to pantry logic
                   var name = _nameController.text;
-                  var amount = 0;
+                  var quantity = 1;
                   
                   if(_weight != 0 && _weight > 0 && _expires != null) {
-                    var pantryItem = PantryItem(expiry: _expires!, name: name, weight: _weight, isQuantity: _isQuantity, added: DateTime.now(), amount: amount,  labelSet: selectedLabelSet!);
+                    var pantryItem = PantryItem(expiry: _expires!, name: name, weight: _weight, added: DateTime.now(), quantity: quantity,  labelSet: selectedLabelSet!);
                     Provider.of<PantryProvider>(context, listen:false).addItem(pantryItem);
                   }
                   else {
