@@ -7,11 +7,11 @@ import 'package:provider/provider.dart';
 class LabelBar extends StatefulWidget {
 
   @override
-  _LabelBarState createState() => _LabelBarState();
+  LabelBarState createState() => LabelBarState();
 
 }
 
-class _LabelBarState extends State<LabelBar> {
+class LabelBarState extends State<LabelBar> {
  
   @override 
   Widget build(BuildContext context) {

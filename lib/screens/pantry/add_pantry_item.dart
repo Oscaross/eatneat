@@ -9,11 +9,11 @@ import 'package:provider/provider.dart';
 
 class AddItemPage extends StatefulWidget {
   @override
-  _AddItemPageState createState() => _AddItemPageState();
+  AddItemPageState createState() => AddItemPageState();
 }
 
-class _AddItemPageState extends State<AddItemPage> {
-  static const double LABEL_SPACING = 20;
+class AddItemPageState extends State<AddItemPage> {
+  static const double labelSpacing = 20;
 
   final TextEditingController _nameController = TextEditingController();
   
@@ -66,7 +66,7 @@ class _AddItemPageState extends State<AddItemPage> {
                     keyboardType:TextInputType.text,)
                     ),
             // Break up the space between the item name and quantity input
-            SizedBox(height: LABEL_SPACING),
+            SizedBox(height: labelSpacing),
             Row(
               children: [
                 Expanded(
@@ -116,7 +116,7 @@ class _AddItemPageState extends State<AddItemPage> {
                 ),
               ],
             ),
-            SizedBox(height: LABEL_SPACING*1.5),
+            SizedBox(height: labelSpacing*1.5),
             InkWell(
               onTap: () => selectDate(context),
               child: InputDecorator(decoration: InputDecoration(
@@ -128,13 +128,13 @@ class _AddItemPageState extends State<AddItemPage> {
               ),
               )
             ),
-            SizedBox(height: LABEL_SPACING),
+            SizedBox(height: labelSpacing),
 
             // TODO: Make it so that somehow the set of selected labels is applied to the pantry item in backend code
 
             LabelBar(),
 
-            SizedBox(height:LABEL_SPACING),
+            SizedBox(height:labelSpacing),
             Center(
               child: ElevatedButton(
                 onPressed: () {

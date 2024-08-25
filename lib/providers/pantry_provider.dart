@@ -43,7 +43,7 @@ class PantryProvider with ChangeNotifier {
       case SortByMode.expiryDate:
         items.sort((a, b) => (b.expiry.isBefore(a.expiry) ? 1 : 0));
       case SortByMode.weight:
-        items.sort((a, b) => a.weight.compareTo(b.weight));
+        items.sort((a, b) => b.weight.compareTo(a.weight));
       default: 
         throw ArgumentError("Attempted to sort items by a mode that does not exist?");
     }

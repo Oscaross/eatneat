@@ -9,10 +9,10 @@ class EditItemPage extends StatefulWidget {
   EditItemPage({required this.item});
 
   @override
-  _EditItemPageState createState() => _EditItemPageState();
+  EditItemPageState createState() => EditItemPageState();
 }
 
-class _EditItemPageState extends State<EditItemPage> {
+class EditItemPageState extends State<EditItemPage> {
   late TextEditingController _nameController;
   late TextEditingController _weightController;
   late DateTime _expires;

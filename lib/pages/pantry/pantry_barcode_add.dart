@@ -11,10 +11,10 @@ class PantryBarcodeAddPage extends StatefulWidget {
   PantryBarcodeAddPage({required this.item});
 
   @override
-  _PantryBarcodeAddPage createState() => _PantryBarcodeAddPage();
+  PantryBarcodeAddPageState createState() => PantryBarcodeAddPageState();
 }
 
-class _PantryBarcodeAddPage extends State<PantryBarcodeAddPage> {
+class PantryBarcodeAddPageState extends State<PantryBarcodeAddPage> {
   late PantryItem item;
 
   // If the user wants to edit any attributes after we fetch from the API then these variables capture those changes upon state update
@@ -22,7 +22,7 @@ class _PantryBarcodeAddPage extends State<PantryBarcodeAddPage> {
   late String _name;
   late DateTime _expiry;
 
-  static const double WIDGET_SPACING = 20;
+  static const double widgetSpacing = 20;
 
   @override
   void initState() {
@@ -83,7 +83,7 @@ class _PantryBarcodeAddPage extends State<PantryBarcodeAddPage> {
             ),
 
             // Divider
-            SizedBox(height: WIDGET_SPACING),
+            SizedBox(height: widgetSpacing),
 
             // The image of the product we are adding
             Container(
@@ -99,7 +99,7 @@ class _PantryBarcodeAddPage extends State<PantryBarcodeAddPage> {
               ),
             ),
 
-            SizedBox(height: WIDGET_SPACING),
+            SizedBox(height: widgetSpacing),
 
             // A row of crucial information pertaining to the item including its weight and expiry date.
             // The user should be able to edit these
@@ -121,7 +121,7 @@ class _PantryBarcodeAddPage extends State<PantryBarcodeAddPage> {
                   ),
                 ),
 
-                SizedBox(width: WIDGET_SPACING),
+                SizedBox(width: widgetSpacing),
 
                 // Display object expiry date
                 GestureDetector(
@@ -137,11 +137,11 @@ class _PantryBarcodeAddPage extends State<PantryBarcodeAddPage> {
               ],
             ),
 
-            SizedBox(height: WIDGET_SPACING),
+            SizedBox(height: widgetSpacing),
 
             LabelBar(),
 
-            SizedBox(height: WIDGET_SPACING),
+            SizedBox(height: widgetSpacing),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

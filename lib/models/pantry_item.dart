@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:namer_app/models/label_item.dart';
 
 class PantryItem {
-  // TODO: Remove 'quantity' isQuantity system, convert variable to weight and make it so you can have a count of PantryItem
   // Name of the item (ie. chicken breast)
   String name;
   // Weight stored in metric units. 
@@ -29,7 +28,7 @@ class PantryItem {
   void setWeight(double weight) {
     this.weight = weight;
   }
-  
+
   void setExpiry(DateTime expiry) {
     this.expiry = expiry;
   }

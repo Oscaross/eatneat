@@ -18,8 +18,11 @@ class PantryItemCardDialog extends StatelessWidget {
     return SpeedDial(
       children: [
         SpeedDialChild(
-          child: Icon(Icons.delete),
+          child: Icon(Icons.delete, color: Colors.white),
           label: "Delete Item",
+          labelStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          backgroundColor: Colors.red,
+          labelBackgroundColor: Colors.red,
           onTap: () {
             card.deleteItem(item, Provider.of<PantryProvider>(context, listen:false));
           }

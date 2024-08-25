@@ -15,10 +15,10 @@ import 'package:openfoodfacts/openfoodfacts.dart';
 
 class PantryPage extends StatefulWidget {
   @override
-  _PantryPageState createState() => _PantryPageState();
+  PantryPageState createState() => PantryPageState();
 }
 
-class _PantryPageState extends State<PantryPage> {
+class PantryPageState extends State<PantryPage> {
   // The result of scanning a barcode
   String? _scanResult;
   // Is this our first time scanning?

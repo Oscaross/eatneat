@@ -5,10 +5,10 @@ import 'package:provider/provider.dart';
 
 class AddLabelPage extends StatefulWidget {
   @override
-  _AddLabelPageState createState() => _AddLabelPageState();
+  AddLabelPageState createState() => AddLabelPageState();
 }
 
-class _AddLabelPageState extends State<AddLabelPage> {
+class AddLabelPageState extends State<AddLabelPage> {
   final TextEditingController _nameController = TextEditingController();
 
   final Map<String, Color> namedColors = {
