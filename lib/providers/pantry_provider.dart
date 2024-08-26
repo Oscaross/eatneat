@@ -11,7 +11,8 @@ class PantryProvider with ChangeNotifier {
 
   // Return all items in the pantry that satisfy all of the labels supplied in the set
   List<PantryItem> filterBy(Set<LabelItem> labelSet) {
-    if(labelSet.isEmpty) return List.empty();
+    // If we have no filters just return everything
+    if(labelSet.isEmpty) return items;
 
     List<PantryItem> ret = List.empty(growable: true);
 

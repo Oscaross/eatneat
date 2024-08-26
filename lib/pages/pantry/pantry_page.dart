@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:namer_app/models/pantry_item.dart';
-import 'package:namer_app/pages/pantry/pantry_barcode_add.dart';
+import 'package:namer_app/pages/pantry/scanner/pantry_barcode_add.dart';
 import 'package:namer_app/pages/pantry/pantry_card/pantry_item_card.dart';
+import 'package:namer_app/pages/pantry/scanner/scan_failure_page.dart';
 import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/screens/pantry/add_pantry_item.dart';
@@ -32,12 +33,7 @@ class PantryPageState extends State<PantryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text('My Pantry'),
-          ],
-        ),
+        title: Text("Pantry")
       ),
       body: Consumer2<PantryProvider, LabelProvider>(
         builder: (context, pantryProvider, labelProvider, child) {
@@ -122,7 +118,8 @@ class PantryPageState extends State<PantryPage> {
                 }
                 catch(e) {
                   print(e.toString());
-                  onScanFailure();
+                  // If the context is not mounted in the widget tree then do not display the failure page as we are in a different part of the app now
+                  if(context.mounted) onScanFailure(context);
                 }
                 // If and only if the CURRENT build widget tree contains this context should we send the request to add the pantry item
                 if(context.mounted)
@@ -138,9 +135,8 @@ class PantryPageState extends State<PantryPage> {
                     // The item is null so scanning was unsuccessful. We can retry the scan or just give the option to add manually.
                     else 
                     {
-                      onScanFailure();
+                      onScanFailure(context);
                     }
-                  
                 }
                  
               }
@@ -175,6 +171,17 @@ class PantryPageState extends State<PantryPage> {
             label: "[DEBUG] Create test items",
             onTap: () {
               Debug().configure(Provider.of<PantryProvider>(context, listen:false), Provider.of<LabelProvider>(context, listen:false));
+            }
+          ),
+
+          SpeedDialChild(
+            child: Icon(Icons.tab),
+            label: "[DEBUG] Barcode scan failure",
+            onTap: () {
+               Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BarcodeScanFailurePage())
+              );
             }
           ),
         ]
@@ -284,8 +291,12 @@ class PantryPageState extends State<PantryPage> {
   }
 
   // Code to handle a barcode scan failure
-  void onScanFailure() {
-    // TODO: Implement scan failure logic
-    print("Barcode scan failed!");
+  void onScanFailure(BuildContext context) {
+    print("Barcode scan failed! Result: $_scanResult");
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => BarcodeScanFailurePage())
+    );
   }
 }
