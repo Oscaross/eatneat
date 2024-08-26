@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/screens/pantry/add_pantry_item.dart';
+import 'package:namer_app/pages/pantry/pantry_add/add_pantry_item.dart';
 
 // The page that is displayed when the user's scan fails
 class BarcodeScanFailurePage extends StatelessWidget {

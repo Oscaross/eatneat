@@ -3,7 +3,7 @@ import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/pages/pantry/pantry_card/card_popup_dialog.dart';
 import 'package:namer_app/pages/pantry/pantry_card/pantry_item_more_info.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
-import 'package:namer_app/screens/pantry/edit_pantry_item.dart';
+import 'package:namer_app/pages/pantry/pantry_add/edit_pantry_item.dart';
 import 'package:namer_app/util/shake.dart';
 
 class PantryItemCard extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:namer_app/providers/label_provider.dart';
-import 'package:namer_app/screens/pantry/add_pantry_label.dart';
+import 'package:namer_app/pages/label/add_pantry_label.dart';
 import 'package:namer_app/util/shake.dart';
 import 'package:provider/provider.dart';
 

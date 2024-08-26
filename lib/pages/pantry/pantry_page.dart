@@ -6,7 +6,7 @@ import 'package:namer_app/pages/pantry/pantry_card/pantry_item_card.dart';
 import 'package:namer_app/pages/pantry/scanner/scan_failure_page.dart';
 import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
-import 'package:namer_app/screens/pantry/add_pantry_item.dart';
+import 'package:namer_app/pages/pantry/pantry_add/add_pantry_item.dart';
 import 'package:namer_app/util/debug.dart';
 import 'package:namer_app/util/exceptions/exception_barcode_not_found.dart';
 import 'package:namer_app/widgets/label_bar.dart';

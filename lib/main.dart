@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:namer_app/pages/home/home_page.dart';
 import 'package:namer_app/pages/preferences_page.dart';
 import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/theme_provider.dart';
@@ -55,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (selectedIndex) {
       case 0:
-        page = Placeholder(); 
+        page = HomePage();
       case 1:
         page = PantryPage();
       case 2:

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:namer_app/models/pantry_item.dart';
 import 'package:provider/provider.dart';
-import '../../providers/pantry_provider.dart';
+import '../../../providers/pantry_provider.dart';
 
 class EditItemPage extends StatefulWidget {
   final PantryItem item;
