@@ -4,12 +4,13 @@ import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/pages/pantry/scanner/pantry_barcode_add.dart';
 import 'package:namer_app/pages/pantry/pantry_card/pantry_item_card.dart';
 import 'package:namer_app/pages/pantry/scanner/scan_failure_page.dart';
+import 'package:namer_app/pages/pantry/widgets/navigation_bar.dart';
 import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/pages/pantry/pantry_add/add_pantry_item.dart';
 import 'package:namer_app/util/debug.dart';
 import 'package:namer_app/util/exceptions/exception_barcode_not_found.dart';
-import 'package:namer_app/widgets/label_bar.dart';
+import 'package:namer_app/pages/pantry/widgets/label_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
@@ -37,42 +38,12 @@ class PantryPageState extends State<PantryPage> {
       ),
       body: Consumer2<PantryProvider, LabelProvider>(
         builder: (context, pantryProvider, labelProvider, child) {
+          
           return Column(
             children: [
-              // Display the label bar
-              LabelBar(),
-
-              // Display the 'sort by' box
-              DropdownButton(
-                value: _selectedSortByMode,
-                items: [
-                  DropdownMenuItem(
-                    value: SortByMode.alphabetical,
-                    child: Text("Alphabetical"),
-                  ),
-                  DropdownMenuItem(
-                    value: SortByMode.expiryDate,
-                    child: Text("Expiry date")
-                  ),
-                  DropdownMenuItem(
-                    value: SortByMode.dateAdded,
-                    child: Text("Date added")
-                  ),
-                  DropdownMenuItem(
-                    value: SortByMode.weight,
-                    child: Text("Weight")
-                  ),
-                ],
-
-                onChanged: (value) {
-                  setState(() {
-                    _selectedSortByMode = value!;
-                  });
-
-                  pantryProvider.sortBy(_selectedSortByMode);
-                }
-
-              ),
+              SizedBox(height: 8),
+              // Display the search and sorting bx
+              Navbar(),
               // Display pantry items
               Expanded(
                 child: pantryProvider.filterBy(labelProvider.selectedLabels).isEmpty

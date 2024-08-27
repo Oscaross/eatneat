@@ -48,6 +48,23 @@ class PantryProvider with ChangeNotifier {
       default: 
         throw ArgumentError("Attempted to sort items by a mode that does not exist?");
     }
+
+    // State has changed so notify the listeners
+    notifyListeners();
+  }
+
+  // Takes a search term ie. 'tomato' and returns all candidates that contain that string within their title. Used by the search bar to return results
+  List<PantryItem> searchBy(String searchTerm) {
+
+    if(searchTerm == "") return items;
+
+    List<PantryItem> ret = List.empty(growable: true);
+
+    for(PantryItem i in items) {
+      if(i.name.contains(searchTerm)) ret.add(i);
+    }
+
+    return ret;
   }
 
   void addItem(PantryItem item) {

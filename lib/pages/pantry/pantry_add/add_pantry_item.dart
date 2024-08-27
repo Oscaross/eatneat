@@ -4,7 +4,7 @@ import 'package:namer_app/models/label_item.dart';
 import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
-import 'package:namer_app/widgets/label_bar.dart';
+import 'package:namer_app/pages/pantry/widgets/label_bar.dart';
 import 'package:provider/provider.dart';
 
 class AddItemPage extends StatefulWidget {
