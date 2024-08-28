@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:namer_app/pages/pantry/pantry_add/add_pantry_item.dart';
+import 'package:namer_app/pages/pantry/scanner/scanner.dart';
+import 'package:namer_app/ui/buttons.dart';
 
 // The page that is displayed when the user's scan fails
 class BarcodeScanFailurePage extends StatelessWidget {
@@ -15,9 +17,9 @@ class BarcodeScanFailurePage extends StatelessWidget {
         children: [
           SizedBox(height: 100), // Adjust the height to control how high up the content is
           Icon(Icons.warning_sharp, color: Colors.redAccent, size: 100),
-          SizedBox(height: 20),
+          SizedBox(height: 22),
           Card(
-            color: Colors.redAccent,
+            color: Colors.redAccent.withOpacity(0.95),
             child: SizedBox(
               width: 150,
               height: 40,
@@ -27,6 +29,7 @@ class BarcodeScanFailurePage extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -34,6 +37,7 @@ class BarcodeScanFailurePage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 40), // Space between the main content and the text
+            
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -58,20 +62,21 @@ class BarcodeScanFailurePage extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 200),
+          SizedBox(height: 140),
           ButtonBar(
-            alignment: MainAxisAlignment.spaceEvenly,
+            alignment: MainAxisAlignment.center,
             children: <Widget>[
               TextButton.icon(
+                style: Buttons.genericButtonStyle(1),
                 label: Text("Retry Scan"),
                 icon: Icon(Icons.refresh),
-                onPressed: () {
-                  // TODO: Refactor scanning logic so we can just call the asynchronous scan function from inside here
-
+                onPressed: () async {
+                  await Scanner.scan(context);
                 },
               ),
-
+              SizedBox(width:15),
               TextButton.icon(
+                style: Buttons.genericButtonStyle(0.6),
                 label: Text("Add Manually"),
                 icon: Icon(Icons.add),
                 onPressed: () {
@@ -81,9 +86,7 @@ class BarcodeScanFailurePage extends StatelessWidget {
                   );
                 },
               )
-
             ]
-
           ),
         ],
       ),

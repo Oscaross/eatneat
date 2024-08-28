@@ -5,6 +5,7 @@ import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/pages/pantry/widgets/label_bar.dart';
+import 'package:namer_app/ui/buttons.dart';
 import 'package:provider/provider.dart';
 
 class AddItemPage extends StatefulWidget {
@@ -136,7 +137,10 @@ class AddItemPageState extends State<AddItemPage> {
 
             SizedBox(height:labelSpacing),
             Center(
-              child: ElevatedButton(
+              child: ElevatedButton.icon(
+                label: Text("Add Item"),
+                icon: Icon(Icons.add),
+                style: Buttons.genericButtonStyle(1),
                 onPressed: () {
                   // Add item to pantry logic
                   var name = _nameController.text;
@@ -152,8 +156,6 @@ class AddItemPageState extends State<AddItemPage> {
                   
                   Navigator.pop(context);
                 },
-                child: Text(
-                  'Add Item'),
               ),
             ),
           ],
