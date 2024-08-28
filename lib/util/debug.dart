@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:namer_app/models/label_item.dart';
+import 'package:namer_app/models/pantry_category.dart';
 import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/providers/label_provider.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
@@ -32,6 +33,10 @@ class Debug {
     provider.addItem(steak);
     provider.addItem(pork);
     provider.addItem(sweetcorn);
+
+    provider.categories.add(PantryCategory(name: "Canned Foods"));
+    provider.categories.add(PantryCategory(name: "Breads"));
+    provider.categories.add(PantryCategory(name: "Condiments"));
 
     provider2.createNewLabel(meat);
     provider2.createNewLabel(cold);

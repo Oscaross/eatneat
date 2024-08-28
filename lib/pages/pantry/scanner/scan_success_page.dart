@@ -5,16 +5,16 @@ import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/pages/pantry/widgets/label_bar.dart';
 import 'package:provider/provider.dart';
 
-class PantryBarcodeAddPage extends StatefulWidget {
+class PantryBarcodeSuccessPage extends StatefulWidget {
   final PantryItem item;
 
-  PantryBarcodeAddPage({required this.item});
+  PantryBarcodeSuccessPage({required this.item});
 
   @override
-  PantryBarcodeAddPageState createState() => PantryBarcodeAddPageState();
+  PantryBarcodeSuccessPageState createState() => PantryBarcodeSuccessPageState();
 }
 
-class PantryBarcodeAddPageState extends State<PantryBarcodeAddPage> {
+class PantryBarcodeSuccessPageState extends State<PantryBarcodeSuccessPage> {
   late PantryItem item;
 
   // If the user wants to edit any attributes after we fetch from the API then these variables capture those changes upon state update

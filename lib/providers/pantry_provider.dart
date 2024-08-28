@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:namer_app/models/label_item.dart';
+import 'package:namer_app/models/pantry_category.dart';
 import '../models/pantry_item.dart';
 
 class PantryProvider with ChangeNotifier {
@@ -7,7 +8,13 @@ class PantryProvider with ChangeNotifier {
 
   List<PantryItem> get items => _items;
 
+  List<PantryCategory> _categories = [];
+
+  List<PantryCategory> get categories => _categories;
+
   SortByMode _currentSortingMode = SortByMode.alphabetical;
+
+  List<PantryItem> searchResult = [];
 
   // Return all items in the pantry that satisfy all of the labels supplied in the set
   List<PantryItem> filterBy(Set<LabelItem> labelSet) {
@@ -54,17 +61,21 @@ class PantryProvider with ChangeNotifier {
   }
 
   // Takes a search term ie. 'tomato' and returns all candidates that contain that string within their title. Used by the search bar to return results
-  List<PantryItem> searchBy(String searchTerm) {
+  void searchBy(String searchTerm) {
 
-    if(searchTerm == "") return items;
+    if(searchTerm == "") searchResult = items;
 
     List<PantryItem> ret = List.empty(growable: true);
 
     for(PantryItem i in items) {
-      if(i.name.contains(searchTerm)) ret.add(i);
+      // Search should not be case sensitive
+      if(i.name.toLowerCase().contains(searchTerm)) ret.add(i);
     }
+    
+    // A successful search query has been performed so trigger an update
+    notifyListeners();
 
-    return ret;
+    searchResult = ret;
   }
 
   void addItem(PantryItem item) {

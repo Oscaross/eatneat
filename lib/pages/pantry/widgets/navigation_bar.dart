@@ -15,74 +15,86 @@ class NavbarState extends State<Navbar> {
     var provider = Provider.of<PantryProvider>(context, listen:false);
     var searchResult = provider.items;
 
-    return Row(
+    return Column(
       children: [
-        Flexible(
-          flex: 4,
-          child: SearchAnchor(
-            builder: (BuildContext context, SearchController controller) {
-              return SearchBar(
-                  onSubmitted: (input) {
-                    
-                  },
-                  onChanged: (input) {
-                    searchResult = provider.searchBy(input);
-                  },
-                  controller: controller,
-                  hintText: "Search",
-                  padding: const WidgetStatePropertyAll<EdgeInsets>(
-                    EdgeInsets.symmetric(horizontal: 16.0),
-                  ),
-                  elevation: WidgetStatePropertyAll(2),
-                  trailing: [
-                    DropdownButton(
-                      icon: Icon(Icons.sort),
-                      elevation: 1,
-                      value: _selectedSortByMode,
-                      items: [
-                        DropdownMenuItem(
-                          value: SortByMode.alphabetical,
-                          child: Text("Alphabetical"),
-                        ),
-                        DropdownMenuItem(
-                          value: SortByMode.expiryDate,
-                          child: Text("Expiry")
-                        ),
-                        DropdownMenuItem(
-                          value: SortByMode.dateAdded,
-                          child: Text("Date added")
-                        ),
-                        DropdownMenuItem(
-                          value: SortByMode.weight,
-                          child: Text("Weight")
-                        ),
+        Row(
+          children: [
+            Flexible(
+              flex: 4,
+              child: SearchAnchor(
+                builder: (BuildContext context, SearchController controller) {
+                  return SearchBar(
+                      onSubmitted: (input) {
+                        
+                      },
+                      onChanged: (input) {
+                        provider.searchBy(input.toLowerCase());
+                      },
+                      controller: controller,
+                      hintText: "Search my pantry...",
+                      padding: const WidgetStatePropertyAll<EdgeInsets>(
+                        EdgeInsets.symmetric(horizontal: 16.0),
+                      ),
+                      elevation: WidgetStatePropertyAll(2),
+                      trailing: [
+                         IconButton(
+                          onPressed: () {
+                            provider.searchBy("");
+                            controller.clear();
+                          }, 
+        
+                          icon: Icon(Icons.close)),
                       ],
-                    
-                      onChanged: (value) {
+                    );
+                },
+                suggestionsBuilder: (BuildContext context, SearchController controller) {
+                  return List<ListTile>.generate(5, (int index) {
+                    final String item = 'item $index';
+                    return ListTile(
+                      title: Text(item),
+                      onTap: () {
                         setState(() {
-                          _selectedSortByMode = value!;
-                          provider.sortBy(_selectedSortByMode);
+                          controller.closeView(item);
                         });
-                      }
-                    
-                    ),
-                  ],
-                );
-            },
-            suggestionsBuilder: (BuildContext context, SearchController controller) {
-              return List<ListTile>.generate(5, (int index) {
-                final String item = 'item $index';
-                return ListTile(
-                  title: Text(item),
-                  onTap: () {
-                    setState(() {
-                      controller.closeView(item);
-                    });
-                  },
-                );
-              });
-            },
-          ),
+                      },
+                    );
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+
+        DropdownButton(
+          icon: Icon(Icons.sort),
+          elevation: 1,
+          value: _selectedSortByMode,
+          items: [
+            DropdownMenuItem(
+              value: SortByMode.alphabetical,
+              child: Text("Alphabetical"),
+            ),
+            DropdownMenuItem(
+              value: SortByMode.expiryDate,
+              child: Text("Expiry")
+            ),
+            DropdownMenuItem(
+              value: SortByMode.dateAdded,
+              child: Text("Date added")
+            ),
+            DropdownMenuItem(
+              value: SortByMode.weight,
+              child: Text("Weight")
+            ),
+          ],
+        
+          onChanged: (value) {
+            setState(() {
+              _selectedSortByMode = value!;
+              provider.sortBy(_selectedSortByMode);
+            });
+          }
+        
         ),
       ],
     );
