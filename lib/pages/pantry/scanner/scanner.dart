@@ -80,7 +80,8 @@ class Scanner {
       expiry: Parser.parseExpiry(product.expirationDate),
       added: DateTime.now(),
       quantity: 1,
-      labelSet: {}
+      labelSet: {},
+      image: product.imageFrontUrl
     );
   }
 

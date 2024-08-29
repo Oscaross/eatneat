@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:namer_app/models/label_item.dart';
+import 'package:namer_app/models/pantry_category.dart';
 
 class PantryItem {
   // Name of the item (ie. chicken breast)
@@ -18,8 +19,12 @@ class PantryItem {
   Set<LabelItem> labelSet = {};
   // The date it was added
   DateTime added;
+  // A URL that shows the image of the product
+  String? image;
+  // The item's category
+  PantryCategory category = PantryCategory.none;
 
-  PantryItem({required this.name, required this.weight, required this.expiry, required this.added, required this.quantity, required this.labelSet});
+  PantryItem({required this.name, required this.weight, required this.expiry, required this.added, required this.quantity, required this.labelSet, this.image});
 
   void setName(String name) {
     this.name = name;
@@ -39,6 +44,10 @@ class PantryItem {
 
   void addLabel(Set<LabelItem> labelsToAdd) {
     labelSet.addAll(labelsToAdd);
+  }
+
+  void setCategory(PantryCategory category) {
+    this.category = category;
   }
 
   // Returns true iff this pantry item has expired according to the expiry date set, OR if the user has told us the item is expired.

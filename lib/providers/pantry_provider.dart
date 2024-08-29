@@ -96,12 +96,12 @@ class PantryProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  bool isEmpty() {
-    return itemCount() == 0;
-  }
+  void setCategory(PantryCategory category, PantryItem item) {
+    // Items must have at most one category
+    item.category.removeFromCategory(item);
+    category.addToCategory(item);
 
-  int itemCount() {
-    return _items.length;
+    notifyListeners();
   }
 }
 

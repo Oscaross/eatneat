@@ -3,6 +3,8 @@ import 'package:namer_app/models/pantry_item.dart';
 // For example, a category named 'Tinned foods' that has 3 instances of PantryItem: "Kidney bean", "Chickpea", "Tomato soup"
 
 class PantryCategory {
+  
+  static final PantryCategory none = PantryCategory(name: "None");
 
   // A set containing all PantryItems that belong to this category
   Set<PantryItem> _items = {};
@@ -12,7 +14,7 @@ class PantryCategory {
   // The number of items contained within it
   int _count = 0;
 
-  int get count => _count;
+  int get itemCount => _count;
 
   PantryCategory({required this.name});
 

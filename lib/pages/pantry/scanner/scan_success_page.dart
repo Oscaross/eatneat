@@ -3,6 +3,7 @@ import 'package:flutter_spinbox/material.dart';
 import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/pages/pantry/widgets/label_bar.dart';
+import 'package:namer_app/ui/buttons.dart';
 import 'package:provider/provider.dart';
 
 class PantryBarcodeSuccessPage extends StatefulWidget {
@@ -64,22 +65,24 @@ class PantryBarcodeSuccessPageState extends State<PantryBarcodeSuccessPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Scan Success!'),
-          ],
-        ),
+        title: Text("Success!")
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             // The name of the product
-            Text(
-              item.name,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            Container(
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.grey[200],
+              ),
+              child: Text(
+                item.name,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),
+              ),        
             ),
 
             // Divider
@@ -94,7 +97,7 @@ class PantryBarcodeSuccessPageState extends State<PantryBarcodeSuccessPage> {
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                      "https://miro.medium.com/v2/resize:fit:1098/format:webp/1*--DvqdXSA38rPuqMK5c0tQ.png"),
+                      (item.image == null) ? "https://miro.medium.com/v2/resize:fit:1098/format:webp/1*--DvqdXSA38rPuqMK5c0tQ.png" : item.image!),
                 ),
               ),
             ),
@@ -139,35 +142,22 @@ class PantryBarcodeSuccessPageState extends State<PantryBarcodeSuccessPage> {
 
             SizedBox(height: widgetSpacing),
 
-            LabelBar(),
-
-            SizedBox(height: widgetSpacing),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Button to add pantry item to pantry
                 Expanded(
                   child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      side: BorderSide(
-                        color: Colors.blue,
-                        width: 1.75,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.0), 
-                      ),
-                      elevation: 0,
-                      backgroundColor: Colors.green.withOpacity(0.2),
-                      foregroundColor: Colors.green, // Background color
-                      minimumSize: Size(double.infinity, MediaQuery.of(context).size.height / 14),
-                    ),
+                    style: Buttons.confirmButtonStyle(),
                     icon: Icon(Icons.check),
-                    label: Text(
-                        "Yes, add to my pantry",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontWeight: FontWeight.bold)
-                      ),
+                    label: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                          "Add Item",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold)
+                        ),
+                    ),
                     onPressed: () {
                       // Add the PantryItem to the pantry and get out of this window
                       item.expiry = _expiry;
@@ -188,27 +178,18 @@ class PantryBarcodeSuccessPageState extends State<PantryBarcodeSuccessPage> {
                 Expanded(
                   child: ElevatedButton.icon(
                     icon: Icon(Icons.close),
-                    label: Text(
-                        "Cancel",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontWeight: FontWeight.bold)
-                      ),
+                    label: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                          "Cancel",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold)
+                        ),
+                    ),
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    style: ElevatedButton.styleFrom(
-                      side: BorderSide(
-                        color: Colors.red,
-                        width: 1.75,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.0), 
-                      ),
-                      elevation: 0,
-                      backgroundColor: Colors.red.withOpacity(0.2),
-                      foregroundColor: Colors.red, // Background color
-                      minimumSize: Size(double.infinity, MediaQuery.of(context).size.height / 14),
-                    ),
+                    style: Buttons.genericButtonStyle(0.8),
                   ),
                 ),
               ],
