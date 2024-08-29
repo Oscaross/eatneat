@@ -25,7 +25,7 @@ class NavbarState extends State<Navbar> {
                 builder: (BuildContext context, SearchController controller) {
                   return SearchBar(
                       onSubmitted: (input) {
-                        
+                        controller.clearComposing();
                       },
                       onChanged: (input) {
                         provider.searchBy(input.toLowerCase());
@@ -41,6 +41,8 @@ class NavbarState extends State<Navbar> {
                           onPressed: () {
                             provider.searchBy("");
                             controller.clear();
+                            // Remove the keyboard
+                            controller.clearComposing();
                           }, 
         
                           icon: Icon(Icons.close)),

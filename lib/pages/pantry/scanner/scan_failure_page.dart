@@ -71,7 +71,7 @@ class BarcodeScanFailurePage extends StatelessWidget {
                 label: Text("Retry Scan"),
                 icon: Icon(Icons.refresh),
                 onPressed: () async {
-                  await Scanner.scan(context);
+                  await Scanner.scan(context, OriginPage.scanFailurePage);
                 },
               ),
               SizedBox(width:15),

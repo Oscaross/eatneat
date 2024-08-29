@@ -10,7 +10,7 @@ import 'package:openfoodfacts/openfoodfacts.dart';
 
 class Scanner {
 
-  static Future<void> scan(BuildContext context) async {
+  static Future<void> scan(BuildContext context, OriginPage page) async {
 
     PantryItem? item = await tryFetch(await tryScan(context));
 
@@ -19,7 +19,7 @@ class Scanner {
 
     // A null item can only mean one thing, the scan failed somewhere
     if(item == null) {
-      onScanFailure(context);
+      onScanFailure(context, (page == OriginPage.scanFailurePage));
     }
     else {
       // Otherwise, give this function the successfully constructed PantryItem
@@ -70,7 +70,7 @@ class Scanner {
 
     ProductResultV3 response = await OpenFoodAPIClient.getProductV3(request);
 
-    if(response.result.toString() != "Product found" || response.product == null) return null;
+    if(response.result == null || response.product == null) return null;
 
     Product product = response.product!;
 
@@ -84,12 +84,14 @@ class Scanner {
     );
   }
 
-  static void onScanFailure(BuildContext context) {
+  static void onScanFailure(BuildContext context, bool pageAlreadyBuilt) {
     
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => BarcodeScanFailurePage())
-    );
+    if(!pageAlreadyBuilt) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => BarcodeScanFailurePage())
+      );
+    }
 
     print("Scan unsuccessful");
   }
@@ -140,4 +142,10 @@ class Parser {
     return DateTime.now();
   }
 
+}
+
+// Tells our app which page we came from, if we came from the failure page we need to not display the notification again or we get an endless stack of failed pages
+enum OriginPage {
+  scanFailurePage,
+  pantryPage
 }

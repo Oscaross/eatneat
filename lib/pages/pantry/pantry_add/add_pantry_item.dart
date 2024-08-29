@@ -140,7 +140,7 @@ class AddItemPageState extends State<AddItemPage> {
               child: ElevatedButton.icon(
                 label: Text("Add Item"),
                 icon: Icon(Icons.add),
-                style: Buttons.genericButtonStyle(1),
+                style: Buttons.confirmButtonStyle(),
                 onPressed: () {
                   // Add item to pantry logic
                   var name = _nameController.text;

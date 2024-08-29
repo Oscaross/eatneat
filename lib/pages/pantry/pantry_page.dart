@@ -100,7 +100,7 @@ class PantryPageState extends State<PantryPage> {
             label: "Scan Barcode",
             onTap: () async {
               
-              await Scanner.scan(context);
+              await Scanner.scan(context, OriginPage.pantryPage);
             }
           ),
           SpeedDialChild(
