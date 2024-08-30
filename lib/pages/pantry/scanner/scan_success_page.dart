@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:namer_app/models/pantry_item.dart';
 import 'package:namer_app/providers/pantry_provider.dart';
-import 'package:namer_app/pages/pantry/widgets/label_bar.dart';
 import 'package:namer_app/ui/buttons.dart';
 import 'package:provider/provider.dart';
 

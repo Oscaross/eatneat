@@ -60,4 +60,50 @@ class Buttons {
       ))
     );
   }
+
+  static IconButton iconButtonStyle(Icon icon, Function()? onPressed, Offset? offset) {
+    return IconButton(
+      style: ButtonStyle(
+        iconSize: WidgetStatePropertyAll(22),
+        backgroundColor: WidgetStatePropertyAll(Colors.blue.withOpacity(0.24)),
+        foregroundColor: WidgetStatePropertyAll(Colors.blueAccent),
+        shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0), 
+        )),
+        side: WidgetStatePropertyAll(BorderSide(
+          color: const Color.fromARGB(255, 28, 148, 246),
+          width: 2,
+        )),
+        alignment: Alignment.topCenter,
+      ),
+      onPressed: onPressed,
+      icon: Transform.translate(
+        offset: offset ?? Offset(0, 0),
+        child: icon
+      ),
+    );
+  }
+
+  static IconButton minorIconButtonStyle(Icon icon, Function()? onPressed, Offset? offset) {
+    return IconButton(
+      style: ButtonStyle(
+        iconSize: WidgetStatePropertyAll(22),
+        backgroundColor: WidgetStatePropertyAll(Colors.blue.withOpacity(0.24)),
+        foregroundColor: WidgetStatePropertyAll(Colors.blueAccent),
+        shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0), 
+        )),
+        side: WidgetStatePropertyAll(BorderSide(
+          color: const Color.fromARGB(255, 28, 148, 246),
+          width: 2,
+        )),
+        alignment: Alignment.topCenter,
+      ),
+      onPressed: onPressed,
+      icon: Transform.translate(
+        offset: offset ?? Offset(0, 0),
+        child: icon
+      ),
+    );
+  }
 }

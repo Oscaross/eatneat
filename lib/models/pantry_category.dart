@@ -3,16 +3,20 @@ import 'package:namer_app/models/pantry_item.dart';
 // For example, a category named 'Tinned foods' that has 3 instances of PantryItem: "Kidney bean", "Chickpea", "Tomato soup"
 
 class PantryCategory {
-  
+
   static final PantryCategory none = PantryCategory(name: "None");
 
   // A set containing all PantryItems that belong to this category
-  Set<PantryItem> _items = {};
-  Set<PantryItem> get items => _items;
+  List<PantryItem> _items = List.empty(growable: true);
+  List<PantryItem> get items => _items;
   // The name of the category
   String name;
   // The number of items contained within it
   int _count = 0;
+
+  // Does the user want to see the items contained within this on the screen?
+  bool _isHidden = false;
+  bool get isHidden => _isHidden;
 
   int get itemCount => _count;
 
@@ -34,5 +38,9 @@ class PantryCategory {
 
   void setName(String name) {
     this.name = name;
+  }
+
+  void toggleVisibility() {
+    _isHidden = !_isHidden;
   }
 }

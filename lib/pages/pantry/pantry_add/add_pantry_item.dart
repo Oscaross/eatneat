@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinbox/material.dart';
-import 'package:namer_app/models/label_item.dart';
 import 'package:namer_app/models/pantry_item.dart';
-import 'package:namer_app/providers/label_provider.dart';
-import 'package:namer_app/providers/pantry_provider.dart';
-import 'package:namer_app/pages/pantry/widgets/label_bar.dart';
-import 'package:namer_app/ui/buttons.dart';
-import 'package:provider/provider.dart';
 
 class AddItemPage extends StatefulWidget {
   @override
@@ -14,152 +7,159 @@ class AddItemPage extends StatefulWidget {
 }
 
 class AddItemPageState extends State<AddItemPage> {
-  static const double labelSpacing = 20;
 
-  final TextEditingController _nameController = TextEditingController();
-  
-  double _weight = 0;
-  bool _isQuantity = true; // true for a quantity (ie. 3 chicken breast), false for kgs
+  PantryItem? item;
 
-  // Expiry management system
-  DateTime? _expires;
-
-  // Open the calendar dialog, at some point in the future we expect a date to be picked but no result back from this call - hence it is void.
-  Future<void> selectDate(BuildContext context) async {
-    final DateTime? expiry = await showDatePicker(
-      context:context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(), // Can't have something expire before now!
-      lastDate: DateTime(2100), // An arbitrarily large end window - could potentially be changed...
-    );
-
-    if(expiry != null && expiry != _expires) {
-      setState(() {
-        _expires = expiry;
-      });
-    }
+  AddItemPageState({this.item}) {
+    if(item != null) _nameController.text = item!.name;
   }
 
-  // The set of labels that need to be assigned to this item
-  Set<LabelItem>? selectedLabelSet;
+  String name = "";
+
+  // Controllers
+  final TextEditingController _quantityController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
+  // Focus nodes (helps us decide when we are editing fields and when we aren't)
+  final FocusNode _nameFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _nameFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var labelProvider = Provider.of<LabelProvider>(context);
-    selectedLabelSet = labelProvider.selectedLabels;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add New Pantry Item'),
+        title: Text("Add Item"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body:
+        Column(
           children: [
-            SizedBox(
-                  child: TextField(
-                    autocorrect: true,
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      labelText:"Item Name"
+            // Widget to display product name
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        textAlign: TextAlign.center,
+                        autocorrect: false,
+                        controller: _nameController,
+                        focusNode: _nameFocusNode,
+                        decoration: InputDecoration(
+                          hintText: "Item name...",
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade700, // Slightly grey color for hint text
+                          ),
+                          filled: true, // Ensures the background is filled
+                          fillColor: Colors.white, // Background color inside the TextField
+                          contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0), // Padding inside the TextField
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade100, // Slightly grey border color
+                              width: 0.5, // Width of the border
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade400,
+                              width: 1,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade600, // Darker grey when focused
+                              width: 2.0,
+                            ),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: BorderSide(
+                              color: Colors.red, // Red border when there's an error
+                              width: 1.5,
+                            ),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: BorderSide(
+                              color: Colors.red, // Red border when focused with an error
+                              width: 2.0,
+                            ),
+                          ),
+                        ),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20,
+                        )
+                      ),
                     ),
-                    keyboardType:TextInputType.text,)
-                    ),
-            // Break up the space between the item name and quantity input
-            SizedBox(height: labelSpacing),
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: SpinBox(
-                    value: _weight,
-                    onChanged: (value) {
-                      setState(() {
-                        _weight = value;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Quantity',
-                    ),
-                    min: 0,
-                    max:100000,
-                    // TODO: Implement smart STEP
-                    step: 100,
-                    decimals: 1,
+                    IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        _nameFocusNode.requestFocus();
+                      }
+                    )
+                  ],
+                ),
+              ),
+              // Widget to display product image
+              Container(
+                height: 200.0,
+                width: 200.0,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                        // The default image or an image which exists if it does - lazy or so this shouldn't result in null pointer (famous last words)
+                        (item == null || item!.image == null) ? "https://miro.medium.com/v2/resize:fit:1098/format:webp/1*--DvqdXSA38rPuqMK5c0tQ.png" : item!.image!
+                      ),
+                    fit: BoxFit.fill,
                   ),
+                  shape: BoxShape.rectangle,
                 ),
 
-                SizedBox(width: 20),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: ToggleButtons(
-                      borderRadius: BorderRadius.circular(20),
-                      isSelected: [_isQuantity, !_isQuantity],
-                      onPressed: (int index) {
-                        setState(() {
-                          _isQuantity = index == 0;
-                        });
-                      },
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('qty'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('gram'),
-                        ),
-                      ],
+                child: Container(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(7.0),
+                    child: IconButton.outlined(
+                      // TODO: This button could maybe be neater?
+                      style: ButtonStyle(
+                        iconSize: WidgetStatePropertyAll(30),
+                        side: WidgetStatePropertyAll(BorderSide.none)
+                      ),
+                      icon: Icon(Icons.camera_alt),
+                      // TODO: Add ability for user to press camera and create a new page that navigates to the add image option
+                      onPressed: () {
+                    
+                      }
+                    ),
+                  )
+                )
+              ),
+
+              // Widget to display quantity editor
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _quantityController,
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: labelSpacing*1.5),
-            InkWell(
-              onTap: () => selectDate(context),
-              child: InputDecorator(decoration: InputDecoration(
-                labelText: "Expires on",
-                border: OutlineInputBorder(),
-              ),
-              child: Text(
-              _expires == null ? "None specified" : '${_expires!.day}/${_expires!.month}/${_expires!.year}',
-              ),
+
+                ],
               )
-            ),
-            SizedBox(height: labelSpacing),
-
-            // TODO: Make it so that somehow the set of selected labels is applied to the pantry item in backend code
-
-            LabelBar(),
-
-            SizedBox(height:labelSpacing),
-            Center(
-              child: ElevatedButton.icon(
-                label: Text("Add Item"),
-                icon: Icon(Icons.add),
-                style: Buttons.confirmButtonStyle(),
-                onPressed: () {
-                  // Add item to pantry logic
-                  var name = _nameController.text;
-                  var quantity = 1;
-                  
-                  if(_weight != 0 && _weight > 0 && _expires != null) {
-                    var pantryItem = PantryItem(expiry: _expires!, name: name, weight: _weight, added: DateTime.now(), quantity: quantity,  labelSet: selectedLabelSet!);
-                    Provider.of<PantryProvider>(context, listen:false).addItem(pantryItem);
-                  }
-                  else {
-                    print("Error validating input to Pantry!");
-                  }
-                  
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          ],
-        ),
+          ]
       ),
     );
   }

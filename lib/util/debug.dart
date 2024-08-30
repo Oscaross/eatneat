@@ -34,9 +34,18 @@ class Debug {
     provider.addItem(pork);
     provider.addItem(sweetcorn);
 
-    provider.categories.add(PantryCategory(name: "Canned Foods"));
-    provider.categories.add(PantryCategory(name: "Breads"));
-    provider.categories.add(PantryCategory(name: "Condiments"));
+    PantryCategory canned = PantryCategory(name: "Canned Foods");
+    PantryCategory bread = PantryCategory(name: "Bread");
+    PantryCategory condiments = PantryCategory(name: "Condiments");
+
+    provider.categories.add(canned);
+    provider.categories.add(bread);
+    provider.categories.add(condiments);
+
+    canned.addToCategory(sweetcorn);
+    bread.addToCategory(steak);
+    bread.addToCategory(pork);
+    bread.addToCategory(chicken);
 
     provider2.createNewLabel(meat);
     provider2.createNewLabel(cold);
