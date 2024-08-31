@@ -65,7 +65,7 @@ class Buttons {
     return IconButton(
       style: ButtonStyle(
         iconSize: WidgetStatePropertyAll(22),
-        backgroundColor: WidgetStatePropertyAll(Colors.blue.withOpacity(0.24)),
+        backgroundColor: WidgetStatePropertyAll(Colors.blue.withOpacity(0.14)),
         foregroundColor: WidgetStatePropertyAll(Colors.blueAccent),
         shape: WidgetStatePropertyAll(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), 
@@ -88,13 +88,13 @@ class Buttons {
     return IconButton(
       style: ButtonStyle(
         iconSize: WidgetStatePropertyAll(22),
-        backgroundColor: WidgetStatePropertyAll(Colors.blue.withOpacity(0.24)),
-        foregroundColor: WidgetStatePropertyAll(Colors.blueAccent),
+        backgroundColor: WidgetStatePropertyAll(Colors.grey.withOpacity(0.1)),
+        foregroundColor: WidgetStatePropertyAll(Colors.blueGrey),
         shape: WidgetStatePropertyAll(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), 
         )),
         side: WidgetStatePropertyAll(BorderSide(
-          color: const Color.fromARGB(255, 28, 148, 246),
+          color: Colors.blueGrey,
           width: 2,
         )),
         alignment: Alignment.topCenter,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:namer_app/models/pantry_category.dart';
 import 'package:namer_app/pages/pantry/pantry_card/pantry_item_card.dart';
 import 'package:namer_app/pages/pantry/scanner/scan_failure_page.dart';
@@ -9,6 +10,7 @@ import 'package:namer_app/providers/pantry_provider.dart';
 import 'package:namer_app/pages/pantry/pantry_add/add_pantry_item.dart';
 import 'package:namer_app/ui/buttons.dart';
 import 'package:namer_app/util/debug.dart';
+import 'package:namer_app/util/shake.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -48,7 +50,7 @@ class PantryPageState extends State<PantryPage> {
                                 width: double.infinity,
                                 height: 40,
                                 decoration: BoxDecoration(
-                                  color: Colors.blueAccent.withOpacity(0.1),
+                                  color: Colors.blueAccent.withOpacity(0.06),
                                   gradient: LinearGradient(
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
@@ -74,14 +76,17 @@ class PantryPageState extends State<PantryPage> {
                                         ),
                                       ),
                                       // Quick click button to collapse/expand the category
-                                      Buttons.iconButtonStyle(
+                                      Spacer(),
+                                      Buttons.minorIconButtonStyle(
                                         // TODO: I need a button which is remove_red_eye but with a line through it
-                                        Icon((category.isHidden) ? Icons.remove_red_eye : Icons.remove_red_eye_sharp), 
+                                        Icon((category.isHidden) ? Icons.remove_red_eye_sharp : Icons.remove_red_eye_sharp), 
                                         () {
                                           setState(() {
                                             category.toggleVisibility();
                                           });
-;                                       }, 
+
+                                          HapticFeedback.lightImpact();
+                                        }, 
                                         Offset(0, -6)
                                       ),
                                       // Icons to edit the category
@@ -113,21 +118,21 @@ class PantryPageState extends State<PantryPage> {
                       ),
                     ),
                     // Add category button
-                    // TODO: This is sat at the bottom and will not join the rest of the items. It's pissing me off
+                    // TODO: There is a better way to deal with this page
                     Container(
                       width: double.infinity,
                       height: 40,
-                              decoration: BoxDecoration(
-                                color: Colors.blueAccent.withOpacity(0.1),
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.blue,
-                                    const Color.fromARGB(255, 46, 154, 243),
-                                  ],
-                                ),
-                              ),
+                      decoration: BoxDecoration(
+                        color: Colors.blueAccent.withOpacity(0.1),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.blue,
+                            const Color.fromARGB(255, 46, 154, 243),
+                          ],
+                        ),
+                      ),
                       child: GestureDetector(
                         onTap: () {
                           // TODO: Navigate to category creation screen
@@ -161,7 +166,17 @@ class PantryPageState extends State<PantryPage> {
         },
       ),
       floatingActionButton: SpeedDial(
+        onOpen: () {
+          HapticFeedback.heavyImpact();
+        },
         icon: Icons.add,
+        iconTheme: IconThemeData(
+          weight: 30,
+          size: 26,
+        ),
+        backgroundColor: Colors.blue.withOpacity(0.9),
+        foregroundColor: Colors.white,
+        buttonSize: Size(60, 60),
         children: [
           SpeedDialChild(
             child: Icon(Icons.barcode_reader),
