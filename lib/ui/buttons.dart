@@ -42,9 +42,10 @@ class Buttons {
     );
   }
 
-  static ButtonStyle genericButtonStyle(double opacityFactor) {
+  static ButtonStyle genericButtonStyle(double opacityFactor, Color? col) {
+    Color color = col ?? Colors.blueAccent;
     return ButtonStyle(
-      backgroundColor: WidgetStatePropertyAll(Colors.blueAccent.withOpacity(opacityFactor)),
+      backgroundColor: WidgetStatePropertyAll(color.withOpacity(opacityFactor)),
       foregroundColor: WidgetStatePropertyAll(Colors.white),
       elevation: WidgetStatePropertyAll(3),
       side: WidgetStatePropertyAll(BorderSide(

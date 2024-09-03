@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/models/label_item.dart';
+import 'package:eatneat/models/label_item.dart';
 
 class LabelProvider with ChangeNotifier {
   // The label that is selected on the pantry page

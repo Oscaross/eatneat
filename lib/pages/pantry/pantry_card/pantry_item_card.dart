@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/models/pantry_item.dart';
-import 'package:namer_app/pages/pantry/pantry_card/card_popup_dialog.dart';
-import 'package:namer_app/pages/pantry/pantry_card/pantry_item_more_info.dart';
-import 'package:namer_app/providers/pantry_provider.dart';
-import 'package:namer_app/pages/pantry/pantry_add/edit_pantry_item.dart';
-import 'package:namer_app/util/shake.dart';
+import 'package:eatneat/models/pantry_item.dart';
+import 'package:eatneat/pages/pantry/pantry_card/card_popup_dialog.dart';
+import 'package:eatneat/pages/pantry/pantry_card/pantry_item_more_info.dart';
+import 'package:eatneat/providers/pantry_provider.dart';
+import 'package:eatneat/pages/pantry/pantry_add/edit_pantry_item.dart';
+import 'package:eatneat/util/shake.dart';
 
 class PantryItemCard extends StatelessWidget {
   final PantryItem item;
@@ -76,7 +76,7 @@ class PantryItemCard extends StatelessWidget {
                             children: [
                               Icon(Icons.scale, size: 17),
                               // If the item has a weight of 0 we just care about its arbitrary quantity (ie. 2 "large" chicken breasts)
-                              Text(" ${item.quantity}x${item.weight == 0 ? "" : item.weightFormatted()}"),
+                              Text(" ${item.quantity} x ${item.weight == 0 ? "" : item.weightFormatted()}"),
                             ],
                           ),
                         ),

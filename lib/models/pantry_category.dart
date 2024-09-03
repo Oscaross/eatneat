@@ -1,4 +1,4 @@
-import 'package:namer_app/models/pantry_item.dart';
+import 'package:eatneat/models/pantry_item.dart';
 
 // For example, a category named 'Tinned foods' that has 3 instances of PantryItem: "Kidney bean", "Chickpea", "Tomato soup"
 
@@ -17,6 +17,9 @@ class PantryCategory {
   // Does the user want to see the items contained within this on the screen?
   bool _isHidden = false;
   bool get isHidden => _isHidden;
+
+  // What page out of the items is the user currently viewing
+  int pageIndex = 0;
 
   int get itemCount => _count;
 

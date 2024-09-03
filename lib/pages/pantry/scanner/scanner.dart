@@ -3,9 +3,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:namer_app/models/pantry_item.dart';
-import 'package:namer_app/pages/pantry/scanner/scan_failure_page.dart';
-import 'package:namer_app/pages/pantry/scanner/scan_success_page.dart';
+import 'package:eatneat/models/pantry_item.dart';
+import 'package:eatneat/pages/pantry/scanner/scan_failure_page.dart';
+import 'package:eatneat/pages/pantry/scanner/scan_success_page.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 
 class Scanner {

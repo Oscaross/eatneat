@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
-import 'package:namer_app/models/pantry_item.dart';
-import 'package:namer_app/providers/pantry_provider.dart';
-import 'package:namer_app/ui/buttons.dart';
+import 'package:eatneat/models/pantry_item.dart';
+import 'package:eatneat/providers/pantry_provider.dart';
+import 'package:eatneat/ui/buttons.dart';
 import 'package:provider/provider.dart';
 
 class PantryBarcodeSuccessPage extends StatefulWidget {
@@ -188,7 +188,7 @@ class PantryBarcodeSuccessPageState extends State<PantryBarcodeSuccessPage> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    style: Buttons.genericButtonStyle(0.8),
+                    style: Buttons.genericButtonStyle(0.8, null),
                   ),
                 ),
               ],

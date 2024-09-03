@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/models/label_item.dart';
-import 'package:namer_app/providers/label_provider.dart';
+import 'package:eatneat/models/label_item.dart';
+import 'package:eatneat/providers/label_provider.dart';
 import 'package:provider/provider.dart';
 
 class AddLabelPage extends StatefulWidget {

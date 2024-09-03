@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/providers/pantry_provider.dart';
+import 'package:eatneat/providers/pantry_provider.dart';
 import 'package:provider/provider.dart';
 
 class Navbar extends StatefulWidget {

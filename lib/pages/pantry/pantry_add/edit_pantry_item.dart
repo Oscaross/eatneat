@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/models/pantry_item.dart';
+import 'package:eatneat/models/pantry_item.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/pantry_provider.dart';
 

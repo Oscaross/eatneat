@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:namer_app/models/pantry_category.dart';
-import 'package:namer_app/pages/pantry/pantry_card/pantry_item_card.dart';
-import 'package:namer_app/pages/pantry/scanner/scan_failure_page.dart';
-import 'package:namer_app/pages/pantry/scanner/scanner.dart';
-import 'package:namer_app/pages/pantry/widgets/navigation_bar.dart';
-import 'package:namer_app/providers/label_provider.dart';
-import 'package:namer_app/providers/pantry_provider.dart';
-import 'package:namer_app/pages/pantry/pantry_add/add_pantry_item.dart';
-import 'package:namer_app/ui/buttons.dart';
-import 'package:namer_app/util/debug.dart';
-import 'package:namer_app/util/shake.dart';
+import 'package:eatneat/models/pantry_category.dart';
+import 'package:eatneat/pages/pantry/pantry_card/pantry_item_card.dart';
+import 'package:eatneat/pages/pantry/scanner/scan_failure_page.dart';
+import 'package:eatneat/pages/pantry/scanner/scanner.dart';
+import 'package:eatneat/pages/pantry/widgets/navigation_bar.dart';
+import 'package:eatneat/providers/label_provider.dart';
+import 'package:eatneat/providers/pantry_provider.dart';
+import 'package:eatneat/pages/pantry/pantry_add/add_pantry_item.dart';
+import 'package:eatneat/ui/buttons.dart';
+import 'package:eatneat/util/debug.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -20,6 +19,7 @@ class PantryPage extends StatefulWidget {
 }
 
 class PantryPageState extends State<PantryPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,13 +96,19 @@ class PantryPageState extends State<PantryPage> {
                                 ),
                               ),
                               // Display children (PantryItemCard widgets) that belong to each of these categories
-                              if(!category.isHidden) 
+                              if(!category.isHidden)
                               SizedBox(
                                 // This is probably a bad idea but we just set the height based on how many objects there are to render. 
                                 // more than 2 objects = we use the second row of space then we scroll horizontally. 
-                                height: (pantryProvider.categories[categoryIndex].itemCount <= 2) ? 220 : 440, 
+                                height: (pantryProvider.categories[categoryIndex].itemCount <= 2) ? 220 : 470, 
                                 child: (category.isHidden) ? null : GridView.builder(
-                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                                  scrollDirection: Axis.horizontal,
+                                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 240,
+                                    mainAxisExtent: 210,
+                                    mainAxisSpacing: 8, // Spacing between items vertically
+                                    crossAxisSpacing: 10, // Spacing between items horizontally
+                                  ),
                                   // The number of items to render is the number of PantryItems in the current category of the iteration
                                   itemCount: pantryProvider.categories[categoryIndex].itemCount,
                                   itemBuilder: (context, itemIndex) {
@@ -111,6 +117,33 @@ class PantryPageState extends State<PantryPage> {
                                     );
                                   },
                                 ),
+                              ),
+
+                              if(!category.isHidden)
+                              // Page viewer widget ( . . . )
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(
+                                  growable: true,
+                                  (category.itemCount <= 4) ? 0 : (category.itemCount / 4).ceil(),
+                                  (index) {
+                                    return Center(
+                                      child: IconButton(
+                                        icon: Icon(
+                                            color: (category.pageIndex == index) ? Colors.blueAccent : const Color.fromARGB(255, 68, 68, 68),
+                                            Icons.circle,
+                                            size: 13,
+                                          ),
+                                        onPressed: () {
+                                          setState(() {
+                                            category.pageIndex = index;
+                                            HapticFeedback.selectionClick();
+                                          });                 
+                                        }
+                                      ),
+                                    );
+                                  }
+                                ),
                               )
                             ],
                           );
@@ -118,46 +151,54 @@ class PantryPageState extends State<PantryPage> {
                       ),
                     ),
                     // Add category button
-                    // TODO: There is a better way to deal with this page
-                    Container(
-                      width: double.infinity,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.blueAccent.withOpacity(0.1),
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.blue,
-                            const Color.fromARGB(255, 46, 154, 243),
-                          ],
-                        ),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          // TODO: Navigate to category creation screen
+                    TextButton.icon(
+                      icon: Icon(Icons.add),
+                      label: Text("Add Category"),
+                      style: Buttons.genericButtonStyle(0.8, null).copyWith(textStyle: WidgetStatePropertyAll(TextStyle(fontWeight: FontWeight.w700, fontSize: 16))),
+                      onPressed: () {
 
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.add,
-                              color: Colors.blueAccent,
-                            ),
-                            SizedBox(width:8),
-                            Text(
-                              "New Category",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                                color: Colors.blueAccent,
-                              ),
-                            )
-                          ]
-                        )
-                      )
+                      },
                     ),
+                    // TODO: There is a better way to deal with this page
+                    // Container(
+                    //   width: double.infinity,
+                    //   height: 40,
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.blueAccent.withOpacity(0.1),
+                    //     gradient: LinearGradient(
+                    //       begin: Alignment.topCenter,
+                    //       end: Alignment.bottomCenter,
+                    //       colors: [
+                    //         Colors.blue,
+                    //         const Color.fromARGB(255, 46, 154, 243),
+                    //       ],
+                    //     ),
+                    //   ),
+                    //   child: GestureDetector(
+                    //     onTap: () {
+                    //       // TODO: Navigate to category creation screen
+
+                    //     },
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       children: [
+                    //         Icon(
+                    //           Icons.add,
+                    //           color: Colors.blueAccent,
+                    //         ),
+                    //         SizedBox(width:8),
+                    //         Text(
+                    //           "New Category",
+                    //           style: TextStyle(
+                    //             fontWeight: FontWeight.w700,
+                    //             fontSize: 16,
+                    //             color: Colors.blueAccent,
+                    //           ),
+                    //         )
+                    //       ]
+                    //     )
+                    //   )
+                    // ),
                   ],
                 ),
               ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/pages/pantry/pantry_add/add_pantry_item.dart';
-import 'package:namer_app/pages/pantry/scanner/scanner.dart';
-import 'package:namer_app/ui/buttons.dart';
+import 'package:eatneat/pages/pantry/pantry_add/add_pantry_item.dart';
+import 'package:eatneat/pages/pantry/scanner/scanner.dart';
+import 'package:eatneat/ui/buttons.dart';
 
 // The page that is displayed when the user's scan fails
 class BarcodeScanFailurePage extends StatelessWidget {
@@ -67,7 +67,7 @@ class BarcodeScanFailurePage extends StatelessWidget {
             alignment: MainAxisAlignment.center,
             children: <Widget>[
               TextButton.icon(
-                style: Buttons.genericButtonStyle(1),
+                style: Buttons.genericButtonStyle(1, null),
                 label: Text("Retry Scan"),
                 icon: Icon(Icons.refresh),
                 onPressed: () async {
@@ -76,7 +76,7 @@ class BarcodeScanFailurePage extends StatelessWidget {
               ),
               SizedBox(width:15),
               TextButton.icon(
-                style: Buttons.genericButtonStyle(0.6),
+                style: Buttons.genericButtonStyle(0.6, null),
                 label: Text("Add Manually"),
                 icon: Icon(Icons.add),
                 onPressed: () {

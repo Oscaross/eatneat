@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/models/pantry_item.dart';
+import 'package:eatneat/models/pantry_item.dart';
 
 // An interactive 'more info' page which allows you to see and modify the items labels and data
 

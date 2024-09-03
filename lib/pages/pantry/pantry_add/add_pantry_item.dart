@@ -1,5 +1,7 @@
+import 'package:eatneat/ui/buttons.dart';
 import 'package:flutter/material.dart';
-import 'package:namer_app/models/pantry_item.dart';
+import 'package:eatneat/models/pantry_item.dart';
+import 'package:flutter/services.dart';
 
 class AddItemPage extends StatefulWidget {
   @override
@@ -12,17 +14,22 @@ class AddItemPageState extends State<AddItemPage> {
 
   AddItemPageState({this.item}) {
     if(item != null) _nameController.text = item!.name;
+    
+    _sliderColor = getSliderColor(_currentPercentageLeft);
   }
 
   String name = "";
 
-  // Controllers
+  // Controllers - contain final values to push to the pantry item after the user hits the submit action.
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  double _currentPercentageLeft = 100;
 
   // Focus nodes (helps us decide when we are editing fields and when we aren't)
   final FocusNode _nameFocusNode = FocusNode();
+
+  late Color _sliderColor;
 
   @override
   void dispose() {
@@ -41,75 +48,17 @@ class AddItemPageState extends State<AddItemPage> {
         Column(
           children: [
             // Widget to display product name
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        textAlign: TextAlign.center,
-                        autocorrect: false,
-                        controller: _nameController,
-                        focusNode: _nameFocusNode,
-                        decoration: InputDecoration(
-                          hintText: "Item name...",
-                          hintStyle: TextStyle(
-                            color: Colors.grey.shade700, // Slightly grey color for hint text
-                          ),
-                          filled: true, // Ensures the background is filled
-                          fillColor: Colors.white, // Background color inside the TextField
-                          contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0), // Padding inside the TextField
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0), // Rounded corners
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade100, // Slightly grey border color
-                              width: 0.5, // Width of the border
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade400,
-                              width: 1,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade600, // Darker grey when focused
-                              width: 2.0,
-                            ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
-                              color: Colors.red, // Red border when there's an error
-                              width: 1.5,
-                            ),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
-                              color: Colors.red, // Red border when focused with an error
-                              width: 2.0,
-                            ),
-                          ),
-                        ),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 20,
-                        )
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () {
-                        _nameFocusNode.requestFocus();
-                      }
+              Row(
+                children: [
+                  Text(
+                    "Name:"
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: _nameController,
                     )
-                  ],
-                ),
+                  ),
+                ],
               ),
               // Widget to display product image
               Container(
@@ -149,18 +98,101 @@ class AddItemPageState extends State<AddItemPage> {
               // Widget to display quantity editor
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-
                 children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _quantityController,
-                    ),
-                  ),
+                  
+                ],
+              ),
 
+              // Widget to display % left slider
+
+              // Label displaying how much we have left
+              Card.filled(
+                color: Color.fromARGB(255, 39, 29, 122).withOpacity(0.9),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "${_currentPercentageLeft.toInt()}% left",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                    )
+                  ),
+                )
+              ),
+
+              // The slider itself that we control the quantity with
+              Slider(
+                value: _currentPercentageLeft,
+                max: 100,
+                min: 0,
+                divisions: 20,
+                activeColor: _sliderColor,
+                onChanged: (val) {
+                  setState(() {
+                    _currentPercentageLeft = val;
+                    _sliderColor = getSliderColor(val);
+                  });
+
+                  HapticFeedback.selectionClick();
+                }
+              ),
+              // Quick action buttons to go to empty, half full and full
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    style: Buttons.genericButtonStyle(1, Color.fromARGB(255, 39, 29, 122)),
+                    onPressed: () {
+                      setState(() {
+                        _currentPercentageLeft = 0;
+                        _sliderColor = getSliderColor(0);
+                      });
+
+                      HapticFeedback.lightImpact();
+                    },
+                    child: Text("Empty")
+                  ),
+                  TextButton(
+                    style: Buttons.genericButtonStyle(1, Color.fromARGB(255, 39, 29, 122)),
+                    onPressed: () {
+                      setState(() {
+                        _currentPercentageLeft = 50;
+                        _sliderColor = getSliderColor(50);
+                      });
+
+                      HapticFeedback.lightImpact();
+                    },
+                    child: Text("Half")
+                  ),
+                  TextButton(
+                    style: Buttons.genericButtonStyle(1, Color.fromARGB(255, 39, 29, 122)),
+                    onPressed: () {
+                      setState(() {
+                        _currentPercentageLeft = 100;
+                        _sliderColor = getSliderColor(100);
+                      });
+
+                      HapticFeedback.lightImpact();
+                    },
+                    child: Text("Full")
+                  ),
                 ],
               )
           ]
       ),
     );
   }
+
+  Color getSliderColor(double percentage) {
+    if(percentage > 50) {
+      return Colors.greenAccent;
+    }
+    else if(percentage >= 25) {
+      return Color.fromARGB(255, 247, 225, 23);
+    }
+    else {
+      return Colors.red;
+    }
+  }
 }
+

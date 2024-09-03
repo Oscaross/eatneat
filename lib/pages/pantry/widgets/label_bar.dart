@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/providers/label_provider.dart';
-import 'package:namer_app/pages/label/add_pantry_label.dart';
-import 'package:namer_app/util/shake.dart';
+import 'package:eatneat/providers/label_provider.dart';
+import 'package:eatneat/pages/label/add_pantry_label.dart';
+import 'package:eatneat/util/shake.dart';
 import 'package:provider/provider.dart';
 
 class LabelBar extends StatefulWidget {

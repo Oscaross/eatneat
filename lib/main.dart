@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/pages/home/home_page.dart';
-import 'package:namer_app/pages/preferences_page.dart';
-import 'package:namer_app/providers/label_provider.dart';
-import 'package:namer_app/providers/theme_provider.dart';
+import 'package:eatneat/pages/home/home_page.dart';
+import 'package:eatneat/pages/preferences_page.dart';
+import 'package:eatneat/providers/label_provider.dart';
+import 'package:eatneat/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'providers/pantry_provider.dart';
 import 'pages/pantry/pantry_page.dart'; // Ensure the path is correct
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             primaryColor: Colors.blue,
             appBarTheme: AppBarTheme(
               color: Colors.blue,
-            )
+            ),
           ),
           home: MyHomePage(),
         );

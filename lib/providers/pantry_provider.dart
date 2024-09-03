@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/models/label_item.dart';
-import 'package:namer_app/models/pantry_category.dart';
+import 'package:eatneat/models/label_item.dart';
+import 'package:eatneat/models/pantry_category.dart';
 import '../models/pantry_item.dart';
 
 class PantryProvider with ChangeNotifier {

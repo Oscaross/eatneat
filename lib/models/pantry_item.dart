@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/models/label_item.dart';
-import 'package:namer_app/models/pantry_category.dart';
+import 'package:eatneat/models/label_item.dart';
+import 'package:eatneat/models/pantry_category.dart';
 
 class PantryItem {
   // Name of the item (ie. chicken breast)
@@ -23,6 +23,15 @@ class PantryItem {
   String? image;
   // The item's category
   PantryCategory category = PantryCategory.none;
+  // How much of the item as a percentage do we have left
+  double _percentageLeft = 100;
+  double get percentageLeft => _percentageLeft;
+
+  set percentageLeft(double percentageLeft) {
+    if(percentageLeft < 0 || percentageLeft > 100) throw FormatException("PantryItem cannot have more than 100% left or less than 0% left!");
+
+    _percentageLeft = percentageLeft;
+  }
 
   PantryItem({required this.name, required this.weight, required this.expiry, required this.added, required this.quantity, required this.labelSet, this.image});
 
