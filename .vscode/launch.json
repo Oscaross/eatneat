@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "application",
+            "name": "eatneat",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "application (profile mode)",
+            "name": "eatneat (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "application (release mode)",
+            "name": "eatneat (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
