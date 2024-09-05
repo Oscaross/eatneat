@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:eatneat/pages/pantry/pantry_add/add_pantry_item.dart';
+import 'package:eatneat/pages/pantry/pantry_add/item_view_page.dart';
 import 'package:eatneat/pages/pantry/scanner/scanner.dart';
 import 'package:eatneat/ui/buttons.dart';
 
@@ -82,7 +82,7 @@ class BarcodeScanFailurePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder:(context) => AddItemPage())
+                    MaterialPageRoute(builder:(context) => ItemViewPage())
                   );
                 },
               )

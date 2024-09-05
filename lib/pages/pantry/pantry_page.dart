@@ -1,3 +1,4 @@
+import 'package:eatneat/ui/magic_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:eatneat/models/pantry_category.dart';
@@ -7,7 +8,7 @@ import 'package:eatneat/pages/pantry/scanner/scanner.dart';
 import 'package:eatneat/pages/pantry/widgets/navigation_bar.dart';
 import 'package:eatneat/providers/label_provider.dart';
 import 'package:eatneat/providers/pantry_provider.dart';
-import 'package:eatneat/pages/pantry/pantry_add/add_pantry_item.dart';
+import 'package:eatneat/pages/pantry/pantry_add/item_view_page.dart';
 import 'package:eatneat/ui/buttons.dart';
 import 'package:eatneat/util/debug.dart';
 import 'package:provider/provider.dart';
@@ -150,7 +151,9 @@ class PantryPageState extends State<PantryPage> {
                         },
                       ),
                     ),
+                    // TODO: Improve this button by encapsulating default full page translucent button and calling the styling method from Buttons static class
                     // Add category button
+
                     TextButton.icon(
                       icon: Icon(Icons.add),
                       label: Text("Add Category"),
@@ -159,46 +162,6 @@ class PantryPageState extends State<PantryPage> {
 
                       },
                     ),
-                    // TODO: There is a better way to deal with this page
-                    // Container(
-                    //   width: double.infinity,
-                    //   height: 40,
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.blueAccent.withOpacity(0.1),
-                    //     gradient: LinearGradient(
-                    //       begin: Alignment.topCenter,
-                    //       end: Alignment.bottomCenter,
-                    //       colors: [
-                    //         Colors.blue,
-                    //         const Color.fromARGB(255, 46, 154, 243),
-                    //       ],
-                    //     ),
-                    //   ),
-                    //   child: GestureDetector(
-                    //     onTap: () {
-                    //       // TODO: Navigate to category creation screen
-
-                    //     },
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [
-                    //         Icon(
-                    //           Icons.add,
-                    //           color: Colors.blueAccent,
-                    //         ),
-                    //         SizedBox(width:8),
-                    //         Text(
-                    //           "New Category",
-                    //           style: TextStyle(
-                    //             fontWeight: FontWeight.w700,
-                    //             fontSize: 16,
-                    //             color: Colors.blueAccent,
-                    //           ),
-                    //         )
-                    //       ]
-                    //     )
-                    //   )
-                    // ),
                   ],
                 ),
               ),
@@ -223,6 +186,7 @@ class PantryPageState extends State<PantryPage> {
             child: Icon(Icons.barcode_reader),
             label: "Scan Barcode",
             onTap: () async {
+              HapticFeedback.mediumImpact();
               
               await Scanner.scan(context, OriginPage.pantryPage);
             }
@@ -231,9 +195,10 @@ class PantryPageState extends State<PantryPage> {
             child: Icon(Icons.plus_one),
             label: "Manually Add",
             onTap: () {
+              HapticFeedback.mediumImpact();
               Navigator.push(
                 context,
-                MaterialPageRoute(builder:(context) => AddItemPage(),
+                MaterialPageRoute(builder:(context) => ItemViewPage(),
                 )
               );
             }
@@ -245,6 +210,18 @@ class PantryPageState extends State<PantryPage> {
             onTap: () {
               Debug().configure(Provider.of<PantryProvider>(context, listen:false), Provider.of<LabelProvider>(context, listen:false));
             }
+          ),
+
+          SpeedDialChild(
+            child: Icon(Icons.tab),
+            label: "[DEBUG] Magic Keyboard",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MagicKeyboard())
+              );
+            }
+
           ),
 
           SpeedDialChild(

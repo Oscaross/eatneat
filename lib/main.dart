@@ -23,6 +23,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // TODO: This theme here can definitely be improved!
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return MaterialApp(
@@ -32,7 +33,16 @@ class MyApp extends StatelessWidget {
             ),
             primaryColor: Colors.blue,
             appBarTheme: AppBarTheme(
-              color: Colors.blue,
+              titleTextStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.blue,
+              ),
+              color: Colors.blue[200]!.withOpacity(0.4),
+              iconTheme: IconThemeData(
+                color: Colors.blue,
+                weight: 16,
+              )
             ),
           ),
           home: MyHomePage(),

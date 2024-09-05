@@ -1,9 +1,8 @@
+import 'package:eatneat/pages/pantry/pantry_add/item_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:eatneat/models/pantry_item.dart';
 import 'package:eatneat/pages/pantry/pantry_card/card_popup_dialog.dart';
-import 'package:eatneat/pages/pantry/pantry_card/pantry_item_more_info.dart';
 import 'package:eatneat/providers/pantry_provider.dart';
-import 'package:eatneat/pages/pantry/pantry_add/edit_pantry_item.dart';
 import 'package:eatneat/util/shake.dart';
 
 class PantryItemCard extends StatelessWidget {
@@ -19,7 +18,7 @@ class PantryItemCard extends StatelessWidget {
         onTap: () {
           Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PantryMoreInfoPage(item: item),)
+              MaterialPageRoute(builder: (context) => ItemViewPage(item: item),)
             );
         },
         // Spawn the item card dialog
@@ -103,11 +102,6 @@ class PantryItemCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void editItem(BuildContext context, PantryItem item) {
-
-    Navigator.push(context, MaterialPageRoute(builder: (context) => EditItemPage(item: item)));
   }
 
   void deleteItem(PantryItem item, PantryProvider provider) {

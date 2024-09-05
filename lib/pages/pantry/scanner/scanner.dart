@@ -1,11 +1,11 @@
 // A static class that is designed to encapsulate all logic for communicating with the OFF API, fetching product data & images
 // Handles errors with the scanne, errors in response and instructs the pantry page on where the user should be redirected after a scan occurs
 
+import 'package:eatneat/pages/pantry/pantry_add/item_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:eatneat/models/pantry_item.dart';
 import 'package:eatneat/pages/pantry/scanner/scan_failure_page.dart';
-import 'package:eatneat/pages/pantry/scanner/scan_success_page.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 
 class Scanner {
@@ -101,7 +101,7 @@ class Scanner {
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => PantryBarcodeSuccessPage(item: item))
+      MaterialPageRoute(builder: (context) => ItemViewPage(item: item))
     );
 
     print("Scan successful");
@@ -111,7 +111,7 @@ class Scanner {
 class Parser {
 
   static double parseQuantity(String? qty) {
-    if(qty == null) return 0;
+    if(qty == null || qty == "") return 0;
 
     String asStr = "";
     bool isKilos = false;
