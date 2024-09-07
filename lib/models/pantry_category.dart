@@ -5,6 +5,8 @@ import 'package:eatneat/models/pantry_item.dart';
 class PantryCategory {
 
   static final PantryCategory none = PantryCategory(name: "None");
+  // Very subject to change list of default blanket categories that the app should come pre-built with.
+  static final Set<String> defaultCategories = {"Breakfast & Cereals", "Biscuits & Snacks", "Baking & Dessert", "Canned & Jarred", "Condiments & Spreads", "Pasta, Rice & Grains", "Instant & Ready Meals", "Tea, Coffee & Beverages", "World Foods", "Health & Special Diet", "Herbs & Spices", "Cooking Essentials"};
 
   // A set containing all PantryItems that belong to this category
   List<PantryItem> _items = List.empty(growable: true);

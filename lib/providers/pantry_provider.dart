@@ -4,17 +4,21 @@ import 'package:eatneat/models/pantry_category.dart';
 import '../models/pantry_item.dart';
 
 class PantryProvider with ChangeNotifier {
-  List<PantryItem> _items = [];
 
+  List<PantryItem> _items = [];
   List<PantryItem> get items => _items;
 
   List<PantryCategory> _categories = [];
-
-  List<PantryCategory> get categories => _categories;
+  List<PantryCategory> get categories => (_isSearching) ? _categoriesInSearch : _categories;
 
   SortByMode _currentSortingMode = SortByMode.alphabetical;
 
-  List<PantryItem> searchResult = [];
+  // Search management:
+
+  List<PantryCategory> _categoriesInSearch = [];
+
+  // Is the user using the search bar? This will change the data we send them,
+  bool _isSearching = false;
 
   // Return all items in the pantry that satisfy all of the labels supplied in the set
   List<PantryItem> filterBy(Set<LabelItem> labelSet) {
@@ -60,22 +64,27 @@ class PantryProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Takes a search term ie. 'tomato' and returns all candidates that contain that string within their title. Used by the search bar to return results
   void searchBy(String searchTerm) {
+    _isSearching = true;
 
-    if(searchTerm == "") searchResult = items;
+    if(searchTerm == "") _categoriesInSearch = categories;
 
-    List<PantryItem> ret = List.empty(growable: true);
+    List<PantryCategory> ret = List.empty(growable: true);
 
-    for(PantryItem i in items) {
+    for(PantryCategory c in categories) {
       // Search should not be case sensitive
-      if(i.name.toLowerCase().contains(searchTerm)) ret.add(i);
+      if(c.name.toLowerCase().contains(searchTerm)) ret.add(c);
     }
     
     // A successful search query has been performed so trigger an update
     notifyListeners();
 
-    searchResult = ret;
+    _categoriesInSearch = ret;
+  }
+  
+  void stopSearching() {
+    _isSearching = false;
+    notifyListeners();
   }
 
   void addItem(PantryItem item) {

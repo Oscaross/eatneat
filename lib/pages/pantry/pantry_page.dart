@@ -23,25 +23,63 @@ class PantryPageState extends State<PantryPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    Size deviceSize = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pantry")
+        title: Text("Pantry"),
+        forceMaterialTransparency: true,
+        scrolledUnderElevation: 0,
       ),
       body: Consumer2<PantryProvider, LabelProvider>(
         builder: (context, pantryProvider, labelProvider, child) {
           return Column(
             children: [
-              SizedBox(height: 8),
               // Display the search and sorting box
-              Navbar(),
+              Flexible(
+                flex: 2,
+                child: Navbar()
+              ),
+              SizedBox(height: deviceSize.height * 0.02),
               // Display all of the categories
-              Expanded(
+              Flexible(
+                flex: 11,
                 child: Column(
                   children: [
                     Expanded(
                       child: ListView.builder(
-                        itemCount: pantryProvider.categories.length,
+                        itemCount: pantryProvider.categories.length + 1, // need to render the add category button
                         itemBuilder: (context, categoryIndex) {
+                          // If this is the final element it's our Add Category button so we need to render that instead
+                          if(categoryIndex == pantryProvider.categories.length) {
+                            return Center(
+                              child: TextButton.icon(
+                                  label: Center(
+                                    child: Text(
+                                      "Add Category",
+                                      style: TextStyle(
+                                        color: Colors.blueAccent,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 17
+                                      ),
+                                    ),
+                                  
+                                  ),
+                                  // TODO: Add category logic
+                                  onPressed: () {
+                                    
+                                  },
+                                  style: ButtonStyle(
+                                    fixedSize: WidgetStatePropertyAll(Size(deviceSize.width * 0.95, deviceSize.height * 0.02)),
+                                    backgroundColor: WidgetStatePropertyAll(Colors.blue.withOpacity(0.15)),
+                                    overlayColor: WidgetStatePropertyAll(Colors.blueAccent.withOpacity(0.05)),
+                                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16)))),
+                                  )
+                                ),
+                            );
+                          }
+
                           PantryCategory category = pantryProvider.categories[categoryIndex];
 
                           return Column(
@@ -49,7 +87,7 @@ class PantryPageState extends State<PantryPage> {
                               // Display category widget
                               Container(
                                 width: double.infinity,
-                                height: 40,
+                                height: MediaQuery.of(context).size.height / 24, // consistently scale height across displays
                                 decoration: BoxDecoration(
                                   color: Colors.blueAccent.withOpacity(0.06),
                                   gradient: LinearGradient(
@@ -78,17 +116,22 @@ class PantryPageState extends State<PantryPage> {
                                       ),
                                       // Quick click button to collapse/expand the category
                                       Spacer(),
-                                      Buttons.minorIconButtonStyle(
-                                        // TODO: I need a button which is remove_red_eye but with a line through it
-                                        Icon((category.isHidden) ? Icons.remove_red_eye_sharp : Icons.remove_red_eye_sharp), 
-                                        () {
-                                          setState(() {
-                                            category.toggleVisibility();
-                                          });
-
-                                          HapticFeedback.lightImpact();
-                                        }, 
-                                        Offset(0, -6)
+                                      Stack(
+                                        alignment: Alignment.center,
+                                        children: 
+                                        [
+                                          Buttons.minorIconButtonStyle(
+                                            (category.isHidden) ? Icon(Icons.remove_red_eye_sharp) : Icon(Icons.remove_red_eye_sharp), 
+                                            () {
+                                              setState(() {
+                                                category.toggleVisibility();
+                                              });
+                                          
+                                              HapticFeedback.lightImpact();
+                                            }, 
+                                            Offset(0, -7)
+                                          ),
+                                        ]
                                       ),
                                       // Icons to edit the category
                                       Buttons.iconButtonStyle(Icon(Icons.more_horiz), () {}, Offset(0, -5)),
@@ -99,15 +142,15 @@ class PantryPageState extends State<PantryPage> {
                               // Display children (PantryItemCard widgets) that belong to each of these categories
                               if(!category.isHidden)
                               SizedBox(
-                                // This is probably a bad idea but we just set the height based on how many objects there are to render. 
-                                // more than 2 objects = we use the second row of space then we scroll horizontally. 
-                                height: (pantryProvider.categories[categoryIndex].itemCount <= 2) ? 220 : 470, 
+                                // Set the height based on how many objects there are to render. 
+                                // more than 2 objects = we use the second row of space then we scroll horizontally, relies on MediaQuery for consistent scaling
+                                height: deviceSize.height * ((pantryProvider.categories[categoryIndex].itemCount <= 2) ? 0.25 : 0.5), 
                                 child: (category.isHidden) ? null : GridView.builder(
                                   scrollDirection: Axis.horizontal,
                                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 240,
+                                    maxCrossAxisExtent: deviceSize.width,
                                     mainAxisExtent: 210,
-                                    mainAxisSpacing: 8, // Spacing between items vertically
+                                    mainAxisSpacing: 4, // Spacing between items vertically
                                     crossAxisSpacing: 10, // Spacing between items horizontally
                                   ),
                                   // The number of items to render is the number of PantryItems in the current category of the iteration
@@ -150,17 +193,6 @@ class PantryPageState extends State<PantryPage> {
                           );
                         },
                       ),
-                    ),
-                    // TODO: Improve this button by encapsulating default full page translucent button and calling the styling method from Buttons static class
-                    // Add category button
-
-                    TextButton.icon(
-                      icon: Icon(Icons.add),
-                      label: Text("Add Category"),
-                      style: Buttons.genericButtonStyle(0.8, null).copyWith(textStyle: WidgetStatePropertyAll(TextStyle(fontWeight: FontWeight.w700, fontSize: 16))),
-                      onPressed: () {
-
-                      },
                     ),
                   ],
                 ),
@@ -218,7 +250,7 @@ class PantryPageState extends State<PantryPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MagicKeyboard())
+                MaterialPageRoute(builder: (context) => MagicKeyboard(onChanged: (String val) {}))
               );
             }
 

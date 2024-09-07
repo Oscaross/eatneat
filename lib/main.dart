@@ -36,12 +36,12 @@ class MyApp extends StatelessWidget {
               titleTextStyle: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 20,
-                color: Colors.blue,
+                color: Colors.grey[800],
               ),
-              color: Colors.blue[200]!.withOpacity(0.4),
+              color: Theme.of(context).scaffoldBackgroundColor,
               iconTheme: IconThemeData(
-                color: Colors.blue,
-                weight: 16,
+                color: Colors.grey[800],
+                weight: 18,
               )
             ),
           ),
