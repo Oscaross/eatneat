@@ -250,7 +250,7 @@ class PantryPageState extends State<PantryPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MagicKeyboard(onChanged: (String val) {}))
+                MaterialPageRoute(builder: (context) => MagicKeyboard(onChanged: (String val) {}, step: 1))
               );
             }
 

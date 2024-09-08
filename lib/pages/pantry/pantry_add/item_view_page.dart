@@ -40,6 +40,7 @@ class ItemViewPageState extends State<ItemViewPage> {
   final Map<int, FocusNode> _focusNodeMap = {};
   // Numerical system to capture the state of each node
   final Map<int, bool> _focusStateMap = {};
+  CurrentFocus focus = CurrentFocus.none;
   
 
   late Color _sliderColor;
@@ -176,7 +177,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                     ),
                   ),
 
-                  if(!_isMagicKeyboardShowing) Spacer(flex: 1),
+                  Spacer(flex: 1),
             
                   // Widget to display quantity editor
                   Flexible(
@@ -369,7 +370,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                       label: Text("Add Item", style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.w800, fontSize: 16)),
                       icon: Icon(Icons.add, color: Colors.blueAccent),
                       onPressed: () {
-                        // TODO: Make parsing and logic checks here more robust & test them for weaknesses
+                        // TODO: Make parsing and logic checks here more robust & test them for weaknesse s
                             
                         String name = _nameController.value.text;
                         double weight = double.tryParse(_weightController.value.text) ?? 0;
@@ -427,14 +428,24 @@ class ItemViewPageState extends State<ItemViewPage> {
         ),
         if (_isMagicKeyboardShowing)
         Positioned(
-          height: deviceSize.height * 0.7,
+          height: deviceSize.height * 0.52,
           bottom: 0, // Display keyboard from the bottom of the screen
           left: 0,
           right: 0,
           child: MagicKeyboard(
+            step: 100,
+            maxStringLength: 8,
             onChanged: (String val) {
               // TODO: Store val and display it dynamically on the UI
               _weightController.value = TextEditingValue(text: val);
+              switch (focus) {
+                case CurrentFocus.weight:
+                  _weightController.value = TextEditingValue(text: val);
+                case CurrentFocus.quantity:
+                  _quantityController.value = TextEditingValue(text: val);
+                case _:
+
+              }
             },
             onNextPressed: () {
               // TODO: Fetch the next input node and focus it instead
@@ -523,10 +534,11 @@ class ItemViewPageState extends State<ItemViewPage> {
           controller: controller,
           keyboardType: keyboardType,
           onTap: () {
-            print("Trying to spawn keyboard");
-            setState(() {
+            if(keyboardType == TextInputType.none) {
+              setState(() {
               toggleMagicKeyboard();
             });
+            }
           },
           decoration: InputDecoration(
             border: InputBorder.none, 
@@ -537,4 +549,11 @@ class ItemViewPageState extends State<ItemViewPage> {
       ),
     );
   }
+}
+
+enum CurrentFocus {
+  none,
+  name,
+  quantity,
+  weight
 }
