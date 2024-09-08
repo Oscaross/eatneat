@@ -16,9 +16,9 @@ class Debug {
   Set<LabelItem> setTwo = {};
 
   void configure(PantryProvider provider, LabelProvider provider2) {
-    PantryItem chicken = PantryItem(name: "Chicken Breast", added: DateTime.now(), weight: 300, expiry: DateTime.now().add(const Duration(days:10)), quantity: 3, labelSet: setOne);
+    PantryItem chicken = PantryItem(name: "Chicken Breast", added: DateTime.now().subtract(const Duration(days:20)), weight: 300, expiry: DateTime.now().add(const Duration(days:10)), quantity: 3, labelSet: setOne);
     PantryItem steak = PantryItem(name: "Elephant Steak", added: DateTime.now(), weight: 0, expiry: DateTime.now().add(const Duration(days:2)), quantity:2, labelSet: setOne);
-    PantryItem pork = PantryItem(name: "No Label!", added: DateTime.now(), weight: 300, expiry: DateTime.now().add(const Duration(days:30)), quantity: 1, labelSet: {});
+    PantryItem pork = PantryItem(name: "No Label!", added: DateTime.now().subtract(const Duration(days:25)), weight: 300, expiry: DateTime.now().subtract(const Duration(days:2)), quantity: 1, labelSet: {});
     PantryItem sweetcorn = PantryItem(name: "Sweetcorn", added: DateTime.now(), weight: 150, expiry: DateTime.now().add(const Duration(days:7)), quantity: 3, labelSet: setTwo);
     PantryItem fuckUpMyAppPlease = PantryItem(name: "Deal with this lol", added: DateTime.now(), weight: 1200, expiry: DateTime.now(), quantity: 1, labelSet: {});
     PantryItem fish = PantryItem(name: "Fish", added: DateTime.now(), weight: 500, expiry: DateTime.now().add(const Duration(days:30)), quantity: 1, labelSet: {});

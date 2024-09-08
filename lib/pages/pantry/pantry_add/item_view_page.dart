@@ -96,7 +96,7 @@ class ItemViewPageState extends State<ItemViewPage> {
         // Stops the UI from shrinking and breaking when the keyboard is pulled up
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text("Add Item"),
+          title: Text("View Item"),
         ),
         body:
           // The entire body is wrapped with a Flex widget. This means we can dynamically size this UI based on the device 
@@ -414,14 +414,34 @@ class ItemViewPageState extends State<ItemViewPage> {
                       },
                             
                       style: ButtonStyle(
-                        fixedSize: WidgetStatePropertyAll(Size(400, 40)),
+                        fixedSize: WidgetStatePropertyAll(Size(MediaQuery.of(context).size.width * 0.95, MediaQuery.of(context).size.height * 0.1)),
                         backgroundColor: WidgetStatePropertyAll(Colors.blue.withOpacity(0.15)),
                         overlayColor: WidgetStatePropertyAll(Colors.blueAccent.withOpacity(0.05)),
-                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16)))),
+                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14)))),
                       )
                     ),
                   ),
                   Spacer(flex: 1),
+                  Flexible(
+                    flex: 2,
+                    child: TextButton.icon(
+                      label: Text("Delete Item", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 16)),
+                      icon: Icon(Icons.delete, color: Colors.white),
+                      onPressed: () {
+                        HapticFeedback.heavyImpact();
+                        
+                        // TODO: Show a confirmation alert dialog
+                        
+                      },
+                            
+                      style: ButtonStyle(
+                        fixedSize: WidgetStatePropertyAll(Size(MediaQuery.of(context).size.width * 0.95, MediaQuery.of(context).size.height * 0.1)),
+                        backgroundColor: WidgetStatePropertyAll(Colors.red.withOpacity(0.7)),
+                        overlayColor: WidgetStatePropertyAll(Colors.redAccent.withOpacity(0.7)),
+                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14)))),
+                      )
+                    ),
+                  ),
                 ]
               ),
             ),

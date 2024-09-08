@@ -53,30 +53,33 @@ class PantryPageState extends State<PantryPage> {
                         itemBuilder: (context, categoryIndex) {
                           // If this is the final element it's our Add Category button so we need to render that instead
                           if(categoryIndex == pantryProvider.categories.length) {
-                            return Center(
-                              child: TextButton.icon(
-                                  label: Center(
-                                    child: Text(
-                                      "Add Category",
-                                      style: TextStyle(
-                                        color: Colors.blueAccent,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 17
-                                      ),
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                child: TextButton.icon(
+                                    iconAlignment: IconAlignment.start,
+                                    label: Center(
+                                      child: Text(
+                                        "Add Category",
+                                        style: TextStyle(
+                                          color: Colors.blueAccent,
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 17
+                                        ),
+                                      ),                                    
                                     ),
-                                  
+                                    // TODO: Add category logic
+                                    onPressed: () {
+                                      
+                                    },
+                                    style: ButtonStyle(
+                                      fixedSize: WidgetStatePropertyAll(Size(deviceSize.width * 0.99, deviceSize.height * 0.02)),
+                                      backgroundColor: WidgetStatePropertyAll(Colors.blue.withOpacity(0.18)),
+                                      overlayColor: WidgetStatePropertyAll(Colors.blueAccent.withOpacity(0.05)),
+                                      shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
+                                    ),
                                   ),
-                                  // TODO: Add category logic
-                                  onPressed: () {
-                                    
-                                  },
-                                  style: ButtonStyle(
-                                    fixedSize: WidgetStatePropertyAll(Size(deviceSize.width * 0.95, deviceSize.height * 0.02)),
-                                    backgroundColor: WidgetStatePropertyAll(Colors.blue.withOpacity(0.15)),
-                                    overlayColor: WidgetStatePropertyAll(Colors.blueAccent.withOpacity(0.05)),
-                                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16)))),
-                                  )
-                                ),
+                              ),
                             );
                           }
 

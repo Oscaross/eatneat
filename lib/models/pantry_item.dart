@@ -77,18 +77,28 @@ class PantryItem {
     // The date time object must be relative to 00:00 local timezone otherwise we will encounter issues
     var daysUntil = expiry.difference(DateTime(now.year, now.month, now.day)).inDays;
 
-    // TODO: Not sure if this is best but "Tomorrow" will almost always overflow our card so there isn't really an alternative...
-    if(daysUntil <= 1) return "Soon";
+    var ret = "";
 
-    if(daysUntil > 365) {
-      int years = (daysUntil / 365).floor();
-      return "${years}y";
-    } else if(daysUntil > 30) {
-      int months = (daysUntil / 30).floor();
-      return "${months}mo";
-    } else {
-      return "${daysUntil}d";
+    if(daysUntil <= 1 && daysUntil >= 0) {
+      ret = "Soon";
     }
+    else {
+      if(daysUntil.abs() > 365) {
+        int years = (daysUntil / 365).floor();
+        ret = "${years}y";
+      } 
+      else if(daysUntil.abs() > 30) {
+        int months = (daysUntil / 30).floor();
+        ret = "${months}mo";
+      } 
+      else {
+        ret = "${daysUntil}d";
+      }
+    }
+
+    if(daysUntil < 0) "-$ret";
+
+    return ret;
   }
 
   // Format the expiry from a DateTime object to a neat representation (ie. Aug 23, Mar 19)
@@ -145,13 +155,13 @@ class PantryItem {
       return Theme.of(context).scaffoldBackgroundColor;
     }
     else if(delta < 0.75) {
-      return Colors.yellow;
+      return Colors.yellow[600]!;
     }
     else if(delta < 0.9) {
       return Colors.amber;
     }
     else {
-      return Colors.red;
+      return Colors.redAccent;
     }
   }
 

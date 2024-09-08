@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:eatneat/pages/home/home_page.dart';
-import 'package:eatneat/pages/preferences_page.dart';
+import 'package:eatneat/pages/preferences/preferences_page.dart';
 import 'package:eatneat/providers/label_provider.dart';
 import 'package:eatneat/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
