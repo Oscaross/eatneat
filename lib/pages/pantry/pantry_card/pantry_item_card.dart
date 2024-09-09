@@ -21,6 +21,7 @@ class PantryItemCard extends StatelessWidget {
           color: Colors.red[600]!,
           message: "EXPIRED",
           location: BannerLocation.topStart,
+          // Fog out the rest of the card to make it more obvious that this item is expired and make the banner stand out
           child: Opacity(
             opacity: 0.6,
             child: renderCardWithoutBanner(context),

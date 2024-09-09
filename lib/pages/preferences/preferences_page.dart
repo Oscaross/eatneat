@@ -23,9 +23,7 @@ class PreferencesPage extends StatelessWidget {
               onTap: () {
                   
                 HapticFeedback.lightImpact();
-                  
-                StatelessWidget route =
-                  
+                Widget route =
                   switch(pages[index]) {
                     "Theme" => ThemePage(),
                     _ => PreferencesPage(),

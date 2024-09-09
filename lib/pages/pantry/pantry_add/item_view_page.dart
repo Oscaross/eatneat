@@ -35,18 +35,16 @@ class ItemViewPageState extends State<ItemViewPage> {
   PantryCategory? _category;
   double _currentPercentageLeft = 100;
 
-  // Focus nodes (helps us decide when we are editing fields and when we aren't)
-  // IMPORTANT: here are the mappings from integer to node
-  // 0 => item name, 1 => quantity, 2 => weight, 3 => expiry date
-
   // A numerical system that sets up a focus node for each editable UI widget 
-  final Map<CurrentFocus, FocusNode> _focusNodeMap = {};
+  final Map<FocusableWidget, FocusNode> _focusNodeMap = {};
   // Numerical system to capture the state of each node
-  final Map<CurrentFocus, bool> _focusStateMap = {};
-  CurrentFocus focus = CurrentFocus.none;
+  final Map<FocusableWidget, bool> _focusStateMap = {};
+  // The current focused node, none initially and none if we aren't looking at any nodes right now
+  FocusableWidget _focus = FocusableWidget.none;
   
-
+  // Color theme related variables
   late Color _sliderColor;
+  static final Color containerGrey = Colors.grey[100]!;
 
   @override
   void dispose() {
@@ -65,7 +63,7 @@ class ItemViewPageState extends State<ItemViewPage> {
     actionType = widget.actionType;
 
     // Initialise focus nodes - 4 in total to instantiate because there are 5 fields
-    for(CurrentFocus cf in CurrentFocus.values) {
+    for(FocusableWidget cf in FocusableWidget.values) {
       _focusNodeMap[cf] = FocusNode(debugLabel: "Addition page focus node index $cf");
       _focusNodeMap[cf]!.addListener(() {
         setState(() {
@@ -88,18 +86,25 @@ class ItemViewPageState extends State<ItemViewPage> {
     super.initState();
   }
 
-  void unfocus(CurrentFocus focus) {
+  void unfocus(FocusableWidget focus) {
     setState(() {
       _focusStateMap[focus] = false;
-      focus = CurrentFocus.none;
-      toggleMagicKeyboard();
+      _focus = FocusableWidget.none;
+      magicKeyboardDown();
     });
   }
 
-  void toggleMagicKeyboard() {
+  void magicKeyboardUp() {
     setState(() {
-      _isMagicKeyboardShowing = !_isMagicKeyboardShowing;
-      _keyboardBottomPosition = (_isMagicKeyboardShowing) ? 0 : -300;
+      _isMagicKeyboardShowing = true;
+      _keyboardBottomPosition = 0;
+    });
+  }
+
+  void magicKeyboardDown() {
+    setState(() {
+      _isMagicKeyboardShowing = false;
+      _keyboardBottomPosition = -300;
     });
   }
 
@@ -121,7 +126,7 @@ class ItemViewPageState extends State<ItemViewPage> {
           GestureDetector(
             onTap: () {
               // We're attempting to escape keyboard input so unfocus to show the whole page again!
-              unfocus(focus);
+              unfocus(_focus);
             },
             child: Column(
               children: [
@@ -130,42 +135,49 @@ class ItemViewPageState extends State<ItemViewPage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 2.0),
                     child: TextField(
-                          controller: _nameController,
-                          keyboardType: TextInputType.name, 
-                          focusNode: _focusNodeMap[0],
-                          decoration: InputDecoration(
-                            hintText: "Enter product name...",
-                            hintStyle: TextStyle(color: Colors.grey[400]),
-                            filled: true,
-                            fillColor: Colors.grey[100],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.blue, width: 2),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-                            prefixIcon: Icon(Icons.label, color: Colors.grey[600]),
+                        onTap: () {
+                          // Can't have two keyboards at once!
+                          if(_isMagicKeyboardShowing) magicKeyboardDown();
+                        },
+                        controller: _nameController,
+                        keyboardType: TextInputType.name, 
+                        focusNode: _focusNodeMap[0],
+                        decoration: InputDecoration(
+                          hintText: "Enter product name...",
+                          hintStyle: TextStyle(color: Colors.grey[400]),
+                          filled: true,
+                          fillColor: containerGrey,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
                           ),
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.blue, width: 2),
                           ),
+                          contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                          prefixIcon: Icon(Icons.label, color: Colors.grey[600]),
                         ),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                 ),
                   // Widget to display product categories
                   Flexible(
-                    flex: 4,
+                    flex: 5,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
                       child: GestureDetector(
-                        onTap: () => _showCategoryPicker(context), // Opens the picker
+                        onTap: () {
+                          if(_isMagicKeyboardShowing) magicKeyboardDown();
+                          _showCategoryPicker(context);
+                        },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey[100],
+                            color: containerGrey,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(color: Colors.grey.shade300, width: 1.5),
                           ),
@@ -192,7 +204,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                     ),
                   ),
 
-                  Spacer(flex: 1),
+                  SizedBox(height: deviceSize.height * 0.006),
             
                   // Widget to display quantity editor
                   Flexible(
@@ -206,30 +218,30 @@ class ItemViewPageState extends State<ItemViewPage> {
                             "Qty",
                             style: TextStyle(
                               color: Colors.grey[700],
-                              fontWeight: (_focusStateMap[CurrentFocus.quantity] ?? false) ? FontWeight.w700 : FontWeight.w600,
+                              fontWeight: (_focusStateMap[FocusableWidget.quantity] ?? false) ? FontWeight.w700 : FontWeight.w600,
                               fontSize: 16,
                             )
                           ),
                         ),
-                        Spacer(flex: 2),
+                        Spacer(flex: 5),
                         Text(
                           "Grams",
                           style: TextStyle(
                             color: Colors.grey[700],
-                            fontWeight: (_focusStateMap[CurrentFocus.weight] ?? false) ? FontWeight.w700 : FontWeight.w600,
+                            fontWeight: (_focusStateMap[FocusableWidget.weight] ?? false) ? FontWeight.w700 : FontWeight.w600,
                             fontSize: 16,
                           )
                         ),
-                        Spacer(flex: 4),
+                        Spacer(flex: 9),
                         Text(
                           "Expiry Date",
                           style: TextStyle(
                             color: Colors.grey[700],
-                            fontWeight: (_focusStateMap[CurrentFocus.expiry] ?? false) ? FontWeight.w700 : FontWeight.w600,
+                            fontWeight: (_focusStateMap[FocusableWidget.expiry] ?? false) ? FontWeight.w700 : FontWeight.w600,
                             fontSize: 16,
                           )
                         ),
-                        Spacer(flex: 5),
+                        Spacer(flex: 8),
                       ]
                     )
                   ),
@@ -240,31 +252,31 @@ class ItemViewPageState extends State<ItemViewPage> {
                       children: [
                         // Quantity controller (how many units we have)
                         Flexible(
-                          flex: 1,
-                          child: generateInputField(TextInputType.none, _quantityController, CurrentFocus.quantity),
+                          flex: 2,
+                          child: generateInputField(_quantityController, FocusableWidget.quantity),
                         ),
                         // Weight controller (what is the weight of each unit)
                         Flexible(
-                          flex: 2,
-                          child: generateInputField(TextInputType.none, _weightController, CurrentFocus.weight),
+                          flex: 4,
+                          child: generateInputField(_weightController, FocusableWidget.weight),
                         ),
                         // Expiry controller (when will the item expire)
                         Flexible(
-                          flex: 3,
-                          child: generateInputField(TextInputType.datetime, _expiryController, CurrentFocus.expiry),
+                          flex: 5,
+                          child: generateInputField(_expiryController, FocusableWidget.expiry),
                         ),
                       ]
                     ),
                   ),
             
-                  Spacer(flex: 1),
+                  SizedBox(height: deviceSize.height * 0.006),
                   // Widget to display product image
             
                   Flexible(
                     flex: 16,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: containerGrey,
                         borderRadius: BorderRadius.circular(12.0), 
                       ),
                       child: ClipRRect(
@@ -290,7 +302,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                   ),
             
                   // Widget to display % left slider
-                  Spacer(flex: 1),
+                  SizedBox(height: deviceSize.height * 0.01),
             
                   Flexible(
                     flex: 3,
@@ -378,7 +390,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                       ],
                     ),
                   ),
-                  Spacer(flex: 2),
+                  SizedBox(height: deviceSize.height * 0.03),
                   Flexible(
                     flex: 2,
                     child: TextButton.icon(
@@ -428,14 +440,14 @@ class ItemViewPageState extends State<ItemViewPage> {
                       },
                             
                       style: ButtonStyle(
-                        fixedSize: WidgetStatePropertyAll(Size(MediaQuery.of(context).size.width * 0.95, MediaQuery.of(context).size.height * 0.1)),
+                        fixedSize: WidgetStatePropertyAll(Size(MediaQuery.of(context).size.width * 0.95, MediaQuery.of(context).size.height * 0.14)),
                         backgroundColor: WidgetStatePropertyAll(Colors.blue.withOpacity(0.15)),
                         overlayColor: WidgetStatePropertyAll(Colors.blueAccent.withOpacity(0.05)),
-                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14)))),
+                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
                       )
                     ),
                   ),
-                  Spacer(flex: 1),
+                  SizedBox(height: deviceSize.height * 0.01),
                   Flexible(
                     flex: 2,
                     child: TextButton.icon(
@@ -469,13 +481,13 @@ class ItemViewPageState extends State<ItemViewPage> {
           left: 0,
           right: 0,
           child: MagicKeyboard(
-            step: (focus == CurrentFocus.quantity) ? 1 : 100,
+            step: (_focus == FocusableWidget.quantity) ? 1 : 100,
             maxStringLength: 8,
             onChanged: (String val) {           
-              switch (focus) {
-                case CurrentFocus.weight:
+              switch (_focus) {
+                case FocusableWidget.weight:
                   _weightController.value = TextEditingValue(text: val);
-                case CurrentFocus.quantity:
+                case FocusableWidget.quantity:
                   _quantityController.value = TextEditingValue(text: val);
                 case _:
 
@@ -550,14 +562,14 @@ class ItemViewPageState extends State<ItemViewPage> {
     );
   }
 
-  Widget generateInputField(TextInputType keyboardType, TextEditingController controller, CurrentFocus focus) {
-    bool isFocused = _focusStateMap[focus] ?? false;
+  Widget generateInputField(TextEditingController controller, FocusableWidget widget) {
+    bool isFocused = _focusStateMap[widget] ?? false;
 
     return Padding(
-      padding: const EdgeInsets.all(8.0), 
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 4), 
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[100],
+          color: containerGrey,
           borderRadius: BorderRadius.circular(12.0), 
           border: Border.all(
             color: (isFocused) ? Colors.blueAccent : Colors.grey[300]!,
@@ -565,35 +577,37 @@ class ItemViewPageState extends State<ItemViewPage> {
           )
         ),
         child: TextField(
-          focusNode: _focusNodeMap[focus],
-          showCursor: keyboardType == TextInputType.none,
+          focusNode: _focusNodeMap[widget],
+          showCursor: (widget != FocusableWidget.expiry) && (_focus == widget), // unless it's the date picker we need a cursor
           controller: controller,
-          keyboardType: keyboardType,
+          keyboardType: TextInputType.none, // we use custom inputs for all of our fields in this row, no need for a keyboard type
           onTap: () async {
-          // Display a magic keyboard for numerical input
-          if (keyboardType == TextInputType.none) {
-            setState(() {
-              this.focus = focus; 
-              toggleMagicKeyboard();
-            });
-          // Display a flutter DatePicker for the expiry date
-          } else if (keyboardType == TextInputType.datetime) {
-            final selectedDate = await showDatePicker(
-              fieldLabelText: "Choose expiry date",
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime.now().subtract(const Duration(days: 365)), 
-              lastDate: DateTime.now().add(const Duration(days: 10000)),
-            );
+            if(_focus == widget) return; // if we are already focused on this widget - escape before we mess up the object state!
 
-            setState(() {
-              controller.text = formatSelectedExpiry(selectedDate);
-            });
-          } 
-          else {
-            throw ArgumentError("Controller requested a keyboard that does not exist!");
-          }
-        },
+            _focus = widget;
+            // Display a magic keyboard for numerical input
+            if (widget == FocusableWidget.quantity || widget == FocusableWidget.weight) {
+              setState(() {
+                magicKeyboardUp();
+              });
+            // Display a flutter DatePicker for the expiry date
+            } else if (widget == FocusableWidget.expiry) {
+              final selectedDate = await showDatePicker(
+                fieldLabelText: "Choose expiry date",
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime.now().subtract(const Duration(days: 365)), 
+                lastDate: DateTime.now().add(const Duration(days: 10000)),
+              );
+
+              setState(() {
+                controller.text = formatSelectedExpiry(selectedDate);
+              });
+            } 
+            else {
+              throw ArgumentError("Controller requested a keyboard that does not exist!");
+            }
+          },
           decoration: InputDecoration(
             border: InputBorder.none, 
             contentPadding: EdgeInsets.symmetric(horizontal: 12), 
@@ -645,12 +659,11 @@ class ItemViewPageState extends State<ItemViewPage> {
 
     // If there are more than 365 days until the product expires it should also show the year it will expire in
     return (daysUntil >= 365 || daysUntil < 0) ? "$trunc ${selectedExpiry.day} ${selectedExpiry.year}" : "$trunc ${selectedExpiry.day}";
-
   }
 }
 
 // Allows us to keep track of which editable widget is currently in focus for the user
-enum CurrentFocus {
+enum FocusableWidget {
   quantity,
   weight,
   name,
