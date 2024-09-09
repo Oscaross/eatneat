@@ -43,6 +43,7 @@ class MagicKeyboardState extends State<MagicKeyboard> {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
+      physics: NeverScrollableScrollPhysics(),
       childAspectRatio: 1,
       crossAxisCount: 4,
       // Take each button item in the list and convert it to an individual button widget

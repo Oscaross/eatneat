@@ -233,7 +233,7 @@ class PantryPageState extends State<PantryPage> {
               HapticFeedback.mediumImpact();
               Navigator.push(
                 context,
-                MaterialPageRoute(builder:(context) => ItemViewPage(),
+                MaterialPageRoute(builder:(context) => ItemViewPage(actionType: ActionType.add),
                 )
               );
             }

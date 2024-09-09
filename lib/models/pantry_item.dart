@@ -101,45 +101,6 @@ class PantryItem {
     return ret;
   }
 
-  // Format the expiry from a DateTime object to a neat representation (ie. Aug 23, Mar 19)
-  String displayExpiry() {
-    var month = expiry.month;
-    var trunc = "";
-
-    switch(month) {
-      case 1:
-      trunc = "Jan";
-      case 2:
-      trunc = "Feb";
-      case 3:
-      trunc = "Mar";
-      case 4:
-      trunc = "Apr";
-      case 5:
-      trunc = "May";
-      case 6:
-      trunc = "Jun";
-      case 7:
-      trunc = "Jul";
-      case 8:
-      trunc = "Aug";
-      case 9:
-      trunc = "Sep";
-      case 10:
-      trunc = "Oct";
-      case 11:
-      trunc = "Nov";
-      case 12:
-      trunc = "Dec";
-    }
-
-    // The number of days from now until when the product is set to expire
-    var daysUntil = expiry.difference(DateTime.now()).inDays;
-
-    // If there are more than 365 days until the product expires it should also show the year it will expire in
-    return (daysUntil < 365) ? "$trunc ${expiry.day}" : "$trunc ${expiry.day} ${expiry.year}";
-  }
-
   // Returns a color code based on how soon the food will expire:
   // Based on a percentage of time from when the food was added (added) to expires (expiry).
   // 50% = yellow, 75% = amber and 90% for red

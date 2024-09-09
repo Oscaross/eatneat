@@ -82,7 +82,7 @@ class BarcodeScanFailurePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder:(context) => ItemViewPage())
+                    MaterialPageRoute(builder:(context) => ItemViewPage(actionType: ActionType.add))
                   );
                 },
               )

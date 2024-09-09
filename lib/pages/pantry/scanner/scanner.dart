@@ -101,7 +101,7 @@ class Scanner {
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ItemViewPage(item: item))
+      MaterialPageRoute(builder: (context) => ItemViewPage(item: item, actionType: ActionType.add))
     );
 
     print("Scan successful");

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:eatneat/providers/label_provider.dart';
 import 'package:eatneat/pages/label/add_pantry_label.dart';
-import 'package:eatneat/util/shake.dart';
 import 'package:provider/provider.dart';
 
 class LabelBar extends StatefulWidget {
@@ -95,7 +94,6 @@ class LabelBarState extends State<LabelBar> {
                       // We need to re-draw the widget tree otherwise the labels won't change their styling
                       setState(() {
                         labelProvider.toggleLabel(label);
-                        Shaker.vibrate(300);
                       });
                     },
                     onLongPress: () {

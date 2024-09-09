@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:eatneat/models/pantry_item.dart';
 import 'package:eatneat/pages/pantry/pantry_card/card_popup_dialog.dart';
 import 'package:eatneat/providers/pantry_provider.dart';
-import 'package:eatneat/util/shake.dart';
+import 'package:flutter/services.dart';
 
 class PantryItemCard extends StatelessWidget {
   final PantryItem item;
@@ -38,7 +38,7 @@ class PantryItemCard extends StatelessWidget {
             onTap: () {
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ItemViewPage(item: item),)
+                  MaterialPageRoute(builder: (context) => ItemViewPage(item: item, actionType: ActionType.edit),)
                 );
             },
             // Spawn the item card dialog
@@ -51,7 +51,7 @@ class PantryItemCard extends StatelessWidget {
                   );
                 },
               );
-              Shaker.vibrate(15);
+              HapticFeedback.mediumImpact();
             },
             child: Stack(
               children: [

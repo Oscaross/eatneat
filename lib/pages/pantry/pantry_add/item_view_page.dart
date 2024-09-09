@@ -10,8 +10,9 @@ import 'package:provider/provider.dart';
 
 class ItemViewPage extends StatefulWidget {
   final PantryItem? item;
+  final ActionType actionType;
 
-  ItemViewPage({this.item});
+  ItemViewPage({this.item, required this.actionType});
 
   @override
   ItemViewPageState createState() => ItemViewPageState();
@@ -20,6 +21,7 @@ class ItemViewPage extends StatefulWidget {
 class ItemViewPageState extends State<ItemViewPage> {
 
   PantryItem? item;
+  late ActionType actionType;
 
   String name = "";
 
@@ -29,6 +31,7 @@ class ItemViewPageState extends State<ItemViewPage> {
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _expiryController = TextEditingController();
   bool _isMagicKeyboardShowing = false;
+  double _keyboardBottomPosition = -300;
   PantryCategory? _category;
   double _currentPercentageLeft = 100;
 
@@ -37,9 +40,9 @@ class ItemViewPageState extends State<ItemViewPage> {
   // 0 => item name, 1 => quantity, 2 => weight, 3 => expiry date
 
   // A numerical system that sets up a focus node for each editable UI widget 
-  final Map<int, FocusNode> _focusNodeMap = {};
+  final Map<CurrentFocus, FocusNode> _focusNodeMap = {};
   // Numerical system to capture the state of each node
-  final Map<int, bool> _focusStateMap = {};
+  final Map<CurrentFocus, bool> _focusStateMap = {};
   CurrentFocus focus = CurrentFocus.none;
   
 
@@ -59,13 +62,14 @@ class ItemViewPageState extends State<ItemViewPage> {
   @override
   void initState() {
     item = widget.item;
+    actionType = widget.actionType;
 
     // Initialise focus nodes - 4 in total to instantiate because there are 5 fields
-    for(int i = 0; i < 4; i++) {
-      _focusNodeMap[i] = FocusNode(debugLabel: "Addition page focus node index $i");
-      _focusNodeMap[i]!.addListener(() {
+    for(CurrentFocus cf in CurrentFocus.values) {
+      _focusNodeMap[cf] = FocusNode(debugLabel: "Addition page focus node index $cf");
+      _focusNodeMap[cf]!.addListener(() {
         setState(() {
-          _focusStateMap[i] = _focusNodeMap[i]!.hasFocus;
+          _focusStateMap[cf] = _focusNodeMap[cf]!.hasFocus;
         });
       });
     }
@@ -73,7 +77,9 @@ class ItemViewPageState extends State<ItemViewPage> {
     // Configure values to the current known item state
     if(item != null) {
       _nameController.text = item!.name;
-      // TODO: Figure out how to autofill expiry, quantity and weight fields using their controllers
+      _quantityController.value = TextEditingValue(text: item!.quantity.toString());
+      _weightController.value = TextEditingValue(text: item!.weight.toString());
+      _expiryController.value = TextEditingValue(text:formatSelectedExpiry(item!.expiry));
       _category = item!.category;
     }
     
@@ -82,8 +88,19 @@ class ItemViewPageState extends State<ItemViewPage> {
     super.initState();
   }
 
+  void unfocus(CurrentFocus focus) {
+    setState(() {
+      _focusStateMap[focus] = false;
+      focus = CurrentFocus.none;
+      toggleMagicKeyboard();
+    });
+  }
+
   void toggleMagicKeyboard() {
-    _isMagicKeyboardShowing = !_isMagicKeyboardShowing;
+    setState(() {
+      _isMagicKeyboardShowing = !_isMagicKeyboardShowing;
+      _keyboardBottomPosition = (_isMagicKeyboardShowing) ? 0 : -300;
+    });
   }
 
   @override
@@ -96,7 +113,7 @@ class ItemViewPageState extends State<ItemViewPage> {
         // Stops the UI from shrinking and breaking when the keyboard is pulled up
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text("View Item"),
+          title: Text(actionType == ActionType.add ? "Add Item" : "View Item"),
         ),
         body:
           // The entire body is wrapped with a Flex widget. This means we can dynamically size this UI based on the device 
@@ -104,9 +121,7 @@ class ItemViewPageState extends State<ItemViewPage> {
           GestureDetector(
             onTap: () {
               // We're attempting to escape keyboard input so unfocus to show the whole page again!
-              setState(() {
-                _focusNodeMap.forEach((_, node) => node.unfocus(),);
-              });
+              unfocus(focus);
             },
             child: Column(
               children: [
@@ -191,17 +206,17 @@ class ItemViewPageState extends State<ItemViewPage> {
                             "Qty",
                             style: TextStyle(
                               color: Colors.grey[700],
-                              fontWeight: (_focusStateMap[1] ?? false) ? FontWeight.w700 : FontWeight.w600,
+                              fontWeight: (_focusStateMap[CurrentFocus.quantity] ?? false) ? FontWeight.w700 : FontWeight.w600,
                               fontSize: 16,
                             )
                           ),
                         ),
                         Spacer(flex: 2),
                         Text(
-                          "Weight",
+                          "Grams",
                           style: TextStyle(
                             color: Colors.grey[700],
-                            fontWeight: (_focusStateMap[2] ?? false) ? FontWeight.w700 : FontWeight.w600,
+                            fontWeight: (_focusStateMap[CurrentFocus.weight] ?? false) ? FontWeight.w700 : FontWeight.w600,
                             fontSize: 16,
                           )
                         ),
@@ -210,7 +225,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                           "Expiry Date",
                           style: TextStyle(
                             color: Colors.grey[700],
-                            fontWeight: (_focusStateMap[3] ?? false) ? FontWeight.w700 : FontWeight.w600,
+                            fontWeight: (_focusStateMap[CurrentFocus.expiry] ?? false) ? FontWeight.w700 : FontWeight.w600,
                             fontSize: 16,
                           )
                         ),
@@ -226,17 +241,17 @@ class ItemViewPageState extends State<ItemViewPage> {
                         // Quantity controller (how many units we have)
                         Flexible(
                           flex: 1,
-                          child: generateInputField(TextInputType.none, _quantityController, 1),
+                          child: generateInputField(TextInputType.none, _quantityController, CurrentFocus.quantity),
                         ),
                         // Weight controller (what is the weight of each unit)
                         Flexible(
                           flex: 2,
-                          child: generateInputField(TextInputType.none, _weightController, 2),
+                          child: generateInputField(TextInputType.none, _weightController, CurrentFocus.weight),
                         ),
                         // Expiry controller (when will the item expire)
                         Flexible(
                           flex: 3,
-                          child: generateInputField(TextInputType.datetime, _expiryController, 3),
+                          child: generateInputField(TextInputType.datetime, _expiryController, CurrentFocus.expiry),
                         ),
                       ]
                     ),
@@ -367,11 +382,10 @@ class ItemViewPageState extends State<ItemViewPage> {
                   Flexible(
                     flex: 2,
                     child: TextButton.icon(
-                      label: Text("Add Item", style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.w800, fontSize: 16)),
-                      icon: Icon(Icons.add, color: Colors.blueAccent),
+                      label: Text((actionType == ActionType.add) ? "Add Item" : "Save Changes", style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.w800, fontSize: 16)),
+                      icon: Icon((actionType == ActionType.add) ? Icons.add : Icons.check, color: Colors.blueAccent),
                       onPressed: () {
-                        // TODO: Make parsing and logic checks here more robust & test them for weaknesse s
-                            
+                        // TODO: Make parsing and logic checks here more robust & test them for weaknesses
                         String name = _nameController.value.text;
                         double weight = double.tryParse(_weightController.value.text) ?? 0;
                         int quantity = int.tryParse(_quantityController.value.text) ?? 1;
@@ -425,8 +439,8 @@ class ItemViewPageState extends State<ItemViewPage> {
                   Flexible(
                     flex: 2,
                     child: TextButton.icon(
-                      label: Text("Delete Item", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 16)),
-                      icon: Icon(Icons.delete, color: Colors.white),
+                      label: Text((actionType == ActionType.add) ? "Cancel" : "Delete Item", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 16)),
+                      icon: Icon((actionType == ActionType.add) ? Icons.delete : Icons.cancel, color: Colors.white),
                       onPressed: () {
                         HapticFeedback.heavyImpact();
                         
@@ -447,17 +461,17 @@ class ItemViewPageState extends State<ItemViewPage> {
             ),
         ),
         if (_isMagicKeyboardShowing)
-        Positioned(
+        AnimatedPositioned(
+          duration: Duration(seconds: 1),
+          curve: Curves.easeIn,
           height: deviceSize.height * 0.52,
-          bottom: 0, // Display keyboard from the bottom of the screen
+          bottom: _keyboardBottomPosition,
           left: 0,
           right: 0,
           child: MagicKeyboard(
-            step: 100,
+            step: (focus == CurrentFocus.quantity) ? 1 : 100,
             maxStringLength: 8,
-            onChanged: (String val) {
-              // TODO: Store val and display it dynamically on the UI
-              _weightController.value = TextEditingValue(text: val);
+            onChanged: (String val) {           
               switch (focus) {
                 case CurrentFocus.weight:
                   _weightController.value = TextEditingValue(text: val);
@@ -469,6 +483,7 @@ class ItemViewPageState extends State<ItemViewPage> {
             },
             onNextPressed: () {
               // TODO: Fetch the next input node and focus it instead
+             
             },
           ),
         ),
@@ -481,10 +496,10 @@ class ItemViewPageState extends State<ItemViewPage> {
       return Color.fromARGB(255, 43, 225, 137);
     }
     else if(percentage >= 30) {
-      return Color.fromARGB(255, 251, 233, 73);
+      return Colors.yellow[600]!;
     }
     else {
-      return Colors.red;
+      return Colors.red[600]!;
     }
   }
 
@@ -535,8 +550,8 @@ class ItemViewPageState extends State<ItemViewPage> {
     );
   }
 
-  Widget generateInputField(TextInputType keyboardType, TextEditingController controller, int focusIndex) {
-    bool isFocused = _focusStateMap[focusIndex] ?? false;
+  Widget generateInputField(TextInputType keyboardType, TextEditingController controller, CurrentFocus focus) {
+    bool isFocused = _focusStateMap[focus] ?? false;
 
     return Padding(
       padding: const EdgeInsets.all(8.0), 
@@ -550,30 +565,103 @@ class ItemViewPageState extends State<ItemViewPage> {
           )
         ),
         child: TextField(
-          focusNode: _focusNodeMap[focusIndex],
+          focusNode: _focusNodeMap[focus],
+          showCursor: keyboardType == TextInputType.none,
           controller: controller,
           keyboardType: keyboardType,
-          onTap: () {
-            if(keyboardType == TextInputType.none) {
-              setState(() {
+          onTap: () async {
+          // Display a magic keyboard for numerical input
+          if (keyboardType == TextInputType.none) {
+            setState(() {
+              this.focus = focus; 
               toggleMagicKeyboard();
             });
-            }
-          },
+          // Display a flutter DatePicker for the expiry date
+          } else if (keyboardType == TextInputType.datetime) {
+            final selectedDate = await showDatePicker(
+              fieldLabelText: "Choose expiry date",
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime.now().subtract(const Duration(days: 365)), 
+              lastDate: DateTime.now().add(const Duration(days: 10000)),
+            );
+
+            setState(() {
+              controller.text = formatSelectedExpiry(selectedDate);
+            });
+          } 
+          else {
+            throw ArgumentError("Controller requested a keyboard that does not exist!");
+          }
+        },
           decoration: InputDecoration(
             border: InputBorder.none, 
             contentPadding: EdgeInsets.symmetric(horizontal: 12), 
           ),
           textAlign: TextAlign.center,
+          style: TextStyle(
+            color: isFocused ? Colors.grey[800] : Colors.grey[700],
+          )
         ),
       ),
     );
   }
+
+  String formatSelectedExpiry(DateTime? selectedExpiry) {
+    if(selectedExpiry == null) return "Choose expiry...";
+
+    var month = selectedExpiry.month;
+    var trunc = "";
+
+    switch(month) {
+      case 1:
+      trunc = "Jan";
+      case 2:
+      trunc = "Feb";
+      case 3:
+      trunc = "Mar";
+      case 4:
+      trunc = "Apr";
+      case 5:
+      trunc = "May";
+      case 6:
+      trunc = "Jun";
+      case 7:
+      trunc = "Jul";
+      case 8:
+      trunc = "Aug";
+      case 9:
+      trunc = "Sep";
+      case 10:
+      trunc = "Oct";
+      case 11:
+      trunc = "Nov";
+      case 12:
+      trunc = "Dec";
+    }
+
+    // The number of days from now until when the product is set to expire
+    var daysUntil = selectedExpiry.difference(DateTime.now()).inDays;
+
+    // If there are more than 365 days until the product expires it should also show the year it will expire in
+    return (daysUntil >= 365 || daysUntil < 0) ? "$trunc ${selectedExpiry.day} ${selectedExpiry.year}" : "$trunc ${selectedExpiry.day}";
+
+  }
 }
 
+// Allows us to keep track of which editable widget is currently in focus for the user
 enum CurrentFocus {
-  none,
-  name,
   quantity,
-  weight
+  weight,
+  name,
+  expiry,
+  category,
+  none
+}
+
+// Allows us to render the viewer page accordingly based off of whether we're adding this item for the first time or we are just editing something
+// ie. if we click an existing item, the 'Add Item' button should instead be displayed as a "Save Changes" button
+enum ActionType {
+  edit,
+  add
 }
