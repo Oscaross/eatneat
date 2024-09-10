@@ -33,96 +33,96 @@ class PantryItemCard extends StatelessWidget {
 
   Widget renderCardWithoutBanner(BuildContext context) {
     return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6.0), 
-          child: GestureDetector(
-            // If we tap the item go to its page
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ItemViewPage(item: item, actionType: ActionType.edit),)
-                );
-            },
-            // Spawn the item card dialog
-            onLongPress: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return Dialog(
-                    child: PantryItemCardDialog(item: item, card: this),
-                  );
-                },
+      padding: const EdgeInsets.symmetric(vertical: 6.0), 
+      child: GestureDetector(
+        // If we tap the item go to its page
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ItemViewPage(item: item, actionType: ActionType.edit),)
+            );
+        },
+        // Spawn the item card dialog
+        onLongPress: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Dialog(
+                child: PantryItemCardDialog(item: item, card: this),
               );
-              HapticFeedback.mediumImpact();
             },
-            child: Stack(
-              children: [
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+          );
+          HapticFeedback.mediumImpact();
+        },
+        child: Stack(
+          children: [
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              elevation: 1,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    flex: 6,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(14.0)),
+                        image: DecorationImage(
+                          image: NetworkImage(item.image ?? "https://assets.sainsburys-groceries.co.uk/gol/7931400/1/640x640.jpg"), 
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
                   ),
-                  elevation: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                        item.name,
+                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: Colors.grey[800]),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        flex: 6,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(14.0)),
-                            image: DecorationImage(
-                              image: NetworkImage(item.image ?? "https://assets.sainsburys-groceries.co.uk/gol/7931400/1/640x640.jpg"), 
-                              fit: BoxFit.contain,
-                            ),
+                      Card(
+                        elevation: 0.5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Icon(Icons.scale, size: 17, color: Colors.grey[800]),
+                              // If the item has a weight of 0 we just care about its arbitrary quantity (ie. 2 "large" chicken breasts)
+                              Text(" ${item.quantity} x ${item.weight == 0 ? "" : item.weightFormatted()}"),
+                            ],
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Text(
-                            item.name,
-                            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: Colors.grey[800]),
+                      Card(
+                        elevation: 0.5,
+                        color: item.colorCodeExpiry(context),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Icon(Icons.timer, size: 18, color: Colors.grey[800]),
+                              Text(" ${item.formatExpiryTime()}", style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.w600)),
+                            ],
                           ),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Card(
-                            elevation: 0.5,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.scale, size: 17, color: Colors.grey[800]),
-                                  // If the item has a weight of 0 we just care about its arbitrary quantity (ie. 2 "large" chicken breasts)
-                                  Text(" ${item.quantity} x ${item.weight == 0 ? "" : item.weightFormatted()}"),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Card(
-                            elevation: 0.5,
-                            color: item.colorCodeExpiry(context),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.timer, size: 18, color: Colors.grey[800]),
-                                  Text(" ${item.formatExpiryTime()}", style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.w600)),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
+          ],
+        ),
+      ),
+    );
   }
 
   void deleteItem(PantryItem item, PantryProvider provider) {

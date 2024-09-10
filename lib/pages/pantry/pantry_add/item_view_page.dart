@@ -452,7 +452,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                     flex: 2,
                     child: TextButton.icon(
                       label: Text((actionType == ActionType.add) ? "Cancel" : "Delete Item", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 16)),
-                      icon: Icon((actionType == ActionType.add) ? Icons.delete : Icons.cancel, color: Colors.white),
+                      icon: Icon((actionType == ActionType.add) ? Icons.cancel : Icons.delete, color: Colors.white),
                       onPressed: () {
                         HapticFeedback.heavyImpact();
                         
@@ -481,6 +481,7 @@ class ItemViewPageState extends State<ItemViewPage> {
           left: 0,
           right: 0,
           child: MagicKeyboard(
+            currentValue: (_focus == FocusableWidget.quantity) ? _quantityController.value.text : _weightController.value.text,
             step: (_focus == FocusableWidget.quantity) ? 1 : 100,
             maxStringLength: 8,
             onChanged: (String val) {           
@@ -493,9 +494,11 @@ class ItemViewPageState extends State<ItemViewPage> {
 
               }
             },
-            onNextPressed: () {
-              // TODO: Fetch the next input node and focus it instead
-             
+            onKeyboardDown: () {
+              setState(() {
+                magicKeyboardDown();
+                unfocus(_focus);
+              });
             },
           ),
         ),

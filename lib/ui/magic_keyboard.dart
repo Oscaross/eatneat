@@ -5,11 +5,13 @@ import 'package:flutter/services.dart';
 
 class MagicKeyboard extends StatefulWidget {
   final void Function(String val) onChanged;
-  final void Function()? onNextPressed;
+  final void Function()? onKeyboardDown;
   final int? maxStringLength;
   final int step;
+  // Capture the current value held within the box if there is one.
+  final String? currentValue;
 
-  MagicKeyboard({required this.onChanged, required this.step, this.onNextPressed, this.maxStringLength});
+  MagicKeyboard({required this.onChanged, required this.step, this.onKeyboardDown, this.maxStringLength, this.currentValue});
 
   @override
   MagicKeyboardState createState() => MagicKeyboardState();
@@ -17,8 +19,8 @@ class MagicKeyboard extends StatefulWidget {
 
 class MagicKeyboardState extends State<MagicKeyboard> {
 
-  final List<String> buttons = ["1", "2", "3", "+", "4", "5", "6", "-", "7", "8", "9", "Clr", ".", "0", "x", "Nxt"];
-  void Function()? onNextPressed;
+  final List<String> buttons = ["1", "2", "3", "+", "4", "5", "6", "-", "7", "8", "9", "Clr", ".", "0", "x", "Down"];
+  void Function()? onKeyboardDown;
   int maxStringLength = 10;
   int step = 0;
 
@@ -30,9 +32,10 @@ class MagicKeyboardState extends State<MagicKeyboard> {
 
   @override
   void initState() {
-    onNextPressed = widget.onNextPressed;
+    onKeyboardDown = widget.onKeyboardDown;
     maxStringLength = widget.maxStringLength ?? 10;
     step = widget.step;
+    _capturedInput = widget.currentValue ?? "";
 
     super.initState();
   }
@@ -61,8 +64,8 @@ class MagicKeyboardState extends State<MagicKeyboard> {
             switch(label) {
               
               // If we have a next pressed action, great! Otherwise just do nothing
-              case "Nxt":
-                (onNextPressed == null) ? null : onNextPressed!();
+              case "Down":
+                (onKeyboardDown == null) ? null : onKeyboardDown!();
               case "Clr":
                 processClear();
               case ".":
@@ -121,7 +124,13 @@ class MagicKeyboardState extends State<MagicKeyboard> {
             size: 30,
             color: Colors.blue,
           );
-      case "Nxt":
+      case "Down":
+        return Icon(
+            Icons.keyboard_double_arrow_down,
+            weight: 20,
+            size: 30,
+            color: Colors.blue,
+          );
       case "Clr":
         return Text(
           label,
@@ -171,7 +180,17 @@ class MagicKeyboardState extends State<MagicKeyboard> {
     // Can't have negative weight, if val is negative clamp it at 0
     if(val < 0) val = 0;
 
-    _capturedInput = val.toString();
+    // Convert the value to a string with up to 2 decimal places
+    String formattedVal = val.toStringAsFixed(2);
+    
+    // Remove trailing '.0' if there are no decimal digits - keeps only significant figures in the decimal places
+    if (formattedVal.endsWith('.00')) {
+      formattedVal = formattedVal.substring(0, formattedVal.length - 3);
+    } else if (formattedVal.endsWith('0')) {
+      formattedVal = formattedVal.substring(0, formattedVal.length - 1);
+    }
+
+    _capturedInput = formattedVal;
     widget.onChanged(_capturedInput);
     HapticFeedback.lightImpact();
   }
