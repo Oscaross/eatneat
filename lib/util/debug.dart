@@ -44,12 +44,12 @@ class Debug {
     provider.categories.add(bread);
     provider.categories.add(condiments);
 
-    canned.addToCategory(sweetcorn);
-    bread.addToCategory(steak);
-    bread.addToCategory(pork);
-    bread.addToCategory(chicken);
-    bread.addToCategory(fish);
-    bread.addToCategory(fuckUpMyAppPlease);
+    canned.setCategory(sweetcorn);
+    bread.setCategory(steak);
+    bread.setCategory(pork);
+    bread.setCategory(chicken);
+    bread.setCategory(fish);
+    bread.setCategory(fuckUpMyAppPlease);
 
     provider2.createNewLabel(meat);
     provider2.createNewLabel(cold);

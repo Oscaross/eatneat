@@ -9,7 +9,7 @@ import 'package:eatneat/pages/pantry/scanner/scanner.dart';
 import 'package:eatneat/pages/pantry/widgets/navigation_bar.dart';
 import 'package:eatneat/providers/label_provider.dart';
 import 'package:eatneat/providers/pantry_provider.dart';
-import 'package:eatneat/pages/pantry/pantry_add/item_view_page.dart';
+import 'package:eatneat/pages/pantry/item_view_page.dart';
 import 'package:eatneat/util/debug.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';

@@ -1,7 +1,7 @@
 // A static class that is designed to encapsulate all logic for communicating with the OFF API, fetching product data & images
 // Handles errors with the scanne, errors in response and instructs the pantry page on where the user should be redirected after a scan occurs
 
-import 'package:eatneat/pages/pantry/pantry_add/item_view_page.dart';
+import 'package:eatneat/pages/pantry/item_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:eatneat/models/pantry_item.dart';

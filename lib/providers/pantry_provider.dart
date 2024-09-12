@@ -11,8 +11,6 @@ class PantryProvider with ChangeNotifier {
   List<PantryCategory> _categories = [];
   List<PantryCategory> get categories => (_isSearching) ? _categoriesInSearch : _categories;
 
-  SortByMode _currentSortingMode = SortByMode.alphabetical;
-
   // Search management:
 
   List<PantryCategory> _categoriesInSearch = [];
@@ -37,31 +35,6 @@ class PantryProvider with ChangeNotifier {
     }
 
     return ret;
-  }
-
-  // Takes a mode and sorts the pantry by this mode, this function is only called if:
-  // a. the user changes the SortByMode
-  // b. the list of pantry items is changed
-  void sortBy(SortByMode mode) {
-
-    _currentSortingMode = mode;
-
-    switch(mode) {
-      case SortByMode.alphabetical:
-        items.sort((a, b) => a.name.compareTo(b.name));
-      case SortByMode.dateAdded:
-      // If a was added before b then return a 1, otherwise return a 0 and this allows for us to sort similarly to the compareTo operator
-        items.sort((a, b) => (a.added.isBefore(b.added) ? 1 : 0));
-      case SortByMode.expiryDate:
-        items.sort((a, b) => (b.expiry.isBefore(a.expiry) ? 1 : 0));
-      case SortByMode.weight:
-        items.sort((a, b) => b.weight.compareTo(a.weight));
-      default: 
-        throw ArgumentError("Attempted to sort items by a mode that does not exist?");
-    }
-
-    // State has changed so notify the listeners
-    notifyListeners();
   }
 
   void searchBy(String searchTerm) {
@@ -103,10 +76,7 @@ class PantryProvider with ChangeNotifier {
   }
 
   void setCategory(PantryCategory category, PantryItem item) {
-    // Items must have at most one category
-    item.category.removeFromCategory(item);
-    category.addToCategory(item);
-
+    category.setCategory(item);
     notifyListeners();
   }
 
@@ -119,11 +89,4 @@ class PantryProvider with ChangeNotifier {
 
     return ret;
   }
-}
-
-enum SortByMode {
-  dateAdded, 
-  expiryDate,
-  alphabetical,
-  weight,
 }

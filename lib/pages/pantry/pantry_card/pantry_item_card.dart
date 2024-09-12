@@ -1,4 +1,4 @@
-import 'package:eatneat/pages/pantry/pantry_add/item_view_page.dart';
+import 'package:eatneat/pages/pantry/item_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:eatneat/models/pantry_item.dart';
 import 'package:eatneat/pages/pantry/pantry_card/card_popup_dialog.dart';

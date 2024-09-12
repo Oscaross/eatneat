@@ -45,7 +45,6 @@ class ItemViewPageState extends State<ItemViewPage> {
   
   // Color theme related variables
   late Color _sliderColor;
-  static final Color containerGrey = Colors.grey[100]!;
 
   @override
   void dispose() {
@@ -145,24 +144,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                         keyboardType: TextInputType.name, 
                         focusNode: _focusNodeMap[0],
                         decoration: InputDecoration(
-                          hintText: "Enter product name...",
-                          hintStyle: TextStyle(color: Colors.grey[400]),
-                          filled: true,
-                          fillColor: containerGrey,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.blue, width: 2),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                           prefixIcon: Icon(Icons.label, color: Colors.grey[600]),
-                        ),
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -175,11 +157,11 @@ class ItemViewPageState extends State<ItemViewPage> {
                       child: GestureDetector(
                         onTap: () {
                           if(_isMagicKeyboardShowing) magicKeyboardDown();
+                          _focus = FocusableWidget.category;
                           _showCategoryPicker(context);
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: containerGrey,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(color: Colors.grey.shade300, width: 1.5),
                           ),
@@ -277,10 +259,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                   Flexible(
                     flex: 16,
                     child: Container(
-                      decoration: BoxDecoration(
-                        color: containerGrey,
-                        borderRadius: BorderRadius.circular(12.0), 
-                      ),
+                      decoration: Themes.decorateContainer(),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12.0), // Same value to clip the image
                         child: Padding(
@@ -308,23 +287,15 @@ class ItemViewPageState extends State<ItemViewPage> {
             
                   Flexible(
                     flex: 3,
-                    child: Card(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Colors.grey[500]!,
-                          width: 1.5, 
-                        ),
-                        borderRadius: BorderRadius.circular(10.0), 
+                    child: SizedBox(
+                      height: deviceSize.height * 0.03,
+                      width: deviceSize.width * 0.24,
+                      child: Chip(
+                        label: Center(
+                          child: Text("${_currentPercentageLeft.toInt()}% left")
+                        )
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0), 
-                        child: Text(
-                          "${_currentPercentageLeft.toInt()}% left",
-                          style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
+                    )
                   ),
             
                   // The slider itself that we control the quantity with
@@ -354,7 +325,6 @@ class ItemViewPageState extends State<ItemViewPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         OutlinedButton(
-                          style: percentLeftButtonStyle(),
                           onPressed: () {
                             setState(() {
                               _currentPercentageLeft = 0;
@@ -366,7 +336,6 @@ class ItemViewPageState extends State<ItemViewPage> {
                           child: Text("Empty")
                         ),
                         OutlinedButton(
-                          style: percentLeftButtonStyle(),
                           onPressed: () {
                             setState(() {
                               _currentPercentageLeft = 50;
@@ -378,7 +347,6 @@ class ItemViewPageState extends State<ItemViewPage> {
                           child: Text("Half")
                         ),
                         OutlinedButton(
-                          style: percentLeftButtonStyle(),
                           onPressed: () {
                             setState(() {
                               _currentPercentageLeft = 100;
@@ -408,10 +376,10 @@ class ItemViewPageState extends State<ItemViewPage> {
                         PantryCategory category = _category ?? PantryCategory.none;
                         // TODO: not even gonna bother with this shit tonight
                         DateTime expiry = DateTime.now();
-                        Set<LabelItem> labelSet = {};
+                        Set<LabelItem> labelSet = {};  
                             
                         if(item == null) {
-                            
+
                           PantryItem i = PantryItem(
                             name: name,
                             weight: weight,
@@ -422,9 +390,8 @@ class ItemViewPageState extends State<ItemViewPage> {
                           );
                           
                           pantryProvider.addItem(i);
-                          // TODO: Terrible addition logic, it should be set in the pantry item constructor and handled independent of these classes as that's asking for trouble
-                          category.addToCategory(i);
                         }
+                        // If the item is already in the pantry we just need to update all of the fields with the values from this page state
                         else {
                           item!.name = name;
                           item!.weight = weight;
@@ -433,8 +400,6 @@ class ItemViewPageState extends State<ItemViewPage> {
                           item!.category = category;
                           item!.expiry = expiry;
                           item!.labelSet = labelSet;
-                            
-                          category.addToCategory(item!);
                         }
                             
                         HapticFeedback.heavyImpact();
@@ -445,7 +410,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                       )
                     ),
                   ),
-                  SizedBox(height: deviceSize.height * 0.01),
+                  SizedBox(height: deviceSize.height * 0.02),
                   Flexible(
                     flex: 2,
                     child: FilledButton.icon(
@@ -504,6 +469,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                         fixedSize: Themes.getFullWidthButtonSize(context),
                         backgroundColor: Colors.red.withOpacity(0.7),
                         overlayColor: Colors.redAccent,
+                        foregroundColor: Colors.white,
                       )
                     ),
                   ),
@@ -563,7 +529,7 @@ class ItemViewPageState extends State<ItemViewPage> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: 200,
           child: CupertinoPicker(
             backgroundColor: Colors.white,
@@ -582,83 +548,47 @@ class ItemViewPageState extends State<ItemViewPage> {
     );
   }
 
-  static ButtonStyle percentLeftButtonStyle() {
-    return ButtonStyle(
-      foregroundColor: WidgetStatePropertyAll(Colors.blueAccent),
-      textStyle: WidgetStatePropertyAll(
-        TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 16,
-          color: Colors.blueAccent,
-        ),
-      ),
-      side: WidgetStatePropertyAll(BorderSide(color: Colors.blueAccent, width: 2)),
-      shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-      ),
-      overlayColor: WidgetStatePropertyAll(
-        Colors.blueAccent.withOpacity(0.1),
-      ),
-    );
-  }
-
   Widget generateInputField(TextEditingController controller, FocusableWidget widget) {
     bool isFocused = _focusStateMap[widget] ?? false;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 0, 8, 4), 
-      child: Container(
-        decoration: BoxDecoration(
-          color: containerGrey,
-          borderRadius: BorderRadius.circular(12.0), 
-          border: Border.all(
-            color: (isFocused) ? Colors.blueAccent : Colors.grey[300]!,
-            width: (isFocused) ? 2 : 1.5,
-          )
-        ),
-        child: TextField(
-          focusNode: _focusNodeMap[widget],
-          showCursor: (widget != FocusableWidget.expiry) && (_focus == widget), // unless it's the date picker we need a cursor
-          controller: controller,
-          keyboardType: TextInputType.none, // we use custom inputs for all of our fields in this row, no need for a keyboard type
-          onTap: () async {
-            if(_focus == widget) return; // if we are already focused on this widget - escape before we mess up the object state!
+      child: TextField(
+        focusNode: _focusNodeMap[widget],
+        showCursor: (widget != FocusableWidget.expiry) && (_focus == widget), // unless it's the date picker we need a cursor
+        controller: controller,
+        keyboardType: TextInputType.none, // we use custom inputs for all of our fields in this row, no need for a keyboard type
+        onTap: () async {
+          if(_focus == widget) return; // if we are already focused on this widget - escape before we mess up the object state!
 
-            _focus = widget;
-            // Display a magic keyboard for numerical input
-            if (widget == FocusableWidget.quantity || widget == FocusableWidget.weight) {
-              setState(() {
-                magicKeyboardUp();
-              });
-            // Display a flutter DatePicker for the expiry date
-            } else if (widget == FocusableWidget.expiry) {
-              final selectedDate = await showDatePicker(
-                fieldLabelText: "Choose expiry date",
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime.now().subtract(const Duration(days: 365)), 
-                lastDate: DateTime.now().add(const Duration(days: 10000)),
-              );
+          _focus = widget;
+          // Display a magic keyboard for numerical input
+          if (widget == FocusableWidget.quantity || widget == FocusableWidget.weight) {
+            setState(() {
+              magicKeyboardUp();
+            });
+          // Display a flutter DatePicker for the expiry date
+          } else if (widget == FocusableWidget.expiry) {
+            final selectedDate = await showDatePicker(
+              fieldLabelText: "Choose expiry date",
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime.now().subtract(const Duration(days: 365)), 
+              lastDate: DateTime.now().add(const Duration(days: 10000)),
+            );
 
-              setState(() {
-                controller.text = formatSelectedExpiry(selectedDate);
-              });
-            } 
-            else {
-              throw ArgumentError("Controller requested a keyboard that does not exist!");
-            }
-          },
-          decoration: InputDecoration(
-            border: InputBorder.none, 
-            contentPadding: EdgeInsets.symmetric(horizontal: 12), 
-          ),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: isFocused ? Colors.grey[800] : Colors.grey[700],
-          )
-        ),
+            setState(() {
+              controller.text = formatSelectedExpiry(selectedDate);
+            });
+          } 
+          else {
+            throw ArgumentError("Controller requested a keyboard that does not exist!");
+          }
+        },
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: isFocused ? Colors.grey[800] : Colors.grey[700],
+        )
       ),
     );
   }

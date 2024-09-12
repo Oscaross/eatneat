@@ -9,7 +9,7 @@ class PantryCategory {
   static final Set<String> defaultCategories = {"Breakfast & Cereals", "Biscuits & Snacks", "Breads & Wraps", "Baking & Dessert", "Tinned & Jarred", "Condiments & Spreads", "Pasta, Rice & Grains", "Instant & Ready Meals", "Tea, Coffee & Beverages", "World Foods", "Health & Special Diet", "Herbs & Spices", "Cooking Essentials"};
 
   // A set containing all PantryItems that belong to this category
-  List<PantryItem> _items = List.empty(growable: true);
+  Set<PantryItem> _items = {};
 
   // The name of the category
   String name;
@@ -27,18 +27,22 @@ class PantryCategory {
 
   PantryCategory({required this.name});
 
-  void addToCategory(PantryItem item) {
-    if(!_items.contains(item)) {
-      _items.add(item);
-      _count++;
-    }
+  void removeFromCategory(PantryItem item) {
+    // Only update the count if the item was successfully removed from the set (was in there to begin with)
+    if(_items.remove(item)) _count--;
   }
 
-  void removeFromCategory(PantryItem item) {
-    if(_items.contains(item)) {
-      _items.remove(item);
-      _count--;
-    }
+  void setCategory(PantryItem item) {
+    // Avoid uneccessary computation by exiting this function if the item is already in the category
+    if(_items.contains(item)) return;
+    // Remove the item from its original category
+    item.category.removeFromCategory(item);
+
+    // Add to its new category
+    _items.add(item);
+    _count++;
+
+    item.category = this;
   }
 
   void setName(String name) {
@@ -50,7 +54,7 @@ class PantryCategory {
   }
 
   List<PantryItem> getPantryItems(String? searchTerm) {
-    if(searchTerm == null) return _items;
+    if(searchTerm == null) return _items.toList();
 
     List<PantryItem> ret = [];
 
