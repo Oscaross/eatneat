@@ -2,6 +2,7 @@ import 'package:eatneat/models/label_item.dart';
 import 'package:eatneat/models/pantry_category.dart';
 import 'package:eatneat/providers/pantry_provider.dart';
 import 'package:eatneat/ui/magic_keyboard.dart';
+import 'package:eatneat/ui/themes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:eatneat/models/pantry_item.dart';
@@ -111,6 +112,7 @@ class ItemViewPageState extends State<ItemViewPage> {
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
+    PantryProvider pantryProvider = Provider.of<PantryProvider>(context);
 
     return Stack(
       children: [
@@ -351,7 +353,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        TextButton(
+                        OutlinedButton(
                           style: percentLeftButtonStyle(),
                           onPressed: () {
                             setState(() {
@@ -363,7 +365,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                           },
                           child: Text("Empty")
                         ),
-                        TextButton(
+                        OutlinedButton(
                           style: percentLeftButtonStyle(),
                           onPressed: () {
                             setState(() {
@@ -375,7 +377,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                           },
                           child: Text("Half")
                         ),
-                        TextButton(
+                        OutlinedButton(
                           style: percentLeftButtonStyle(),
                           onPressed: () {
                             setState(() {
@@ -393,9 +395,9 @@ class ItemViewPageState extends State<ItemViewPage> {
                   SizedBox(height: deviceSize.height * 0.03),
                   Flexible(
                     flex: 2,
-                    child: TextButton.icon(
-                      label: Text((actionType == ActionType.add) ? "Add Item" : "Save Changes", style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.w800, fontSize: 16)),
-                      icon: Icon((actionType == ActionType.add) ? Icons.add : Icons.check, color: Colors.blueAccent),
+                    child: FilledButton.icon(
+                      label: Text((actionType == ActionType.add) ? "Add Item" : "Save Changes"),
+                      icon: Icon((actionType == ActionType.add) ? Icons.add : Icons.check),
                       onPressed: () {
                         // TODO: Make parsing and logic checks here more robust & test them for weaknesses
                         String name = _nameController.value.text;
@@ -419,7 +421,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                             labelSet: labelSet
                           );
                           
-                          Provider.of<PantryProvider>(context, listen:false).addItem(i);
+                          pantryProvider.addItem(i);
                           // TODO: Terrible addition logic, it should be set in the pantry item constructor and handled independent of these classes as that's asking for trouble
                           category.addToCategory(i);
                         }
@@ -438,33 +440,70 @@ class ItemViewPageState extends State<ItemViewPage> {
                         HapticFeedback.heavyImpact();
                         Navigator.pop(context);
                       },
-                            
-                      style: ButtonStyle(
-                        fixedSize: WidgetStatePropertyAll(Size(MediaQuery.of(context).size.width * 0.95, MediaQuery.of(context).size.height * 0.14)),
-                        backgroundColor: WidgetStatePropertyAll(Colors.blue.withOpacity(0.15)),
-                        overlayColor: WidgetStatePropertyAll(Colors.blueAccent.withOpacity(0.05)),
-                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
+                      style: FilledButton.styleFrom(
+                        fixedSize: Themes.getFullWidthButtonSize(context),
                       )
                     ),
                   ),
                   SizedBox(height: deviceSize.height * 0.01),
                   Flexible(
                     flex: 2,
-                    child: TextButton.icon(
-                      label: Text((actionType == ActionType.add) ? "Cancel" : "Delete Item", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 16)),
-                      icon: Icon((actionType == ActionType.add) ? Icons.cancel : Icons.delete, color: Colors.white),
+                    child: FilledButton.icon(
+                      label: Text((actionType == ActionType.add) ? "Cancel" : "Delete Item"),
+                      icon: Icon((actionType == ActionType.add) ? Icons.cancel : Icons.delete),
                       onPressed: () {
                         HapticFeedback.heavyImpact();
-                        
-                        // TODO: Show a confirmation alert dialog
-                        
+
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text("Heads up!"),
+                              content: Center(
+                                child: Text(
+                                  (actionType == ActionType.add) ? 
+                                    "Cancelling will lose the current input, this action cannot be undone."
+                                      :
+                                    "Deleting an item is permanent, this action cannot be undone."
+                                ),
+                              ),
+                              actions: [
+                                ButtonBar(
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(); 
+                                      },
+                                      child: Text('Back'),
+                                    ),
+
+                                    TextButton(
+                                      onPressed: () {
+
+                                        Navigator.pop(context); // remove dialog
+
+                                        if(actionType == ActionType.edit) {
+                                          assert(item != null, "Attempted to delete an item from the viewer page that does not exist!");
+
+                                          pantryProvider.removeItem(item!); // null safe because item is not null when we are in ActionType.edit (I hope)
+                                        }
+                                        
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text((actionType == ActionType.add) ? "Continue" : "Delete"),
+                                    ),
+                                  ]
+                                )
+                              ],
+                            );
+                          }
+                        );
                       },
-                            
-                      style: ButtonStyle(
-                        fixedSize: WidgetStatePropertyAll(Size(MediaQuery.of(context).size.width * 0.95, MediaQuery.of(context).size.height * 0.1)),
-                        backgroundColor: WidgetStatePropertyAll(Colors.red.withOpacity(0.7)),
-                        overlayColor: WidgetStatePropertyAll(Colors.redAccent.withOpacity(0.7)),
-                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14)))),
+
+                      style: FilledButton.styleFrom(
+                        fixedSize: Themes.getFullWidthButtonSize(context),
+                        backgroundColor: Colors.red.withOpacity(0.7),
+                        overlayColor: Colors.redAccent,
                       )
                     ),
                   ),

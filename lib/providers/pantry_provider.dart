@@ -89,15 +89,12 @@ class PantryProvider with ChangeNotifier {
 
   void addItem(PantryItem item) {
     _items.add(item);
-    // We must re-sort the list
-    sortBy(_currentSortingMode);
     notifyListeners();
   }
 
   void removeItem(PantryItem item) {
     _items.remove(item);
-    // We must re-sort the list
-    sortBy(_currentSortingMode);
+    item.category.removeFromCategory(item);
     notifyListeners();
   }
 
