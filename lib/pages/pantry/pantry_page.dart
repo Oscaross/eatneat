@@ -1,11 +1,10 @@
-import 'package:eatneat/ui/magic_keyboard.dart';
+import 'package:eatneat/models/pantry_item.dart';
 import 'package:eatneat/ui/padding.dart';
 import 'package:eatneat/ui/quick_page_scroller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:eatneat/models/pantry_category.dart';
 import 'package:eatneat/pages/pantry/pantry_card/pantry_item_card.dart';
-import 'package:eatneat/pages/pantry/scanner/scan_failure_page.dart';
 import 'package:eatneat/pages/pantry/scanner/scanner.dart';
 import 'package:eatneat/pages/pantry/widgets/navigation_bar.dart';
 import 'package:eatneat/providers/label_provider.dart';
@@ -21,6 +20,8 @@ class PantryPage extends StatefulWidget {
 }
 
 class PantryPageState extends State<PantryPage> {
+  
+  String? searchTerm;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,17 @@ class PantryPageState extends State<PantryPage> {
               // Search bar
               SizedBox(
                 height: deviceSize.height * 0.05, 
-                child: Navbar(),
+                child: Navbar(
+                  onChanged: (input) { 
+                    setState(() {
+                      searchTerm = input;
+                    });
+                  },
+                  onSubmitted: (input) {
+
+                  }
+
+                ),
               ),
 
               SizedBox(height: deviceSize.height * 0.02),
@@ -79,6 +90,18 @@ class PantryPageState extends State<PantryPage> {
             }
           ),
           SpeedDialChild(
+            child: Icon(Icons.receipt),
+            label: "Scan Receipt",
+            onTap: () {
+              HapticFeedback.mediumImpact();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder:(context) => ItemViewPage(actionType: ActionType.add),
+                )
+              );
+            }
+          ),
+          SpeedDialChild(
             child: Icon(Icons.plus_one),
             label: "Manually Add",
             onTap: () {
@@ -98,29 +121,6 @@ class PantryPageState extends State<PantryPage> {
               Debug().configure(Provider.of<PantryProvider>(context, listen:false), Provider.of<LabelProvider>(context, listen:false));
             }
           ),
-
-          SpeedDialChild(
-            child: Icon(Icons.tab),
-            label: "[DEBUG] Magic Keyboard",
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MagicKeyboard(onChanged: (String val) {}, step: 1))
-              );
-            }
-
-          ),
-
-          SpeedDialChild(
-            child: Icon(Icons.tab),
-            label: "[DEBUG] Barcode scan failure",
-            onTap: () {
-               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => BarcodeScanFailurePage())
-              );
-            }
-          ),
         ]
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -132,6 +132,8 @@ class PantryPageState extends State<PantryPage> {
   }
 
   Widget buildCategoryBanner(PantryCategory category, Size deviceSize) {
+    List<PantryItem> items = category.getPantryItems(searchTerm);
+
     return Column(
       children: [
         Container(
@@ -187,7 +189,7 @@ class PantryPageState extends State<PantryPage> {
                       width: 2,
                     )),
                     alignment: Alignment.center,
-                    padding: WidgetStatePropertyAll(EdgeInsets.only(top: 3)),
+                    padding: WidgetStatePropertyAll(EdgeInsets.only(top: 2)),
                   )
                 ),
                 // Icons to edit the category
@@ -207,7 +209,7 @@ class PantryPageState extends State<PantryPage> {
                       width: 2,
                     )),
                     alignment: Alignment.center,
-                    padding: WidgetStatePropertyAll(EdgeInsets.only(top: 6)),
+                    padding: WidgetStatePropertyAll(EdgeInsets.only(top: 4)),
                   )
                 ),
               ],
@@ -215,14 +217,14 @@ class PantryPageState extends State<PantryPage> {
           ),
         ),
 
-        // If the category should hide it's contents - just render a small sized box, otherwise, show the contents
-        (category.isHidden) ? SizedBox(height: deviceSize.height * 0.01) :
+        // If the category should hide it's contents - just render nothing
+        (category.isHidden) ? Center() :
         Column( 
           children: [
-              SizedBox(
+            SizedBox(
               // Set the height based on how many objects there are to render. 
               // more than 2 objects = we use the second row of space then we scroll horizontally, relies on MediaQuery for consistent scaling
-              height: deviceSize.height * ((category.itemCount <= 2) ? 0.25 : 0.5), 
+              height: deviceSize.height * ((items.length <= 2) ? 0.25 : 0.5), 
               child: (category.isHidden) ? null : GridView.builder(
                 scrollDirection: Axis.horizontal,
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -232,17 +234,17 @@ class PantryPageState extends State<PantryPage> {
                   crossAxisSpacing: 10, // Spacing between items horizontally
                 ),
                 // The number of items to render is the number of PantryItems in the current category of the iteration
-                itemCount: category.itemCount,
+                itemCount: items.length,
                 itemBuilder: (context, itemIndex) {
                   return PantryItemCard(
-                    item: category.items[itemIndex],
+                    item: items[itemIndex],
                   );
                 },
               ),
             ),
 
             // Page viewer widget ( . . . )
-            QuickPageScroller(totalElements: category.itemCount, currentPageIndex: 0, elementsPerPage: 4, onWidgetTap: openSearchBar),
+            QuickPageScroller(totalElements: items.length, currentPageIndex: 0, elementsPerPage: 4, onWidgetTap: openSearchBar),
           ],
         ),
       ],

@@ -1,3 +1,4 @@
+import 'package:eatneat/ui/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:eatneat/pages/home/home_page.dart';
 import 'package:eatneat/pages/preferences/preferences_page.dart';
@@ -27,24 +28,7 @@ class MyApp extends StatelessWidget {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return MaterialApp(
-          theme: ThemeData(
-            bottomNavigationBarTheme: BottomNavigationBarThemeData(
-              selectedItemColor: Colors.blueAccent,
-            ),
-            primaryColor: Colors.blue,
-            appBarTheme: AppBarTheme(
-              titleTextStyle: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
-                color: Colors.grey[800],
-              ),
-              color: Theme.of(context).scaffoldBackgroundColor,
-              iconTheme: IconThemeData(
-                color: Colors.grey[800],
-                weight: 18,
-              )
-            ),
-          ),
+          theme: Themes.lightMode,
           home: MyHomePage(),
         );
       }
@@ -82,10 +66,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: page,
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-        selectedItemColor: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
-        unselectedItemColor: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
         currentIndex: selectedIndex,
         onTap: (index) {
           setState(() {

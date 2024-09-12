@@ -10,7 +10,7 @@ class PantryCategory {
 
   // A set containing all PantryItems that belong to this category
   List<PantryItem> _items = List.empty(growable: true);
-  List<PantryItem> get items => _items;
+
   // The name of the category
   String name;
   // The number of items contained within it
@@ -47,5 +47,17 @@ class PantryCategory {
 
   void toggleVisibility() {
     _isHidden = !_isHidden;
+  }
+
+  List<PantryItem> getPantryItems(String? searchTerm) {
+    if(searchTerm == null) return _items;
+
+    List<PantryItem> ret = [];
+
+    for(PantryItem i in _items) {
+      if(i.name.toLowerCase().contains(searchTerm.toLowerCase())) ret.add(i);
+    }
+
+    return ret;
   }
 }

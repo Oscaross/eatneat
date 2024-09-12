@@ -112,6 +112,16 @@ class PantryProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+  List<PantryItem> searchByTerm(String term) {
+    List<PantryItem> ret = [];
+
+    for(PantryItem i in _items) {
+      if(i.name.toLowerCase().contains(term)) ret.add(i);
+    }
+
+    return ret;
+  }
 }
 
 enum SortByMode {
