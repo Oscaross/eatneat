@@ -291,9 +291,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                       height: deviceSize.height * 0.03,
                       width: deviceSize.width * 0.24,
                       child: Chip(
-                        label: Center(
-                          child: Text("${_currentPercentageLeft.toInt()}% left")
-                        )
+                        label: Text("${_currentPercentageLeft.toInt()}% left"),
                       ),
                     )
                   ),
@@ -372,10 +370,8 @@ class ItemViewPageState extends State<ItemViewPage> {
                         double weight = double.tryParse(_weightController.value.text) ?? 0;
                         int quantity = int.tryParse(_quantityController.value.text) ?? 1;
                         DateTime added = DateTime.now();
-                        // TODO: Should we allow no category? For now I will but not sure
                         PantryCategory category = _category ?? PantryCategory.none;
-                        // TODO: not even gonna bother with this shit tonight
-                        DateTime expiry = DateTime.now();
+                        DateTime expiry = DateTime.tryParse(_expiryController.value.text) ?? DateTime.now();
                         Set<LabelItem> labelSet = {};  
                             
                         if(item == null) {
@@ -389,17 +385,20 @@ class ItemViewPageState extends State<ItemViewPage> {
                             labelSet: labelSet
                           );
                           
-                          pantryProvider.addItem(i);
+                          if(PantryProvider.isValidEntry(i)) pantryProvider.addItem(i);
                         }
                         // If the item is already in the pantry we just need to update all of the fields with the values from this page state
                         else {
-                          item!.name = name;
-                          item!.weight = weight;
-                          item!.quantity = quantity;
-                          item!.added = added;
-                          item!.category = category;
-                          item!.expiry = expiry;
-                          item!.labelSet = labelSet;
+                          if(PantryProvider.isValidEntry(item!))
+                          {
+                            item!.name = name;
+                            item!.weight = weight;
+                            item!.quantity = quantity;
+                            item!.added = added;
+                            item!.category = category;
+                            item!.expiry = expiry;
+                            item!.labelSet = labelSet;
+                          }
                         }
                             
                         HapticFeedback.heavyImpact();
@@ -549,8 +548,6 @@ class ItemViewPageState extends State<ItemViewPage> {
   }
 
   Widget generateInputField(TextEditingController controller, FocusableWidget widget) {
-    bool isFocused = _focusStateMap[widget] ?? false;
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 0, 8, 4), 
       child: TextField(
@@ -586,9 +583,6 @@ class ItemViewPageState extends State<ItemViewPage> {
           }
         },
         textAlign: TextAlign.center,
-        style: TextStyle(
-          color: isFocused ? Colors.grey[800] : Colors.grey[700],
-        )
       ),
     );
   }

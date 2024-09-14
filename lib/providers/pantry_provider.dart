@@ -89,4 +89,13 @@ class PantryProvider with ChangeNotifier {
 
     return ret;
   }
+
+  /// Checks whether the item instantiated is valid to enter the pantry
+  static bool isValidEntry(PantryItem item) {
+
+    if(item.quantity < 1) return false;
+    if(item.category == PantryCategory.none) return false;
+
+    return true;
+  }
 }

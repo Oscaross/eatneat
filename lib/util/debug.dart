@@ -35,10 +35,17 @@ class Debug {
     provider.addItem(steak);
     provider.addItem(pork);
     provider.addItem(sweetcorn);
+    
 
     PantryCategory canned = PantryCategory(name: "Canned Foods");
     PantryCategory bread = PantryCategory(name: "Bread");
     PantryCategory condiments = PantryCategory(name: "Condiments");
+
+    for(int i = 0; i < 20; i++) {
+      PantryItem ii = PantryItem(name: "Chicken Breast", added: DateTime.now().subtract(const Duration(days:20)), weight: 300, expiry: DateTime.now().add(const Duration(days:10)), quantity: 3, labelSet: setOne);
+      provider.addItem(ii);
+      canned.setCategory(ii);
+    }
 
     provider.categories.add(canned);
     provider.categories.add(bread);

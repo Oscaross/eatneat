@@ -10,9 +10,9 @@ class Themes {
 
   static final ThemeData lightMode = ThemeData(
     colorScheme: ColorScheme.light(
-      surface: Colors.grey.shade200,
-      surfaceContainer: Colors.grey.shade200,
-      onSurface: Colors.grey.shade700,
+      surface: Colors.grey.shade100,
+      surfaceContainer: Colors.grey.shade100,
+      onSurface: const Color.fromARGB(255, 97, 97, 97),
       primary: primary,
     ),
 
@@ -24,8 +24,8 @@ class Themes {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade300, width: 2.0),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -33,6 +33,18 @@ class Themes {
       ),
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade300, width: 2.0),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.red, width: 1.5),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.redAccent, width: 2),
       ),
       hintStyle: TextStyle(color: hintTextGrey),
       contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
