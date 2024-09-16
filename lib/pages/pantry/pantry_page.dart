@@ -1,6 +1,7 @@
 import 'package:eatneat/models/pantry_item.dart';
-import 'package:eatneat/ui/padding.dart';
+import 'package:eatneat/ui/safe_padding.dart';
 import 'package:eatneat/ui/quick_page_scroller.dart';
+import 'package:eatneat/ui/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:eatneat/models/pantry_category.dart';
@@ -21,7 +22,19 @@ class PantryPage extends StatefulWidget {
 
 class PantryPageState extends State<PantryPage> {
   
+  Map<PantryCategory, ScrollController> _horizontalScrollerMap = <PantryCategory, ScrollController> {};
   String? searchTerm;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _horizontalScrollerMap.forEach((_, controller) => controller.dispose());
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +147,12 @@ class PantryPageState extends State<PantryPage> {
   Widget buildCategoryBanner(PantryCategory category, Size deviceSize) {
     List<PantryItem> items = category.getPantryItems(searchTerm);
 
+    // initialise a new scroll controller for this category
+    _horizontalScrollerMap.putIfAbsent(category, () => ScrollController());
+    
+    // null safe because in the line above we've ensured that we have a controller
+    ScrollController controller = _horizontalScrollerMap[category]!;
+
     return Column(
       children: [
         Container(
@@ -176,21 +195,8 @@ class PantryPageState extends State<PantryPage> {
                     setState(() {
                       category.toggleVisibility();
                     });
-                
                   },
-                  style: ButtonStyle(
-                    foregroundColor: WidgetStatePropertyAll(Colors.grey[700]),
-                    backgroundColor: WidgetStatePropertyAll(Colors.grey[300]!.withOpacity(0.25)),
-                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), 
-                    )),
-                    side: WidgetStatePropertyAll(BorderSide(
-                      color: Colors.grey[700]!,
-                      width: 2,
-                    )),
-                    alignment: Alignment.center,
-                    padding: WidgetStatePropertyAll(EdgeInsets.only(top: 2)),
-                  )
+                  style: Themes.decorateIconButton()
                 ),
                 // Icons to edit the category
                 IconButton(
@@ -198,19 +204,7 @@ class PantryPageState extends State<PantryPage> {
                   onPressed: () {
                 
                   },
-                  style: ButtonStyle(
-                    foregroundColor: WidgetStatePropertyAll(Colors.blue),
-                    backgroundColor: WidgetStatePropertyAll(Colors.blue[400]!.withOpacity(0.25)),
-                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), 
-                    )),
-                    side: WidgetStatePropertyAll(BorderSide(
-                      color: Colors.blue[400]!,
-                      width: 2,
-                    )),
-                    alignment: Alignment.center,
-                    padding: WidgetStatePropertyAll(EdgeInsets.only(top: 4)),
-                  )
+                  style: Themes.decorateIconButton(),
                 ),
               ],
             ),
@@ -227,11 +221,12 @@ class PantryPageState extends State<PantryPage> {
               height: deviceSize.height * ((items.length <= 2) ? 0.25 : 0.5), 
               child: (category.isHidden) ? null : GridView.builder(
                 scrollDirection: Axis.horizontal,
+                controller: controller,
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: deviceSize.width,
                   mainAxisExtent: 210,
-                  mainAxisSpacing: 4, // Spacing between items vertically
-                  crossAxisSpacing: 10, // Spacing between items horizontally
+                  mainAxisSpacing: 6, 
+                  crossAxisSpacing: 12, 
                 ),
                 // The number of items to render is the number of PantryItems in the current category of the iteration
                 itemCount: items.length,
@@ -244,7 +239,16 @@ class PantryPageState extends State<PantryPage> {
             ),
 
             // Page viewer widget ( . . . )
-            QuickPageScroller(totalElements: items.length, currentPageIndex: 0, elementsPerPage: 4, onWidgetTap: openSearchBar),
+            // TODO: Animate this between a search icon and the page viewer
+            QuickPageScroller(
+              totalElements: items.length,
+              currentPageIndex: 0,
+              elementsPerPage: 4,
+              onWidgetTap: openSearchBar,
+              controller: controller,
+              // TODO: Add a constant width to all item cards and query it here 
+              pageSize: MediaQuery.of(context).size.width,
+            ),
           ],
         ),
       ],

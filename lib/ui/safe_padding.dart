@@ -21,7 +21,7 @@ class SafePadding {
     Size deviceSize = MediaQuery.of(context).size;
 
     return switch(marginType) {
-      MarginType.all => EdgeInsets.all(deviceSize.aspectRatio * multiplier),
+      MarginType.all => EdgeInsets.all(deviceSize.width * multiplier),
       MarginType.vertical => EdgeInsets.fromLTRB(0, (deviceSize.height * multiplier) / 2, 0, (deviceSize.height * multiplier) / 2),
       MarginType.horizontal => EdgeInsets.fromLTRB(deviceSize.width * multiplier, 0, deviceSize.width * multiplier, 0),
       MarginType.left => EdgeInsets.only(left: deviceSize.width * multiplier),
@@ -33,10 +33,10 @@ class SafePadding {
 
   static double _getMultiplierByPaddingType(PaddingType type) {
     return switch(type) {
-      PaddingType.small => 0.01,
-      PaddingType.medium => 0.02,
-      PaddingType.large => 0.05,
-      PaddingType.generous => 0.1,
+      PaddingType.small => 0.005,
+      PaddingType.medium => 0.01,
+      PaddingType.large => 0.04,
+      PaddingType.generous => 0.8,
       PaddingType.none => 0,
     };
   }

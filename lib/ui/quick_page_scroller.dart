@@ -8,9 +8,11 @@ class QuickPageScroller extends StatefulWidget {
   final int totalElements;
   final int currentPageIndex;
   final int elementsPerPage;
+  final ScrollController controller;
+  final double pageSize;
   final void Function()? onWidgetTap;
 
-  QuickPageScroller({required this.totalElements, required this.currentPageIndex, required this.elementsPerPage, this.onWidgetTap});
+  QuickPageScroller({required this.totalElements, required this.currentPageIndex, required this.elementsPerPage, required this.controller, required this.pageSize, this.onWidgetTap});
 
   @override
   QuickPageScrollerState createState() => QuickPageScrollerState();
@@ -22,15 +24,19 @@ class QuickPageScrollerState extends State<QuickPageScroller> {
   int _totalPages = 0;
   bool _isActive = false;
   bool _showWidget = false;
+  double _pageSize = 0;
   void Function()? onWidgetTap;
+  ScrollController _controller = ScrollController(); // init to blank to stop compiler complaining
 
-  int _pagesMoved = 0;
   double _distanceToAdvance = 0;
   double _oldDX = 0;
 
   @override
   void initState() {
     onWidgetTap = widget.onWidgetTap;
+
+    _controller = widget.controller;
+    _pageSize = widget.pageSize;
 
     // What page is the user currently viewing, how many pages are there in total (divide by the total viewable in each page then ceiling)
     _currentPageIndex = widget.currentPageIndex;
@@ -68,13 +74,17 @@ class QuickPageScrollerState extends State<QuickPageScroller> {
           if(dxMoved.abs() > _distanceToAdvance) {
 
             setState(() {
+              bool updateNegative = _currentPageIndex > 0;
+              bool updatePositive = _currentPageIndex < _totalPages - 1;
+
               if(dxMoved.isNegative) {
-                _currentPageIndex += (_currentPageIndex > 0) ? -1 : 0;
+                _currentPageIndex += (updateNegative) ? -1 : 0;
               }
               else {
-                _currentPageIndex += (_currentPageIndex < _totalPages - 1) ? 1 : 0;
+                _currentPageIndex += (updatePositive) ? 1 : 0;
               }
-              HapticFeedback.selectionClick();
+
+              if(updateNegative && updatePositive) updatePage();
             });
 
             _oldDX = dx;
@@ -108,10 +118,7 @@ class QuickPageScrollerState extends State<QuickPageScroller> {
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemCount: max(0, _totalPages),
-                itemBuilder: (context, index) {
-                  return drawPageIcon(index);
-                  
-                },
+                itemBuilder: (_, index) => drawPageIcon(index)
               ),
             ),
               ),
@@ -121,25 +128,25 @@ class QuickPageScrollerState extends State<QuickPageScroller> {
   }
 
   Widget drawPageIcon(int index) {
+    // The difference of the current page from the page we want a dot for
+    int indexDiff = (_currentPageIndex - index).abs();
+
+    // If we are more than 2 pages out from where we are, don't bother rendering a dot for this page
+    if(indexDiff > 2) return Center();
+
     return Padding(
       padding: const EdgeInsets.only(right: 2),
       child: Icon(
         Icons.circle,
-        size: 8,
+        // Make the dot bigger based on how close it is to the selected page
+        size: (indexDiff == 2) ? 7 : 9,
         color: (index == _currentPageIndex) ? Colors.grey.shade700 : Colors.grey.shade400,
       ),
     );
   }
 
-  Widget drawSmallPageIcon() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 1),
-      child: Icon(
-        Icons.circle,
-        size: 6,
-        color: Colors.grey.shade400,
-      ),
-    );
-
+  void updatePage() {
+    _controller.animateTo(_pageSize * _currentPageIndex, duration: const Duration(milliseconds: 50), curve: Curves.elasticIn);
+    HapticFeedback.selectionClick();
   }
 }

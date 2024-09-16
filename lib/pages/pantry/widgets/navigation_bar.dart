@@ -37,6 +37,7 @@ class NavbarState extends State<Navbar> {
           child: SearchAnchor(
             builder: (BuildContext context, SearchController controller) {
               return SearchBar(
+                  backgroundColor: WidgetStatePropertyAll(Colors.grey.shade200),
                   onTap: () {
                     controller.openView();
                   },

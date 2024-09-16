@@ -17,8 +17,6 @@ class ThemePageState extends State<ThemePage> {
   
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Theme")
@@ -34,7 +32,6 @@ class ThemePageState extends State<ThemePage> {
                 Text("Dark Mode", style: TextStyle(color: Colors.grey[800], fontSize: 17, fontWeight: FontWeight.w600)),
                 Switch(
                   thumbIcon: WidgetStatePropertyAll(Icon((_darkMode) ? Icons.mode_night : Icons.sunny, size: 20)),
-                  trackColor: WidgetStatePropertyAll(Colors.grey[700]),
                   value: _darkMode,
                   onChanged: (darkMode) {
                     setState(() {

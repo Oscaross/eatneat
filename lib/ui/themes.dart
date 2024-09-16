@@ -5,12 +5,12 @@ class Themes {
   static const Color primary = Colors.blue;
   static const Color primaryAccent = Colors.blueAccent;
   static final Color textGrey = Colors.grey.shade700;
-  static final Color hintTextGrey = Colors.grey.shade600;
+  static final Color hintTextGrey = Colors.grey.shade400;
   static const Color background = Color(0xFFFEFEFE);
 
   static final ThemeData lightMode = ThemeData(
     colorScheme: ColorScheme.light(
-      surface: Colors.grey.shade100,
+      surface: Colors.grey.shade200,
       surfaceContainer: Colors.grey.shade100,
       onSurface: const Color.fromARGB(255, 97, 97, 97),
       primary: primary,
@@ -22,7 +22,7 @@ class Themes {
     ),
 
     inputDecorationTheme: InputDecorationTheme(
-      filled: true,
+      filled: false,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: Colors.grey.shade300, width: 2.0),
@@ -32,6 +32,7 @@ class Themes {
         borderSide: BorderSide(color: Colors.blue, width: 2.0),
       ),
       enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
       ),
       disabledBorder: OutlineInputBorder(
@@ -126,6 +127,14 @@ class Themes {
       )
     ),
 
+    iconButtonTheme: IconButtonThemeData(
+    ),
+
+    // TODO: Add this
+    actionIconTheme: ActionIconThemeData(
+
+    ),
+
     buttonBarTheme: ButtonBarThemeData(
       alignment: MainAxisAlignment.center,
       buttonPadding: EdgeInsets.symmetric(horizontal: 16.0), 
@@ -210,9 +219,36 @@ class Themes {
 
   static BoxDecoration decorateContainer() {
     return BoxDecoration(
-      color: Colors.grey.shade100,
+      color: background,
+      gradient: LinearGradient(
+      begin: Alignment.topLeft, 
+      end: Alignment.bottomRight, 
+      colors: [
+        Colors.grey.shade100.withOpacity(0.8), 
+        background,
+      ],
+    ),
       borderRadius: BorderRadius.circular(12.0), 
+      border: Border.all(color: Colors.grey.shade200, width: 2),
     );
+  }
+
+  /// Generates a custom style for IconButtons which we want to be clickable icons for consistency across the app. We have not used the default iconButtonTheme as this also includes stuff like the app bar and context menus which we don't want stylised.
+  static ButtonStyle decorateIconButton() {
+    return ButtonStyle(
+        foregroundColor: WidgetStatePropertyAll(primaryAccent),
+        overlayColor: WidgetStatePropertyAll(primaryAccent.withOpacity(0.15)),
+        backgroundColor: WidgetStatePropertyAll(primary.withOpacity(0.05)),
+        shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0), 
+        )),
+        side: WidgetStatePropertyAll(BorderSide(
+          color: primaryAccent,
+          width: 2,
+        )),
+        alignment: Alignment.center,
+        padding: WidgetStatePropertyAll(EdgeInsets.only(top: 1)),
+      );
   }
   
 }

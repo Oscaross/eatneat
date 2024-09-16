@@ -21,6 +21,8 @@ class ItemViewPage extends StatefulWidget {
 
 class ItemViewPageState extends State<ItemViewPage> {
 
+  static const int spacingFlex = 1;
+
   PantryItem? item;
   late ActionType actionType;
 
@@ -42,6 +44,11 @@ class ItemViewPageState extends State<ItemViewPage> {
   final Map<FocusableWidget, bool> _focusStateMap = {};
   // The current focused node, none initially and none if we aren't looking at any nodes right now
   FocusableWidget _focus = FocusableWidget.none;
+
+  set focus(FocusableWidget focus) {
+    unfocus(_focus);
+    _focus = focus;
+  }
   
   // Color theme related variables
   late Color _sliderColor;
@@ -126,13 +133,14 @@ class ItemViewPageState extends State<ItemViewPage> {
           // We also wrap the body with a gesture detector and this is to allow the keyboard to be focused/unfocused when the user taps outside of its focus box
           GestureDetector(
             onTap: () {
+              print("unfocusing $_focus");
               // We're attempting to escape keyboard input so unfocus to show the whole page again!
               unfocus(_focus);
             },
             child: Column(
               children: [
                 Flexible(
-                  flex: 4,
+                  flex: 7,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 2.0),
                     child: TextField(
@@ -145,19 +153,20 @@ class ItemViewPageState extends State<ItemViewPage> {
                         focusNode: _focusNodeMap[0],
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.label, color: Colors.grey[600]),
-                        ),
+                          hintText: "Item name...",
+                        )
                       ),
                     ),
-                ),
+                  ),
                   // Widget to display product categories
                   Flexible(
-                    flex: 5,
+                    flex: 8,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
                       child: GestureDetector(
                         onTap: () {
                           if(_isMagicKeyboardShowing) magicKeyboardDown();
-                          _focus = FocusableWidget.category;
+                          focus = FocusableWidget.category;
                           _showCategoryPicker(context);
                         },
                         child: Container(
@@ -188,11 +197,11 @@ class ItemViewPageState extends State<ItemViewPage> {
                     ),
                   ),
 
-                  SizedBox(height: deviceSize.height * 0.006),
+                  Spacer(flex: spacingFlex),
             
                   // Widget to display quantity editor
                   Flexible(
-                    flex: 2,
+                    flex: 3,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -229,8 +238,9 @@ class ItemViewPageState extends State<ItemViewPage> {
                       ]
                     )
                   ),
+                  Spacer(flex: spacingFlex),
                   Flexible(
-                    flex: 4,
+                    flex: 7,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -253,15 +263,16 @@ class ItemViewPageState extends State<ItemViewPage> {
                     ),
                   ),
             
-                  SizedBox(height: deviceSize.height * 0.006),
+                  Spacer(flex: spacingFlex),
                   // Widget to display product image
             
                   Flexible(
-                    flex: 16,
+                    flex: 30,
                     child: Container(
+                      width: MediaQuery.of(context).size.width * 0.95,
                       decoration: Themes.decorateContainer(),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12.0), // Same value to clip the image
+                        borderRadius: BorderRadius.circular(12.0), 
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Container(
@@ -283,10 +294,10 @@ class ItemViewPageState extends State<ItemViewPage> {
                   ),
             
                   // Widget to display % left slider
-                  SizedBox(height: deviceSize.height * 0.01),
+                  Spacer(flex: spacingFlex * 2),
             
                   Flexible(
-                    flex: 3,
+                    flex: 5,
                     child: SizedBox(
                       height: deviceSize.height * 0.03,
                       width: deviceSize.width * 0.24,
@@ -298,7 +309,7 @@ class ItemViewPageState extends State<ItemViewPage> {
             
                   // The slider itself that we control the quantity with
                   Flexible(
-                    flex: 2,
+                    flex: 5,
                     child: Slider(
                       value: _currentPercentageLeft,
                       max: 100,
@@ -316,9 +327,10 @@ class ItemViewPageState extends State<ItemViewPage> {
                       }
                     ),
                   ),
+
                   // Quick action buttons to go to empty, half full and full
                   Flexible(
-                    flex: 2,
+                    flex: 5,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -358,9 +370,9 @@ class ItemViewPageState extends State<ItemViewPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: deviceSize.height * 0.03),
+                  Spacer(flex: spacingFlex*2),
                   Flexible(
-                    flex: 2,
+                    flex: 4,
                     child: FilledButton.icon(
                       label: Text((actionType == ActionType.add) ? "Add Item" : "Save Changes"),
                       icon: Icon((actionType == ActionType.add) ? Icons.add : Icons.check),
@@ -409,9 +421,9 @@ class ItemViewPageState extends State<ItemViewPage> {
                       )
                     ),
                   ),
-                  SizedBox(height: deviceSize.height * 0.02),
+                  Spacer(flex: spacingFlex * 2),
                   Flexible(
-                    flex: 2,
+                    flex: 4,
                     child: FilledButton.icon(
                       label: Text((actionType == ActionType.add) ? "Cancel" : "Delete Item"),
                       icon: Icon((actionType == ActionType.add) ? Icons.cancel : Icons.delete),
@@ -558,7 +570,7 @@ class ItemViewPageState extends State<ItemViewPage> {
         onTap: () async {
           if(_focus == widget) return; // if we are already focused on this widget - escape before we mess up the object state!
 
-          _focus = widget;
+          focus = widget;
           // Display a magic keyboard for numerical input
           if (widget == FocusableWidget.quantity || widget == FocusableWidget.weight) {
             setState(() {
@@ -583,6 +595,8 @@ class ItemViewPageState extends State<ItemViewPage> {
           }
         },
         textAlign: TextAlign.center,
+        decoration: InputDecoration(
+        ),
       ),
     );
   }
