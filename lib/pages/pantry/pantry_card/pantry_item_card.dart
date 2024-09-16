@@ -1,5 +1,6 @@
 import 'package:eatneat/pages/pantry/item_view_page.dart';
 import 'package:eatneat/ui/options_dialog.dart';
+import 'package:eatneat/ui/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:eatneat/models/pantry_item.dart';
 import 'package:eatneat/providers/pantry_provider.dart';
@@ -87,6 +88,7 @@ class PantryItemCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Card(
+                          color: Colors.white,
                           elevation: 0.5,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -94,7 +96,7 @@ class PantryItemCard extends StatelessWidget {
                               children: [
                                 Icon(Icons.scale, size: 17, color: Colors.grey[800]),
                                 // If the item has a weight of 0 we just care about its arbitrary quantity (ie. 2 "large" chicken breasts)
-                                Text(" ${item.quantity} x ${item.weight == 0 ? "" : item.weightFormatted()}"),
+                                Text(" ${item.quantity} x ${item.weight == 0 ? "" : item.weightFormatted()}", style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.w500)),
                               ],
                             ),
                           ),

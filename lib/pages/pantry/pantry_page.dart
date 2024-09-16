@@ -131,7 +131,7 @@ class PantryPageState extends State<PantryPage> {
             child: Icon(Icons.tab),
             label: "[DEBUG] Create test items",
             onTap: () {
-              Debug().configure(Provider.of<PantryProvider>(context, listen:false), Provider.of<LabelProvider>(context, listen:false));
+              Debug().configure(Provider.of<PantryProvider>(context, listen:false));
             }
           ),
         ]
@@ -159,13 +159,13 @@ class PantryPageState extends State<PantryPage> {
           width: double.infinity,
           height: MediaQuery.of(context).size.height / 24, // consistently scale height across displays
           decoration: BoxDecoration(
-            color: Colors.blueAccent.withOpacity(0.06),
+            color: Themes.primaryAccent.withOpacity(0.06),
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.blue,
-                const Color.fromARGB(255, 46, 154, 243),
+                Themes.primary,
+                Themes.primaryAccent,
               ],
             ),
           ),
@@ -226,7 +226,7 @@ class PantryPageState extends State<PantryPage> {
                   maxCrossAxisExtent: deviceSize.width,
                   mainAxisExtent: 210,
                   mainAxisSpacing: 6, 
-                  crossAxisSpacing: 12, 
+                  crossAxisSpacing: 6, 
                 ),
                 // The number of items to render is the number of PantryItems in the current category of the iteration
                 itemCount: items.length,

@@ -6,7 +6,7 @@ class Themes {
   static const Color primaryAccent = Colors.blueAccent;
   static final Color textGrey = Colors.grey.shade700;
   static final Color hintTextGrey = Colors.grey.shade400;
-  static const Color background = Color(0xFFFEFEFE);
+  static final Color background = Colors.grey.shade50;
 
   static final ThemeData lightMode = ThemeData(
     colorScheme: ColorScheme.light(

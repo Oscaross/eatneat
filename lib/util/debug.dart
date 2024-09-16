@@ -1,65 +1,169 @@
 // Internal class to help with debugging. DO NOT SHIP WITH APP!
 
-import 'package:flutter/material.dart';
-import 'package:eatneat/models/label_item.dart';
+import 'dart:math';
 import 'package:eatneat/models/pantry_category.dart';
 import 'package:eatneat/models/pantry_item.dart';
-import 'package:eatneat/providers/label_provider.dart';
 import 'package:eatneat/providers/pantry_provider.dart';
 
 class Debug {
-  LabelItem meat = LabelItem(name: "Meat",color: Colors.red);
-  LabelItem cold = LabelItem(name: "Cold", color: Colors.blue);
-  LabelItem carbs = LabelItem(name: "Carbs", color: Colors.orange);
+  // Helper function to generate random date
+  DateTime getRandomDate({int startYear = 2022, int endYear = 2024}) {
+    final random = Random();
+    int year = startYear + random.nextInt(endYear - startYear + 1);
+    int month = random.nextInt(12) + 1;
+    int day = random.nextInt(28) + 1; // Keeping it safe with 28 days in any month
+    return DateTime(year, month, day);
+  }
 
-  Set<LabelItem> setOne = {};
-  Set<LabelItem> setTwo = {};
+  // Helper function to generate random weight
+  double getRandomWeight() {
+    final random = Random();
+    bool returnZero = random.nextInt(3) == 0; // 1/3 chance of just a qty being returned
+    return (returnZero) ? 0 : (random.nextInt(251) * 5);
+  }
 
-  void configure(PantryProvider provider, LabelProvider provider2) {
-    PantryItem chicken = PantryItem(name: "Chicken Breast", added: DateTime.now().subtract(const Duration(days:20)), weight: 300, expiry: DateTime.now().add(const Duration(days:10)), quantity: 3, labelSet: setOne);
-    PantryItem steak = PantryItem(name: "Elephant Steak", added: DateTime.now(), weight: 0, expiry: DateTime.now().add(const Duration(days:2)), quantity:2, labelSet: setOne);
-    PantryItem pork = PantryItem(name: "No Label!", added: DateTime.now().subtract(const Duration(days:25)), weight: 300, expiry: DateTime.now().subtract(const Duration(days:2)), quantity: 1, labelSet: {});
-    PantryItem sweetcorn = PantryItem(name: "Sweetcorn", added: DateTime.now(), weight: 150, expiry: DateTime.now().add(const Duration(days:7)), quantity: 3, labelSet: setTwo);
-    PantryItem fuckUpMyAppPlease = PantryItem(name: "Deal with this lol", added: DateTime.now(), weight: 1200, expiry: DateTime.now(), quantity: 1, labelSet: {});
-    PantryItem fish = PantryItem(name: "Fish", added: DateTime.now(), weight: 500, expiry: DateTime.now().add(const Duration(days:30)), quantity: 1, labelSet: {});
+  // Helper function to generate random quantity
+  int getRandomQuantity() {
+    final random = Random();
+    return random.nextInt(10) + 1; // Random quantity between 1 and 10
+  }
 
-    setOne.add(meat);
-    setOne.add(cold);
-    setTwo.add(carbs);
+  void configure(PantryProvider provider) {
 
-    chicken.addLabel(setOne);
-    steak.addLabel(setOne);
-    pork.addLabel(setOne);
+    PantryCategory.defaultCategories.forEach((categoryName) {
+      provider.categories.add(PantryCategory(name: categoryName));
+    });
 
-    provider.addItem(chicken);
-    provider.addItem(steak);
-    provider.addItem(pork);
-    provider.addItem(sweetcorn);
-    
+    List<String> pantryItemNames = [
+      'Whole Wheat Bread',
+      'Apple Juice',
+      'Almond Butter',
+      'Organic Honey',
+      'Canned Beans',
+      'Oatmeal',
+      'Brown Rice',
+      'Frozen Peas',
+      'Granola Bars',
+      'Chocolate Chip Cookies',
+      'Soy Milk',
+      'Pasta Sauce',
+      'Olive Oil',
+      'Flour',
+      'Cereal',
+      'Tomato Soup',
+      'Salted Butter',
+      'Eggs',
+      'Frozen Pizza',
+      'Cheddar Cheese',
+      'Peanut Butter',
+      'Instant Noodles',
+      'Raisins',
+      'Chia Seeds',
+      'Dried Lentils',
+      'Spaghetti',
+      'Coconut Oil',
+      'Canned Tuna',
+      'White Sugar',
+      'Brown Sugar',
+      'Dried Apricots',
+      'Potato Chips',
+      'Greek Yogurt',
+      'Quinoa',
+      'Maple Syrup',
+      'Almond Milk',
+      'Black Pepper',
+      'Cornmeal',
+      'Bread Crumbs',
+      'Pickles',
+      'Ketchup',
+      'Mustard',
+      'Chicken Stock',
+      'Canned Pineapple',
+      'Red Kidney Beans',
+      'Balsamic Vinegar',
+      'Sriracha Sauce',
+      'Soy Sauce',
+      'Ground Cinnamon',
+      'Nutella',
+      'Parmesan Cheese',
+      'Frozen Spinach',
+      'Rice Noodles',
+      'Frozen Mixed Berries',
+      'Couscous',
+      'Powdered Sugar',
+      'Instant Coffee',
+      'Tea Bags',
+      'Canned Tomatoes',
+      'Sweet Corn',
+      'Cream Cheese',
+      'Butter Cookies',
+      'Tortilla Chips',
+      'Frozen Corn',
+      'Vegetable Oil',
+      'Pancake Mix',
+      'Jelly Beans',
+      'Corn Flakes',
+      'Salsa',
+      'Coconut Water',
+      'Vanilla Extract',
+      'Bagels',
+      'Mozzarella Cheese',
+      'Frozen Waffles',
+      'Frozen Chicken Nuggets',
+      'Canned Salmon',
+      'Marinara Sauce',
+      'Baking Soda',
+      'Frozen Broccoli',
+      'Frozen Carrots',
+      'Pita Bread',
+      'Canned Coconut Milk',
+      'Corn Starch',
+      'Barbecue Sauce',
+      'Canned Chickpeas',
+      'Dried Cranberries',
+      'Frozen French Fries',
+      'Hot Dog Buns',
+      'Frozen Fish Fillets',
+      'Ground Beef',
+      'Whole Milk',
+      'Cashew Nuts',
+      'Chili Powder',
+      'Pita Chips',
+      'Frozen Cauliflower Rice',
+      'Ground Turkey',
+      'Pretzels',
+      'Frozen Meatballs',
+      'Coconut Flour',
+      'Frozen Shrimp',
+      'Dried Basil',
+      'Garlic Powder',
+      'Vegetable Broth',
+      'Frozen Blueberries',
+      'Mayo',
+      'Frozen Edamame',
+      'Diced Tomatoes',
+      'Zucchini Noodles',
+      'Taco Shells'
+    ];
 
-    PantryCategory canned = PantryCategory(name: "Canned Foods");
-    PantryCategory bread = PantryCategory(name: "Bread");
-    PantryCategory condiments = PantryCategory(name: "Condiments");
 
-    for(int i = 0; i < 20; i++) {
-      PantryItem ii = PantryItem(name: "Chicken Breast $i", added: DateTime.now().subtract(const Duration(days:20)), weight: i.toDouble(), expiry: DateTime.now().add(const Duration(days:10)), quantity: 3, labelSet: setOne);
-      provider.addItem(ii);
-      canned.setCategory(ii);
-    }
+    pantryItemNames.forEach((itemName) {
+      // Pick a random existing category and add the item to that category
+      PantryCategory randomCategory = provider.categories.toList()[Random().nextInt(provider.categories.length)];
 
-    provider.categories.add(canned);
-    provider.categories.add(bread);
-    provider.categories.add(condiments);
+      PantryItem item = PantryItem(
+        name: itemName,
+        weight: getRandomWeight(),
+        expiry: getRandomDate(startYear: 2024, endYear: 2026),
+        added: DateTime.now(),
+        labelSet: {},
+        quantity: getRandomQuantity(),
+        image: null, // Assuming no image for training data, but can be set if needed
+      );
 
-    canned.setCategory(sweetcorn);
-    bread.setCategory(steak);
-    bread.setCategory(pork);
-    bread.setCategory(chicken);
-    bread.setCategory(fish);
-    bread.setCategory(fuckUpMyAppPlease);
+      provider.addItem(item);
 
-    provider2.createNewLabel(meat);
-    provider2.createNewLabel(cold);
-    provider2.createNewLabel(carbs);
+      provider.setCategory(randomCategory, item);
+    });
   }
 }

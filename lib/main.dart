@@ -1,4 +1,5 @@
 import 'package:eatneat/ui/themes.dart';
+import 'package:eatneat/util/debug.dart';
 import 'package:flutter/material.dart';
 import 'package:eatneat/pages/home/home_page.dart';
 import 'package:eatneat/pages/settings/settings_page.dart';

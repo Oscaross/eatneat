@@ -7,12 +7,12 @@ import 'package:flutter/services.dart';
 class PreferencesPage extends StatelessWidget {
 
   final List<SettingsPageObject> pageObjects = [
-    SettingsPageObject(pageIcon: Icons.brush, pageName: "Theme", route: MaterialPageRoute(builder: (context) => ThemePage())),
-    SettingsPageObject(pageIcon: Icons.person, pageName: "Account", route: MaterialPageRoute(builder: (context) => ThemePage())),
-    SettingsPageObject(pageIcon: Icons.lock, pageName: "Privacy", route: MaterialPageRoute(builder: (context) => ThemePage())),
-    SettingsPageObject(pageIcon: Icons.notifications, pageName: "Notifications", route: MaterialPageRoute(builder: (context) => ThemePage())),
-    SettingsPageObject(pageIcon: Icons.info, pageName: "About", route: MaterialPageRoute(builder: (context) => ThemePage())),
-    SettingsPageObject(pageIcon: Icons.help, pageName: "Help & Support", route: MaterialPageRoute(builder: (context) => ThemePage())),
+    SettingsPageObject(pageIcon: Icons.brush, pageName: "Theme", page: ThemePage()),
+    SettingsPageObject(pageIcon: Icons.person, pageName: "Account", page: ThemePage()),
+    SettingsPageObject(pageIcon: Icons.lock, pageName: "Privacy", page: ThemePage()),
+    SettingsPageObject(pageIcon: Icons.notifications, pageName: "Notifications", page: ThemePage()),
+    SettingsPageObject(pageIcon: Icons.info, pageName: "About", page: ThemePage()),
+    SettingsPageObject(pageIcon: Icons.question_mark_rounded, pageName: "Help & Support", page: ThemePage()),
 
   ];
 
@@ -25,14 +25,12 @@ class PreferencesPage extends StatelessWidget {
         title: Text("Settings")
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: SafePadding.getSafePadding(context: context, marginType: MarginType.all, paddingType: PaddingType.medium),
         child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: deviceSize.width * 0.02, mainAxisSpacing: deviceSize.height * 0.02),
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: deviceSize.width * 0.03, mainAxisSpacing: deviceSize.width * 0.03),
           itemCount: pageObjects.length,
-          itemBuilder: (context, index) => Padding(
-            padding: SafePadding.getSafePadding(context: context, marginType: MarginType.all, paddingType: PaddingType.generous),
-            child: buildSettingsPageContainer(pageObjects[index], context)
-          )
+          itemBuilder: (context, index) => buildSettingsPageContainer(pageObjects[index], context)
         ),
       )
     );
@@ -45,22 +43,21 @@ class PreferencesPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // icon to describe our settings page
             Padding(
               padding: SafePadding.getSafePadding(context: context, marginType: MarginType.bottom, paddingType: PaddingType.medium),
               child: Icon(
                 pageObject.pageIcon,
-                size: 50,
-                color: Colors.grey.shade800.withOpacity(0.95),
+                size: 52,
+                color: Themes.primaryAccent.withOpacity(0.85),
+                semanticLabel: pageObject.pageName,
               ),
             ),
-            // title of settings page
-            Text(pageObject.pageName, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+            Text(pageObject.pageName, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Themes.primary)),
           ],
         )
       ),
       onTap: () {
-        Navigator.push(context, pageObject.route);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => pageObject.page));
         HapticFeedback.selectionClick();
       }
     );
@@ -71,7 +68,7 @@ class SettingsPageObject {
 
   final IconData pageIcon;
   final String pageName;
-  final MaterialPageRoute route;
+  final StatefulWidget page;
 
-  SettingsPageObject({required this.pageIcon, required this.pageName, required this.route});
+  SettingsPageObject({required this.pageIcon, required this.pageName, required this.page});
 }

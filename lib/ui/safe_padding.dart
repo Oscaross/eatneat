@@ -34,7 +34,7 @@ class SafePadding {
   static double _getMultiplierByPaddingType(PaddingType type) {
     return switch(type) {
       PaddingType.small => 0.005,
-      PaddingType.medium => 0.01,
+      PaddingType.medium => 0.02,
       PaddingType.large => 0.04,
       PaddingType.generous => 0.8,
       PaddingType.none => 0,
