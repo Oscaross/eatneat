@@ -1,6 +1,5 @@
 import 'package:eatneat/pages/pantry/item_view_page.dart';
 import 'package:eatneat/ui/options_dialog.dart';
-import 'package:eatneat/ui/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:eatneat/models/pantry_item.dart';
 import 'package:eatneat/providers/pantry_provider.dart';

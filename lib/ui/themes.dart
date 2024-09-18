@@ -17,6 +17,7 @@ class Themes {
   static final Color primary = _shiftColor(Colors.blue, (isDark) ? 1 : 0.95);
   static final Color primaryAccent = _shiftColor(Colors.blueAccent, (isDark) ? 1 : 0.95);
   static final Color textGrey = Colors.grey.shade700;
+  static final Color textHighlight = Colors.grey.shade800;
   static final Color hintTextGrey = Colors.grey.shade400;
   static final Color background = Colors.grey.shade50;
   static final Color backgroundSecondary = Colors.grey.shade100;
@@ -67,7 +68,7 @@ class Themes {
 
     textTheme: TextTheme(
       displayLarge: TextStyle(
-        color: textGrey,
+        color: textHighlight,
         fontSize: 24,
         fontWeight: FontWeight.w800,
       ),
@@ -95,7 +96,22 @@ class Themes {
         color: textGrey,
         fontSize: 12,
         fontWeight: FontWeight.w400,
-      )
+      ),
+      titleLarge: TextStyle(
+        color: textHighlight,
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+      ),
+      titleMedium: TextStyle(
+        color: textHighlight,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+      titleSmall: TextStyle(
+        color: textHighlight,
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+      ),
     ),
 
     scaffoldBackgroundColor: background,
@@ -259,7 +275,7 @@ class Themes {
       begin: Alignment.topLeft, 
       end: Alignment.bottomRight, 
       colors: [
-        backgroundSecondary.withOpacity(0.2), 
+        backgroundSecondary, 
         background,
       ],
     ),

@@ -49,6 +49,7 @@ class NavbarState extends State<Navbar> {
                     onChanged(input);
                   },
                   controller: controller,
+                  hintStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.bodyLarge),
                   hintText: "Search my pantry...",
                   padding: const WidgetStatePropertyAll<EdgeInsets>(
                     EdgeInsets.symmetric(horizontal: 16.0),

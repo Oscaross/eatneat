@@ -1,3 +1,4 @@
+import 'package:eatneat/pages/home/settings/main_settings_page.dart';
 import 'package:eatneat/ui/safe_padding.dart';
 import 'package:eatneat/ui/themes.dart';
 import 'package:flutter/material.dart';
@@ -22,13 +23,15 @@ class HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () async {
+              // TODO: Need to figure out how to stack these pages using the navigator properly
               await showDialog(
                 context: context,
                 builder: (context) => Padding(
                   // some breathing room around the interface
                   padding: SafePadding.getSafePadding(context: context, marginType: MarginType.all, paddingType: PaddingType.large),
                   child: Container(
-                    color: Colors.grey.shade50
+                    decoration: Themes.decorateContainer(),
+                    child: MainSettingsPage(),
                   ),
                 ),
               );
@@ -42,58 +45,4 @@ class HomePageState extends State<HomePage> {
         Center(child: Text("Welcome to EatNeat!")),
     );
   }
-}
-
-class Settings {
-
-  static const List<String> listTiles = ["Hi", "Hello", "Yolo"];
-
-  static Future<void> renderSettingsPage(BuildContext context) async {
-    RenderBox appBarBox = context.findRenderObject() as RenderBox;
-    Offset offset = appBarBox.localToGlobal(Offset.zero);
-    Size deviceSize = MediaQuery.of(context).size;
-
-    await showMenu(
-      context: context,
-      position: RelativeRect.fromLTRB(
-        deviceSize.width,
-        offset.dy + appBarBox.size.height, // don't render the box over the app bar
-        0,
-        0 // bottom of screen
-      ),
-      items: [
-        PopupMenuItem(
-          value: 'settings',
-          child: ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-          ),
-        ),
-        PopupMenuItem(
-          value: 'profile',
-          child: ListTile(
-            leading: Icon(Icons.person),
-            title: Text('Profile'),
-          ),
-        ),
-        PopupMenuItem(
-          value: 'help',
-          child: ListTile(
-            leading: Icon(Icons.help),
-            title: Text('Help'),
-          ),
-        ),
-        PopupMenuItem(
-          value: 'logout',
-          child: ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Logout'),
-          ),
-        ),
-      ],
-    ).then((value) {
-      
-    },
-    
-  );}
 }

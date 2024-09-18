@@ -2,7 +2,6 @@ import 'package:eatneat/ui/themes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:eatneat/pages/home/home_page.dart';
-import 'package:eatneat/pages/settings/settings_page.dart';
 import 'package:eatneat/providers/label_provider.dart';
 import 'package:provider/provider.dart';
 import 'providers/pantry_provider.dart';
@@ -53,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = Placeholder();
       case 3:
         // Settings page
-        page = PreferencesPage();
+        page = Placeholder();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
