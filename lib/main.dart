@@ -1,10 +1,9 @@
 import 'package:eatneat/ui/themes.dart';
-import 'package:eatneat/util/debug.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:eatneat/pages/home/home_page.dart';
 import 'package:eatneat/pages/settings/settings_page.dart';
 import 'package:eatneat/providers/label_provider.dart';
-import 'package:eatneat/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'providers/pantry_provider.dart';
 import 'pages/pantry/pantry_page.dart'; // Ensure the path is correct
@@ -14,7 +13,6 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => PantryProvider()),
-        ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => LabelProvider()),
       ],
       child: MyApp(),
@@ -26,13 +24,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: This theme here can definitely be improved!
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
-        return MaterialApp(
-          theme: Themes.lightMode,
-          home: MyHomePage(),
-        );
-      }
+    return MaterialApp(
+      theme: Themes.lightMode,
+      home: MyHomePage(),
     );
   }
 }
@@ -87,8 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Recipes',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: Icon(CupertinoIcons.snow, size: 30),
+            label: 'Freezer',
           ),
         ],
       ),

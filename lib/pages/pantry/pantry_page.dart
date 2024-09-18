@@ -44,7 +44,6 @@ class PantryPageState extends State<PantryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Pantry"),
-        forceMaterialTransparency: true,
         scrolledUnderElevation: 0,
       ),
       body: Consumer2<PantryProvider, LabelProvider>(
@@ -52,18 +51,21 @@ class PantryPageState extends State<PantryPage> {
           return Column(
             children: [
               // Search bar
-              SizedBox(
-                height: deviceSize.height * 0.05, 
-                child: Navbar(
-                  onChanged: (input) { 
-                    setState(() {
-                      searchTerm = input;
-                    });
-                  },
-                  onSubmitted: (input) {
-
-                  }
-
+              Padding(
+                padding: SafePadding.getSafePadding(context: context, marginType: MarginType.top, paddingType: PaddingType.medium),
+                child: SizedBox(
+                  height: deviceSize.height * 0.05, 
+                  child: Navbar(
+                    onChanged: (input) { 
+                      setState(() {
+                        searchTerm = input;
+                      });
+                    },
+                    onSubmitted: (input) {
+                
+                    }
+                
+                  ),
                 ),
               ),
 
@@ -89,9 +91,7 @@ class PantryPageState extends State<PantryPage> {
           weight: 30,
           size: 26,
         ),
-        backgroundColor: Colors.blue.withOpacity(0.9),
-        foregroundColor: Colors.white,
-        buttonSize: Size(60, 60),
+        buttonSize: deviceSize * 0.07,
         children: [
           SpeedDialChild(
             child: Icon(Icons.barcode_reader),

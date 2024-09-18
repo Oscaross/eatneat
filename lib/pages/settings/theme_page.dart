@@ -1,3 +1,4 @@
+import 'package:eatneat/ui/safe_padding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -25,23 +26,11 @@ class ThemePageState extends State<ThemePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: SafePadding.getSafePadding(context: context, marginType: MarginType.all, paddingType: PaddingType.medium),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Dark Mode", style: TextStyle(color: Colors.grey[800], fontSize: 17, fontWeight: FontWeight.w600)),
-                Switch(
-                  thumbIcon: WidgetStatePropertyAll(Icon((_darkMode) ? Icons.mode_night : Icons.sunny, size: 20)),
-                  value: _darkMode,
-                  onChanged: (darkMode) {
-                    setState(() {
-                      _darkMode = darkMode;
-                    });
                 
-                    HapticFeedback.lightImpact();
-                  }
-                
-                ),
               ],
             ),
           ),

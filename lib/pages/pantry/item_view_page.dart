@@ -139,6 +139,7 @@ class ItemViewPageState extends State<ItemViewPage> {
             },
             child: Column(
               children: [
+                Spacer(flex: spacingFlex),
                 Flexible(
                   flex: 7,
                   child: Padding(
@@ -497,6 +498,7 @@ class ItemViewPageState extends State<ItemViewPage> {
           left: 0,
           right: 0,
           child: MagicKeyboard(
+            // TODO: This is why the step won't update properly with the magic keyboard, the property isn't queried from the keyboard class itself
             currentValue: (_focus == FocusableWidget.quantity) ? _quantityController.value.text : _weightController.value.text,
             step: (_focus == FocusableWidget.quantity) ? 1 : 100,
             maxStringLength: 8,

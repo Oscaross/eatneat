@@ -140,7 +140,7 @@ class QuickPageScrollerState extends State<QuickPageScroller> {
         Icons.circle,
         // Make the dot bigger based on how close it is to the selected page
         size: (indexDiff == 2) ? 7 : 9,
-        color: (index == _currentPageIndex) ? Colors.grey.shade700 : Colors.grey.shade400,
+        color: (index == _currentPageIndex) ? ((_isActive) ? Colors.grey.shade800 : Colors.grey.shade700) : Colors.grey.shade400,
       ),
     );
   }
