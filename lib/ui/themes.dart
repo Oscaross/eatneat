@@ -1,3 +1,4 @@
+import 'package:eatneat/ui/safe_padding.dart';
 import 'package:flutter/material.dart';
 
 class Themes {
@@ -21,6 +22,7 @@ class Themes {
   static final Color hintTextGrey = Colors.grey.shade400;
   static final Color background = Colors.grey.shade50;
   static final Color backgroundSecondary = Colors.grey.shade100;
+  static final Color containerHighlight = Colors.grey.shade200;
   static final Color border = Colors.grey.shade300;
 
   static final ThemeData lightMode = ThemeData(
@@ -108,8 +110,8 @@ class Themes {
         fontWeight: FontWeight.w600,
       ),
       titleSmall: TextStyle(
-        color: textHighlight,
-        fontSize: 16,
+        color: textGrey,
+        fontSize: 15,
         fontWeight: FontWeight.w600,
       ),
     ),
@@ -268,18 +270,21 @@ class Themes {
   /// Takes the current BuildContext and constructs a button that spans a visually appealing portion of the screen, this is a common style in this app.
   static Size getFullWidthButtonSize(BuildContext context) => Size(MediaQuery.of(context).size.width * 0.95, MediaQuery.of(context).size.height * 0.1);
 
+  /// Returns the current app primary color scheme with an opacity film to make for a nice background for labels or text widgets that need to stand out
+  static Color getPrimaryBackground() => primary.withOpacity(0.1);
+
   static BoxDecoration decorateContainer() {
     return BoxDecoration(
       color: background,
       gradient: LinearGradient(
-      begin: Alignment.topLeft, 
-      end: Alignment.bottomRight, 
-      colors: [
-        backgroundSecondary, 
-        background,
-      ],
-    ),
-      borderRadius: BorderRadius.circular(12.0), 
+        begin: Alignment.topLeft, 
+        end: Alignment.bottomRight, 
+        colors: [
+          backgroundSecondary, 
+          containerHighlight,
+        ],
+      ),
+      borderRadius: BorderRadius.circular(32.0), 
       border: Border.all(color: border, width: 1.5),
     );
   }

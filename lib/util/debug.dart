@@ -30,8 +30,8 @@ class Debug {
 
   void configure(PantryProvider provider) {
 
-    PantryCategory.defaultCategories.forEach((categoryName) {
-      provider.categories.add(PantryCategory(name: categoryName));
+    PantryCategory.defaultCategories.forEach((category) {
+      provider.categories.add(category);
     });
 
     List<String> pantryItemNames = [

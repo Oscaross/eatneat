@@ -1,4 +1,5 @@
 import 'package:eatneat/models/pantry_item.dart';
+import 'package:eatneat/pages/shopping/shopping_list_page.dart';
 import 'package:eatneat/ui/safe_padding.dart';
 import 'package:eatneat/ui/quick_page_scroller.dart';
 import 'package:eatneat/ui/themes.dart';
@@ -8,7 +9,6 @@ import 'package:eatneat/models/pantry_category.dart';
 import 'package:eatneat/pages/pantry/pantry_card/pantry_item_card.dart';
 import 'package:eatneat/pages/pantry/scanner/scanner.dart';
 import 'package:eatneat/pages/pantry/widgets/navigation_bar.dart';
-import 'package:eatneat/providers/label_provider.dart';
 import 'package:eatneat/providers/pantry_provider.dart';
 import 'package:eatneat/pages/pantry/item_view_page.dart';
 import 'package:eatneat/util/debug.dart';
@@ -46,8 +46,8 @@ class PantryPageState extends State<PantryPage> {
         title: Text("Pantry"),
         scrolledUnderElevation: 0,
       ),
-      body: Consumer2<PantryProvider, LabelProvider>(
-        builder: (context, pantryProvider, labelProvider, child) {
+      body: Consumer<PantryProvider>(
+        builder: (context, pantryProvider, child) {
           return Column(
             children: [
               // Search bar
@@ -132,6 +132,14 @@ class PantryPageState extends State<PantryPage> {
             label: "[DEBUG] Create test items",
             onTap: () {
               Debug().configure(Provider.of<PantryProvider>(context, listen:false));
+            }
+          ),
+
+          SpeedDialChild(
+            child: Icon(Icons.tab),
+            label: "[DEBUG] Shopping list",
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder:(context) => ShoppingListPage(categories: PantryCategory.defaultCategories.toList(),),));
             }
           ),
         ]

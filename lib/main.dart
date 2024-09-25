@@ -1,8 +1,7 @@
+import 'package:eatneat/pages/shopping/shopping_page.dart';
 import 'package:eatneat/ui/themes.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:eatneat/pages/home/home_page.dart';
-import 'package:eatneat/providers/label_provider.dart';
 import 'package:provider/provider.dart';
 import 'providers/pantry_provider.dart';
 import 'pages/pantry/pantry_page.dart'; // Ensure the path is correct
@@ -12,7 +11,6 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => PantryProvider()),
-        ChangeNotifierProvider(create: (context) => LabelProvider()),
       ],
       child: MyApp(),
     ),
@@ -22,7 +20,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: This theme here can definitely be improved!
     return MaterialApp(
       theme: Themes.lightMode,
       home: MyHomePage(),
@@ -51,8 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // Recipe book to add recipes
         page = Placeholder();
       case 3:
-        // Settings page
-        page = Placeholder();
+        page = ShoppingPage();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -80,8 +76,8 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Recipes',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.snow, size: 30),
-            label: 'Freezer',
+            icon: Icon(Icons.shopping_cart),
+            label: 'Shopping',
           ),
         ],
       ),

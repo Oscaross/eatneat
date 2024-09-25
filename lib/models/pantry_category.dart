@@ -6,7 +6,8 @@ class PantryCategory {
 
   static final PantryCategory none = PantryCategory(name: "None");
   // Very subject to change list of default blanket categories that the app should come pre-built with.
-  static final Set<String> defaultCategories = {"Breakfast & Cereals", "Biscuits & Snacks", "Breads & Wraps", "Baking & Dessert", "Tinned & Jarred", "Condiments & Spreads", "Pasta, Rice & Grains", "Instant & Ready Meals", "Tea, Coffee & Beverages", "World Foods", "Health & Special Diet", "Herbs & Spices", "Cooking Essentials"};
+  static final Set<PantryCategory> defaultCategories = defaultCategoryNames.map((e) => PantryCategory(name: e)).toSet();
+  static final Set<String> defaultCategoryNames = {"Breakfast & Cereals", "Biscuits & Snacks", "Breads & Wraps", "Baking & Dessert", "Tinned & Jarred", "Condiments & Spreads", "Pasta, Rice & Grains", "Instant & Ready Meals", "Tea, Coffee & Beverages", "World Foods", "Health & Special Diet", "Herbs & Spices", "Cooking Essentials"};
 
   // A set containing all PantryItems that belong to this category
   Set<PantryItem> _items = {};
