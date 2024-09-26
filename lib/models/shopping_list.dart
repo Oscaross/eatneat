@@ -7,6 +7,12 @@ class ShoppingList {
 
   final Set<ShoppingItem> _itemList = {};
   Set<ShoppingItem> get itemList => _itemList;
+  // when was the list created
+  late DateTime _timestamp;
+
+  ShoppingList() {
+    _timestamp = DateTime.now();
+  }
 
   void addItem(ShoppingItem item) {
     _itemList.add(item);

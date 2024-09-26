@@ -477,12 +477,7 @@ class ItemViewPageState extends State<ItemViewPage> {
                         );
                       },
 
-                      style: FilledButton.styleFrom(
-                        fixedSize: Themes.getFullWidthButtonSize(context),
-                        backgroundColor: Colors.red.withOpacity(0.25),
-                        overlayColor: Colors.redAccent,
-                        foregroundColor: const Color.fromARGB(255, 249, 85, 74),
-                      )
+                      style: Themes.filledButtonCancelStyle(context),
                     ),
                   ),
                 ]

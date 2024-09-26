@@ -1,4 +1,3 @@
-import 'package:eatneat/ui/safe_padding.dart';
 import 'package:flutter/material.dart';
 
 class Themes {
@@ -268,7 +267,7 @@ class Themes {
   // Utility functions
 
   /// Takes the current BuildContext and constructs a button that spans a visually appealing portion of the screen, this is a common style in this app.
-  static Size getFullWidthButtonSize(BuildContext context) => Size(MediaQuery.of(context).size.width * 0.95, MediaQuery.of(context).size.height * 0.1);
+  static Size getFullWidthButtonSize(BuildContext context) => Size(MediaQuery.of(context).size.width * 0.95, MediaQuery.of(context).size.height * 0.01);
 
   /// Returns the current app primary color scheme with an opacity film to make for a nice background for labels or text widgets that need to stand out
   static Color getPrimaryBackground() => primary.withOpacity(0.1);
@@ -307,6 +306,15 @@ class Themes {
       );
   }
 
+  static ButtonStyle filledButtonCancelStyle(BuildContext context) {
+    return ButtonStyle(
+      fixedSize: WidgetStatePropertyAll(Themes.getFullWidthButtonSize(context)),
+      backgroundColor: WidgetStatePropertyAll(Colors.red.withOpacity(0.25)),
+      overlayColor: WidgetStatePropertyAll(Colors.redAccent.withOpacity(0.07)),
+      foregroundColor: WidgetStatePropertyAll(const Color.fromARGB(255, 249, 85, 74)),
+    );
+  }
+
   /// Shifts a color's RGB values equally to create a brighter or a darker color to match the theme. 
   static Color _shiftColor(Color col, double shiftFactor) {
     assert ((shiftFactor > 0 && shiftFactor <= 1), "RGB values cannot be negative or greater than their bound, yet the shift factor assigned was outside the range 0 <= x <= 1! ($shiftFactor)");
@@ -317,7 +325,6 @@ class Themes {
 
     return Color.fromARGB(col.alpha, r, g, b);
   }
-  
 }
 
 class ColorTheme {
