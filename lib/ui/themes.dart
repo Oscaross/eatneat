@@ -24,6 +24,10 @@ class Themes {
   static final Color containerHighlight = Colors.grey.shade200;
   static final Color border = Colors.grey.shade300;
 
+  static const double largeFontSize = 16;
+  static const double mediumFontSize = 15;
+  static const double smallFontSize = 13;
+
   static final ThemeData lightMode = ThemeData(
     colorScheme: ColorScheme.light(
       surface: Colors.grey.shade200,
@@ -69,49 +73,44 @@ class Themes {
 
     textTheme: TextTheme(
       displayLarge: TextStyle(
+        color: primaryAccent,
+        fontSize: largeFontSize,
+        fontWeight: FontWeight.w800
+      ),
+      displayMedium: TextStyle(
+        color: primaryAccent,
+        fontSize: mediumFontSize,
+        fontWeight: FontWeight.w800,
+      ),
+      headlineLarge: TextStyle(
         color: textHighlight,
         fontSize: 24,
         fontWeight: FontWeight.w800,
       ),
-      displayMedium: TextStyle(
-        color: textGrey,
-        fontSize: 20,
-        fontWeight: FontWeight.w700,
-      ),
-      displaySmall: TextStyle(
-        color: textGrey,
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-      ),
       bodyLarge: TextStyle(
         color: textGrey,
-        fontSize: 16,
+        fontSize: largeFontSize,
         fontWeight: FontWeight.w500,
       ),
       bodyMedium: TextStyle(
         color: textGrey,
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
+        fontSize: mediumFontSize,
+        fontWeight: FontWeight.normal
       ),
       bodySmall: TextStyle(
         color: textGrey,
-        fontSize: 12,
-        fontWeight: FontWeight.w400,
+        fontSize: smallFontSize,
+        fontWeight: FontWeight.normal
       ),
-      titleLarge: TextStyle(
+      labelLarge: TextStyle(
         color: textHighlight,
-        fontSize: 20,
-        fontWeight: FontWeight.w700,
+        fontSize: largeFontSize,
+        fontWeight: FontWeight.w500,
       ),
-      titleMedium: TextStyle(
+      labelMedium: TextStyle(
         color: textHighlight,
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-      ),
-      titleSmall: TextStyle(
-        color: textGrey,
-        fontSize: 15,
-        fontWeight: FontWeight.w600,
+        fontSize: mediumFontSize,
+        fontWeight: FontWeight.normal,
       ),
     ),
 

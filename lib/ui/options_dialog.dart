@@ -24,7 +24,6 @@ class OptionsDialogState extends State<OptionsDialog> {
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
-
     // TODO: implement build
     return OverlayPortal(
       controller: _controller,
