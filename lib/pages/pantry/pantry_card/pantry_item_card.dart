@@ -7,7 +7,19 @@ import 'package:flutter/services.dart';
 
 class PantryItemCard extends StatelessWidget {
 
+  // when we hold click on a card, these are the abilities the user is given as shortcuts in the OverlayPortal dropdown menu
+  static final List<OptionDialogAction> actionItems = [
+    OptionDialogAction(title: "Add Shopping", leadingIcon: Icons.shopping_cart, onPressed: () {}),
+    OptionDialogAction(title: "More Info", leadingIcon: Icons.info, onPressed: () {}),
+    OptionDialogAction(title: "Mark Expired", leadingIcon: Icons.calendar_month, onPressed: () {}),
+    OptionDialogAction(title: "Delete Item", leadingIcon: Icons.delete, important: true, onPressed: () {}),
+  ];
+
   final PantryItem item;
+  final OverlayPortalController _optionsDialogController = OverlayPortalController();
+  @override
+  final GlobalKey key = GlobalKey(debugLabel: "PANTRY_ITEM_CARD");
+
   PantryItemCard({required this.item});
 
   @override
@@ -45,7 +57,12 @@ class PantryItemCard extends StatelessWidget {
         },
         // Spawn the item card dialog
         onLongPress: () {
-          OptionsDialog(actionItems: []);
+          _optionsDialogController.toggle();
+          Overlay.of(context).insert(
+            OverlayEntry(
+              builder: (context) => OptionsDialog(actionItems: actionItems, pos: getCardRect()),
+            )
+          );
           
           HapticFeedback.mediumImpact();
         },
@@ -127,5 +144,22 @@ class PantryItemCard extends StatelessWidget {
 
   void deleteItem(PantryItem item, PantryProvider provider) {
     provider.removeItem(item);
+  }
+
+  Rect getCardRect() {
+    // Fetch the RenderBox using the key's current context
+    final RenderBox? renderBox = key.currentContext?.findRenderObject() as RenderBox?;
+
+    // if we don't find a valid render box then return a zero rectangle and avoid a crash, otherwise type promote to a RenderBox and proceed
+    if(renderBox == null) return Rect.zero;
+
+    // Get the top-left corner of the widget in global coordinates
+    final Offset topLeft = renderBox.localToGlobal(Offset.zero);
+
+    // Get the size of the widget
+    final Size size = renderBox.size;
+
+    // Create a Rect from the top-left offset and the size
+    return Rect.fromLTWH(topLeft.dx, topLeft.dy, size.width, size.height);
   }
 }

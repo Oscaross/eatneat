@@ -23,6 +23,7 @@ class Themes {
   static final Color backgroundSecondary = Colors.grey.shade100;
   static final Color containerHighlight = Colors.grey.shade200;
   static final Color border = Colors.grey.shade300;
+  static final Color overlayColor = Colors.grey.shade900;
 
   static const double largeFontSize = 16;
   static const double mediumFontSize = 15;
@@ -181,11 +182,6 @@ class Themes {
       )
     ),
 
-    // TODO: Add this
-    actionIconTheme: ActionIconThemeData(
-
-    ),
-
     buttonBarTheme: ButtonBarThemeData(
       alignment: MainAxisAlignment.center,
       buttonPadding: EdgeInsets.symmetric(horizontal: 16.0), 
@@ -194,12 +190,17 @@ class Themes {
     appBarTheme: AppBarTheme(
       backgroundColor: backgroundSecondary,
       elevation: 0,
-      iconTheme: IconThemeData(color: textGrey),
       titleTextStyle: TextStyle(
         color: textGrey,
         fontSize: 20,
         fontWeight: FontWeight.w600,
       ),
+    ),
+
+    iconTheme: IconThemeData(
+      color: textGrey,      
+      size: 24.0,           
+      opacity: 0.9,        
     ),
 
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -288,17 +289,38 @@ class Themes {
   }
 
   /// Generates a custom style for IconButtons which we want to be clickable icons for consistency across the app. We have not used the default iconButtonTheme as this also includes stuff like the app bar and context menus which we don't want stylised.
-  static ButtonStyle decorateIconButton() {
+  static ButtonStyle decorateIconButton(ButtonType type) {
+
+    Color mainColor = switch(type) {
+      ButtonType.standout => primaryAccent,
+      ButtonType.subtle => Colors.grey.shade50,
+    };
+
+    Color backgroundColor = switch(type) {
+      ButtonType.standout => primary,
+      ButtonType.subtle => Colors.grey.shade100,
+    };
+
+    double borderWidth = switch(type) {
+      ButtonType.standout => 2,
+      ButtonType.subtle => 1.75,
+    };
+
+    double borderRadius = switch(type) {
+      ButtonType.standout => 10.0,
+      ButtonType.subtle => 15,
+    };
+
     return ButtonStyle(
-        foregroundColor: WidgetStatePropertyAll(primaryAccent),
-        overlayColor: WidgetStatePropertyAll(primaryAccent.withOpacity(0.15)),
-        backgroundColor: WidgetStatePropertyAll(primary.withOpacity(0.05)),
+        foregroundColor: WidgetStatePropertyAll(mainColor),
+        overlayColor: WidgetStatePropertyAll(mainColor.withOpacity(0.1)),
+        backgroundColor: WidgetStatePropertyAll(backgroundColor.withOpacity(0.1)),
         shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0), 
+          borderRadius: BorderRadius.circular(borderRadius), 
         )),
         side: WidgetStatePropertyAll(BorderSide(
-          color: primaryAccent,
-          width: 2,
+          color: mainColor,
+          width: borderWidth,
         )),
         alignment: Alignment.center,
         padding: WidgetStatePropertyAll(EdgeInsets.only(top: 1)),
@@ -313,7 +335,6 @@ class Themes {
       foregroundColor: WidgetStatePropertyAll(const Color.fromARGB(255, 249, 85, 74)),
     );
   }
-
   /// Shifts a color's RGB values equally to create a brighter or a darker color to match the theme. 
   static Color _shiftColor(Color col, double shiftFactor) {
     assert ((shiftFactor > 0 && shiftFactor <= 1), "RGB values cannot be negative or greater than their bound, yet the shift factor assigned was outside the range 0 <= x <= 1! ($shiftFactor)");
@@ -332,4 +353,10 @@ class ColorTheme {
   final Color accent;
 
   ColorTheme({required this.name, required this.primary, required this.accent});
+}
+
+/// Describes how the generateIconButton method should behave, gives a greyed out more subtle icon if subtle (for things like an x) and a more highlighted color to fit the primary accent for standout
+enum ButtonType {
+  subtle,
+  standout
 }

@@ -204,7 +204,7 @@ class PantryPageState extends State<PantryPage> {
                       category.toggleVisibility();
                     });
                   },
-                  style: Themes.decorateIconButton()
+                  style: Themes.decorateIconButton(ButtonType.standout)
                 ),
                 // Icons to edit the category
                 IconButton(
@@ -212,7 +212,7 @@ class PantryPageState extends State<PantryPage> {
                   onPressed: () {
                 
                   },
-                  style: Themes.decorateIconButton(),
+                  style: Themes.decorateIconButton(ButtonType.standout),
                 ),
               ],
             ),
