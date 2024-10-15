@@ -44,6 +44,9 @@ class QuickPageScrollerState extends State<QuickPageScroller> {
     // TODO: Fix the fact that the search bar doesn't correctly reflect this boolean property (if you search and have 1 item in a view, it still thinks we need to show the widget)
     _showWidget = (_totalPages > 1);
 
+    // attach a listener to the scroll controller so we can dynamically update the scroller widget to reflect new scrolls
+    _controller.addListener(_onUserScroll);
+
     super.initState();
   }
 
@@ -84,7 +87,7 @@ class QuickPageScrollerState extends State<QuickPageScroller> {
                 _currentPageIndex += (updatePositive) ? 1 : 0;
               }
 
-              if(updateNegative && updatePositive) updatePage();
+              if(updateNegative && updatePositive) _updatePage();
             });
 
             _oldDX = dx;
@@ -145,8 +148,17 @@ class QuickPageScrollerState extends State<QuickPageScroller> {
     );
   }
 
-  void updatePage() {
-    _controller.animateTo(_pageSize * _currentPageIndex, duration: const Duration(milliseconds: 50), curve: Curves.elasticIn);
+  // called when the user scrolls naturally but without the widget itself
+  void _onUserScroll() {
+    if(!_isActive) {
+      setState(() {
+        _currentPageIndex = (_controller.offset / _pageSize).toInt();
+      });
+    }
+  }
+
+  void _updatePage() {
+    _controller.animateTo(_pageSize * (_currentPageIndex), duration: const Duration(milliseconds: 50), curve: Curves.elasticIn);
     HapticFeedback.selectionClick();
   }
 }

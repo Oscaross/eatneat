@@ -113,6 +113,11 @@ class Themes {
         fontSize: mediumFontSize,
         fontWeight: FontWeight.normal,
       ),
+      titleSmall: TextStyle(
+        color: textHighlight,
+        fontSize: mediumFontSize,
+        fontWeight: FontWeight.bold,
+      ),
     ),
 
     scaffoldBackgroundColor: background,
@@ -198,9 +203,8 @@ class Themes {
     ),
 
     iconTheme: IconThemeData(
-      color: textGrey,      
-      size: 24.0,           
-      opacity: 0.9,        
+      color: textHighlight,      
+      size: 24.0,                 
     ),
 
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -232,6 +236,11 @@ class Themes {
           width: 2, // Set the border width here
         ),
       ),
+    ),
+
+    checkboxTheme: CheckboxThemeData(
+      checkColor: WidgetStatePropertyAll(Colors.white),
+      fillColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.selected) ? Themes.primaryAccent : Themes.background),
     ),
 
     dialogTheme: DialogTheme(

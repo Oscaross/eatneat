@@ -1,7 +1,7 @@
 // Model for a shopping list which is a list of shopping items.
 // Contains a bunch of util functions for doing shopping related actions, eventually can be interpreted by PantryProvider to automate shopping -> pantry system
 
-import 'package:eatneat/models/shopping_item.dart';
+import 'package:eatneat/models/shopping/shopping_item.dart';
 
 class ShoppingList {
 

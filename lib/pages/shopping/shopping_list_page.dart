@@ -1,4 +1,5 @@
 import 'package:eatneat/models/pantry_category.dart';
+import 'package:eatneat/models/shopping/shopping_list_item.dart';
 import 'package:eatneat/ui/safe_padding.dart';
 import 'package:eatneat/ui/themes.dart';
 import 'package:eatneat/util/date.dart';
@@ -30,7 +31,7 @@ class ShoppingListPageState extends State<ShoppingListPage> {
   final Map<PantryCategory, List<ShoppingListItem>> _shoppingList = {canned : debugItems, chilled : debugItems};
 
   // initialise a new editing controller to start with 'New List' when the user first creates a list
-  final TextEditingController _listNameController = TextEditingController(text: "New List");
+  final TextEditingController _listNameController = TextEditingController(text: "New Shopping List");
 
   @override
   void initState() {
@@ -130,16 +131,16 @@ class ShoppingListPageState extends State<ShoppingListPage> {
           // render actual items in list
           for(final item in items) TableRow(
             decoration: BoxDecoration(
-              color: item.isChecked ? Themes.primary.withOpacity(0.06) : Colors.transparent,
+              borderRadius: BorderRadius.circular(4),
+              color: item.isChecked ? Themes.primary.withOpacity(0.04) : Colors.transparent,
             ),
             children: <Widget> [
-              Text("${item.quantity}x"),
-              Text(item.name),
+              // TODO: Figure out how to call styleFrom() to get these text fields looking nicer when the user selects a todo item
+              Text("${item.quantity}x", style: item.isChecked ? Theme.of(context).textTheme.bodyMedium : Theme.of(context).textTheme.bodyMedium),
+              Text(item.name, style: item.isChecked ? Theme.of(context).textTheme.bodyMedium : Theme.of(context).textTheme.bodyMedium),
               Checkbox(
                 value: item.isChecked,
                 // make the checkbox the primary accent color if we check it, otherwise, make it the scaffold background color and be unselected
-                checkColor: Colors.white,
-                fillColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.selected) ? Themes.primaryAccent : Themes.background),
                 onChanged: (val) {
                   setState(() {
                     item.isChecked = val ?? false;
@@ -175,12 +176,4 @@ class ShoppingListPageState extends State<ShoppingListPage> {
       ]
     );
   }
-}
-
-class ShoppingListItem {
- final String name;
- final int quantity;  
- bool isChecked = false;
-
- ShoppingListItem({required this.name, required this.quantity});
 }
