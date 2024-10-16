@@ -1,4 +1,4 @@
-import 'package:eatneat/models/pantry_category.dart';
+import 'package:eatneat/models/pantry/pantry_category.dart';
 import 'package:eatneat/models/shopping/shopping_list_item.dart';
 import 'package:eatneat/ui/safe_padding.dart';
 import 'package:eatneat/ui/themes.dart';

@@ -20,6 +20,9 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   openfoodfacts: ^3.12.0
   cupertino_icons:
+  http:
+  html:
+  puppeteer:
 
 dev_dependencies:
   flutter_test:

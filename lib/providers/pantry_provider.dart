@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:eatneat/models/label_item.dart';
-import 'package:eatneat/models/pantry_category.dart';
-import '../models/pantry_item.dart';
+import 'package:eatneat/models/pantry/pantry_category.dart';
+import '../models/pantry/pantry_item.dart';
 
 class PantryProvider with ChangeNotifier {
 
@@ -17,25 +16,6 @@ class PantryProvider with ChangeNotifier {
 
   // Is the user using the search bar? This will change the data we send them,
   bool _isSearching = false;
-
-  // Return all items in the pantry that satisfy all of the labels supplied in the set
-  List<PantryItem> filterBy(Set<LabelItem> labelSet) {
-    // If we have no filters just return everything
-    if(labelSet.isEmpty) return items;
-
-    List<PantryItem> ret = List.empty(growable: true);
-
-    for(int i = 0; i < _items.length; i++) {
-
-      var curr = _items[i];
-
-      if(curr.labelSet.containsAll(labelSet)) {
-        ret.add(curr);
-      }
-    }
-
-    return ret;
-  }
 
   void searchBy(String searchTerm) {
     _isSearching = true;

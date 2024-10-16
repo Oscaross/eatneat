@@ -1,8 +1,8 @@
 // Internal class to help with debugging. DO NOT SHIP WITH APP!
 
 import 'dart:math';
-import 'package:eatneat/models/pantry_category.dart';
-import 'package:eatneat/models/pantry_item.dart';
+import 'package:eatneat/models/pantry/pantry_category.dart';
+import 'package:eatneat/models/pantry/pantry_item.dart';
 import 'package:eatneat/providers/pantry_provider.dart';
 
 class Debug {
@@ -156,7 +156,6 @@ class Debug {
         weight: getRandomWeight(),
         expiry: getRandomDate(startYear: 2024, endYear: 2026),
         added: DateTime.now(),
-        labelSet: {},
         quantity: getRandomQuantity(),
         image: null, // Assuming no image for training data, but can be set if needed
       );

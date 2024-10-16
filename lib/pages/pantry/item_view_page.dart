@@ -1,11 +1,10 @@
-import 'package:eatneat/models/label_item.dart';
-import 'package:eatneat/models/pantry_category.dart';
+import 'package:eatneat/models/pantry/pantry_category.dart';
 import 'package:eatneat/providers/pantry_provider.dart';
 import 'package:eatneat/ui/magic_keyboard.dart';
 import 'package:eatneat/ui/themes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:eatneat/models/pantry_item.dart';
+import 'package:eatneat/models/pantry/pantry_item.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -385,7 +384,6 @@ class ItemViewPageState extends State<ItemViewPage> {
                         DateTime added = DateTime.now();
                         PantryCategory category = _category ?? PantryCategory.none;
                         DateTime expiry = DateTime.tryParse(_expiryController.value.text) ?? DateTime.now();
-                        Set<LabelItem> labelSet = {};  
                             
                         if(item == null) {
 
@@ -395,7 +393,6 @@ class ItemViewPageState extends State<ItemViewPage> {
                             quantity: quantity,
                             added: added,
                             expiry: expiry,
-                            labelSet: labelSet
                           );
                           
                           if(PantryProvider.isValidEntry(i)) pantryProvider.addItem(i);
@@ -410,7 +407,6 @@ class ItemViewPageState extends State<ItemViewPage> {
                             item!.added = added;
                             item!.category = category;
                             item!.expiry = expiry;
-                            item!.labelSet = labelSet;
                           }
                         }
                             

@@ -1,4 +1,4 @@
-import 'package:eatneat/models/pantry_item.dart';
+import 'package:eatneat/models/pantry/pantry_item.dart';
 
 // For example, a category named 'Tinned foods' that has 3 instances of PantryItem: "Kidney bean", "Chickpea", "Tomato soup"
 

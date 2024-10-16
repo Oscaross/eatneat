@@ -1,7 +1,7 @@
 import 'package:eatneat/pages/pantry/item_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:eatneat/models/pantry_item.dart';
+import 'package:eatneat/models/pantry/pantry_item.dart';
 import 'package:eatneat/pages/pantry/pantry_card/pantry_item_card.dart';
 import 'package:eatneat/providers/pantry_provider.dart';
 import 'package:provider/provider.dart';

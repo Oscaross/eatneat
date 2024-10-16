@@ -1,11 +1,13 @@
-import 'package:eatneat/models/pantry_item.dart';
+import 'package:eatneat/backend/supermarket_data/scraper.dart';
+import 'package:eatneat/backend/supermarket_data/supermarket.dart';
+import 'package:eatneat/models/pantry/pantry_item.dart';
 import 'package:eatneat/pages/shopping/shopping_list_page.dart';
 import 'package:eatneat/ui/safe_padding.dart';
 import 'package:eatneat/ui/quick_page_scroller.dart';
 import 'package:eatneat/ui/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:eatneat/models/pantry_category.dart';
+import 'package:eatneat/models/pantry/pantry_category.dart';
 import 'package:eatneat/pages/pantry/pantry_card/pantry_item_card.dart';
 import 'package:eatneat/pages/pantry/scanner/scanner.dart';
 import 'package:eatneat/pages/pantry/widgets/navigation_bar.dart';
@@ -140,6 +142,17 @@ class PantryPageState extends State<PantryPage> {
             label: "[DEBUG] Shopping list",
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder:(context) => ShoppingListPage(categories: PantryCategory.defaultCategories.toList(),),));
+            }
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.tab),
+            label: "[DEBUG] Item fetch",
+            onTap: () async {
+              print("Attempting to fetch items from supermarket!");
+              List<dynamic> ret = await Scraper.fetchProductData2("carrot", Supermarket.morrisons);
+              for(final i in ret) {
+                print(i);
+              }
             }
           ),
         ]

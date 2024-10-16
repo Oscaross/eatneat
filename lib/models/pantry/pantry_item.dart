@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:eatneat/models/label_item.dart';
-import 'package:eatneat/models/pantry_category.dart';
+import 'package:eatneat/models/pantry/pantry_category.dart';
 
 class PantryItem {
   // Name of the item (ie. chicken breast)
@@ -13,10 +12,6 @@ class PantryItem {
   bool expired = false;
   // The predicted expiry date
   DateTime expiry;
-  // The label the user has assigned to the item, null if none
-  LabelItem? label;
-  // The set of all labels that the user can assign
-  Set<LabelItem> labelSet = {};
   // The date it was added
   DateTime added;
   // A URL that shows the image of the product
@@ -33,7 +28,7 @@ class PantryItem {
     _percentageLeft = percentageLeft;
   }
 
-  PantryItem({required this.name, required this.weight, required this.expiry, required this.added, required this.quantity, required this.labelSet, this.image});
+  PantryItem({required this.name, required this.weight, required this.expiry, required this.added, required this.quantity, this.image});
 
   void setName(String name) {
     this.name = name;
@@ -49,10 +44,6 @@ class PantryItem {
 
   void setQuantity(int quantity) {
     this.quantity = quantity;
-  }
-
-  void addLabel(Set<LabelItem> labelsToAdd) {
-    labelSet.addAll(labelsToAdd);
   }
 
   void setCategory(PantryCategory category) {

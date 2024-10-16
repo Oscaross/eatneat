@@ -4,7 +4,7 @@
 import 'package:eatneat/pages/pantry/item_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:eatneat/models/pantry_item.dart';
+import 'package:eatneat/models/pantry/pantry_item.dart';
 import 'package:eatneat/pages/pantry/scanner/scan_failure_page.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 
@@ -80,7 +80,6 @@ class Scanner {
       expiry: Parser.parseExpiry(product.expirationDate),
       added: DateTime.now(),
       quantity: 1,
-      labelSet: {},
       image: product.imageFrontUrl
     );
   }
