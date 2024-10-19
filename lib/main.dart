@@ -1,3 +1,4 @@
+import 'package:eatneat/pages/recipes/recipe_page.dart';
 import 'package:eatneat/pages/shopping/shopping_page.dart';
 import 'package:eatneat/ui/themes.dart';
 import 'package:flutter/material.dart';
@@ -46,8 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         page = PantryPage();
       case 2:
-        // Recipe book to add recipes
-        page = Placeholder();
+        page = RecipePage();
       case 3:
         page = ShoppingPage();
       default:

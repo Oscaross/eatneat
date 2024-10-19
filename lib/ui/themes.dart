@@ -118,6 +118,11 @@ class Themes {
         fontSize: mediumFontSize,
         fontWeight: FontWeight.bold,
       ),
+      titleLarge: TextStyle(
+        color: textGrey,
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+      ),
     ),
 
     scaffoldBackgroundColor: background,
@@ -159,7 +164,7 @@ class Themes {
         shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
         textStyle: WidgetStatePropertyAll(TextStyle(
           fontSize: 16,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           )
         )
       )
@@ -294,6 +299,32 @@ class Themes {
       ),
       borderRadius: BorderRadius.circular(32.0), 
       border: Border.all(color: border, width: 1.5),
+    );
+  }
+
+  /// Generates a custom button style for text buttons which do not want a fill color, such as when picking between two different pages.
+  static ButtonStyle decorateTextButton(ButtonType type) {
+    Color foregroundColor = switch(type) {
+      ButtonType.standout => primaryAccent,
+      ButtonType.subtle => textHighlight,
+    };
+
+    FontWeight fontWeight = switch(type) {
+      ButtonType.standout => FontWeight.w700,
+      ButtonType.subtle => FontWeight.w600,
+    };
+
+    return TextButton.styleFrom(
+      backgroundColor: Colors.transparent,
+      side: BorderSide(
+        color: foregroundColor,
+        width: 2,
+      ),
+      foregroundColor: foregroundColor,
+      textStyle: TextStyle(
+        fontSize: mediumFontSize,
+        fontWeight: fontWeight,
+      ),
     );
   }
 

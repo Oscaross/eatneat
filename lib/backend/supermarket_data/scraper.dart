@@ -1,5 +1,5 @@
 /*
-  Class designed to send HTTP requests to supermarket websites and 
+  Class designed to send HTTP requests to supermarket websites and parse product data to be used inside the app for logging and shopping
 */
 
 import 'package:eatneat/backend/supermarket_data/supermarket.dart';
