@@ -116,7 +116,12 @@ class Themes {
       titleSmall: TextStyle(
         color: textHighlight,
         fontSize: mediumFontSize,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
+      ),
+      titleMedium: TextStyle(
+        color: textHighlight,
+        fontSize: mediumFontSize,
+        fontWeight: FontWeight.w600,
       ),
       titleLarge: TextStyle(
         color: textGrey,

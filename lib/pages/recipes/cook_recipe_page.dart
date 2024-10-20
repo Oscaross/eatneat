@@ -22,6 +22,13 @@ class CookRecipePageState extends State<CookRecipePage> {
   final Stopwatch timer = Stopwatch();
   // when to update UI
   late Timer timerChanged;
+  // UI element to represent timer
+  final ValueNotifier<String> timerRepresented = ValueNotifier("0s");
+
+  final Map<RecipeIngredient, bool> completedIngredients = {};
+  int completedIngredientCount = 0;
+  final Map<String, bool> completedInstructions = {};
+  int completedInstructionCount = 0;
 
   // default to showing the ingredients in the recipe
   DisplayableContent contentToDisplay = DisplayableContent.ingredients;
@@ -34,6 +41,15 @@ class CookRecipePageState extends State<CookRecipePage> {
     // to avoid thousands of set state calls when the timer is timing milliseconds, every 1 second that elapses we rebuild the UI to show the stopwatch tick
     timerChanged = Timer(Duration(seconds: 1), reflectChangeInTimer);
 
+    // initialise the map to keep track of which ingredients are prepped & which instructions are complete
+    for(RecipeIngredient i in recipe.ingredients) {
+      completedIngredients[i] = false;
+    }
+
+    for(String i in recipe.instructions) {
+      completedInstructions[i] = false;
+    }
+
     super.initState();
   }
 
@@ -41,14 +57,14 @@ class CookRecipePageState extends State<CookRecipePage> {
     // if the widget is no longer mounted in the tree, we can't have this callback or a memory leak will occur so exit the cycle
     if(!mounted) return;
 
-    setState(() {
-      timerChanged = Timer(Duration(seconds: 1), reflectChangeInTimer);
-    });
+    timerRepresented.value = representTimer();
+    timerChanged = Timer(Duration(seconds: 1), reflectChangeInTimer);
   }
 
   @override
   void dispose() {
     timer.stop();
+    timerRepresented.dispose();
     super.dispose();
   }
 
@@ -91,7 +107,7 @@ class CookRecipePageState extends State<CookRecipePage> {
                       // how many instructions complete / how many total
                       buildIconAndText(Icons.text_snippet, "2/5"),
                       // how many ingredients prepped / how many total
-                      buildIconAndText(Icons.shopping_cart, "3/7"),
+                      buildIconAndText(Icons.shopping_cart, "$completedIngredientCount/${completedIngredients.length}"),
                     ],
                   ),
                 ]
@@ -113,7 +129,13 @@ class CookRecipePageState extends State<CookRecipePage> {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-            child: Text(representTimer()),
+            child: ValueListenableBuilder<String>(
+              valueListenable: timerRepresented,
+              builder: (context, val, child) {
+                return Text(val);
+              },
+
+            )
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -142,8 +164,36 @@ class CookRecipePageState extends State<CookRecipePage> {
           ),
 
           buildMainContent(),
+
+          buildActionButtons(),
         ]
       )
+    );
+  }
+
+  Widget buildActionButtons() {
+    return Column(
+      children: [
+        FilledButton.icon(
+          icon: Icon(Icons.check),
+          label: Text("Finish Cooking"),
+          onPressed: () {
+
+          },
+          style: FilledButton.styleFrom(
+            fixedSize: Themes.getFullWidthButtonSize(context),
+          )
+        ),
+        FilledButton.icon(
+          icon: Icon(Icons.close),
+          label: Text("Cancel"),
+          onPressed: () {
+
+          },
+          style: Themes.filledButtonCancelStyle(context),
+        )
+
+      ]
     );
   }
 
@@ -155,15 +205,56 @@ class CookRecipePageState extends State<CookRecipePage> {
   }
 
   Widget buildIngredientsInfo() {
-    List<RecipeIngredient> ingredients = recipe.ingredients;
+  List<RecipeIngredient> ingredients = recipe.ingredients;
 
-    return Expanded(
-      child: ListView.builder(
-        itemCount: ingredients.length,
-        itemBuilder: (context, index) {
-          return Text(ingredients[index].name);
-        }
-      )
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Table(
+      columnWidths: {
+        0: FlexColumnWidth(60),
+        1: FlexColumnWidth(30),
+        2: FlexColumnWidth(10),
+      },
+      children: [
+        // Guidance text for each field (ingredient name, quantity, and whether it's prepped or not)
+        TableRow(
+          children: [
+            Text("Ingredient", style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
+            Text("Quantity", style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
+            Center(child: Icon(Icons.check)),
+          ],
+        ),
+        // The actual ingredients
+        for (RecipeIngredient i in ingredients)
+          TableRow(
+            children: [
+              TableCell(
+                verticalAlignment: TableCellVerticalAlignment.middle,
+                child: Center(child: Text(i.name)),
+              ),
+              TableCell(
+                verticalAlignment: TableCellVerticalAlignment.middle,
+                child: Center(child: Text(i.amount.formatMeasurement())),
+              ),
+              TableCell(
+                verticalAlignment: TableCellVerticalAlignment.middle,
+                child: Center(
+                  child: Checkbox(
+                    value: completedIngredients[i],
+                    onChanged: (val) {
+                      HapticFeedback.selectionClick();
+                      setState(() {
+                        completedIngredientCount += (val!) ? 1 : -1;
+                        completedIngredients[i] = val;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
