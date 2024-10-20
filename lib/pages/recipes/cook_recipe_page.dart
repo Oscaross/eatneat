@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eatneat/models/recipes/recipe.dart';
 import 'package:eatneat/models/recipes/recipe_ingredient.dart';
 import 'package:eatneat/ui/themes.dart';
@@ -16,13 +18,38 @@ class CookRecipePage extends StatefulWidget {
 class CookRecipePageState extends State<CookRecipePage> {
 
   late Recipe recipe;
+  // how long since the session was started
+  final Stopwatch timer = Stopwatch();
+  // when to update UI
+  late Timer timerChanged;
+
   // default to showing the ingredients in the recipe
   DisplayableContent contentToDisplay = DisplayableContent.ingredients;
 
   @override
   void initState() {
     recipe = widget.recipe;
+    // start timer
+    timer.start();
+    // to avoid thousands of set state calls when the timer is timing milliseconds, every 1 second that elapses we rebuild the UI to show the stopwatch tick
+    timerChanged = Timer(Duration(seconds: 1), reflectChangeInTimer);
+
     super.initState();
+  }
+
+  void reflectChangeInTimer() {
+    // if the widget is no longer mounted in the tree, we can't have this callback or a memory leak will occur so exit the cycle
+    if(!mounted) return;
+
+    setState(() {
+      timerChanged = Timer(Duration(seconds: 1), reflectChangeInTimer);
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.stop();
+    super.dispose();
   }
 
   @override
@@ -32,33 +59,62 @@ class CookRecipePageState extends State<CookRecipePage> {
         automaticallyImplyLeading: false,
         title: Padding(
           padding: const EdgeInsets.only(top: 4),
-          child: Column(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                recipe.name,
-                style: Theme.of(context).textTheme.titleLarge,
+              IconButton(
+                icon: Icon(Icons.expand_more_sharp, size: 28),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  Navigator.pop(context);
+                },
+                style: ButtonStyle(
+                  overlayColor: WidgetStatePropertyAll(Colors.transparent)
+                ),
               ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Spacer(),
+              Column(
                 children: [
-                  // number of servings in the recipe
-                  buildIconAndText(Icons.person, recipe.servings.toString()),
-                  // how long since we clicked 'start cooking'
-                  buildIconAndText(Icons.timer, "20s"),
-                  // how many instructions complete / how many total
-                  buildIconAndText(Icons.text_snippet, "2/5"),
-                  // how many ingredients prepped / how many total
-                  buildIconAndText(Icons.shopping_cart, "3/7"),
-                ],
+                  Text(
+                    recipe.name,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // number of servings in the recipe
+                      buildIconAndText(Icons.person, recipe.servings.toString()),
+                      // how long since we clicked 'start cooking'
+                      buildIconAndText(Icons.timer, "20s"),
+                      // how many instructions complete / how many total
+                      buildIconAndText(Icons.text_snippet, "2/5"),
+                      // how many ingredients prepped / how many total
+                      buildIconAndText(Icons.shopping_cart, "3/7"),
+                    ],
+                  ),
+                ]
               ),
-            ]
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.more_horiz),
+                onPressed: () {},
+                style: ButtonStyle(
+                  overlayColor: WidgetStatePropertyAll(Colors.transparent)
+                ),
+              )
+            ],
           ),
         )
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+            child: Text(representTimer()),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -141,6 +197,36 @@ class CookRecipePageState extends State<CookRecipePage> {
         ]
       ),
     );
+  }
+
+  String representTimer() {
+    int elapsed = timer.elapsed.inSeconds;
+
+    if (elapsed < 60) {
+      return "${elapsed}s";
+    }
+    else if (elapsed < 3600) {
+      int secs = elapsed % 60;
+      int mins = (elapsed / 60).floor();
+
+      return "${mins}m ${secs}s";
+    }
+    else if (elapsed < 86400) {
+      int secs = elapsed % 60;
+      int mins = (elapsed / 60).floor() % 60;
+      int hours = (elapsed / 3600).floor();
+
+      return "${hours}h ${mins}m ${secs}s";
+    }
+    else {
+      int secs = elapsed % 604800;
+      int mins = (elapsed / 60).floor();
+      int hours = (elapsed / 3600).floor();
+      int days = (elapsed / 604800).floor();
+
+      return "${days}d ${hours}h ${mins}m ${secs}s";
+    }
+    // if they are taking any longer than a week to cook a single meal - they should probably just hang up their apron
   }
 }
 

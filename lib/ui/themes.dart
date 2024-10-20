@@ -314,11 +314,16 @@ class Themes {
       ButtonType.subtle => FontWeight.w600,
     };
 
+    double width = switch(type) {
+      ButtonType.standout => 2,
+      ButtonType.subtle => 1.5,
+    };
+
     return TextButton.styleFrom(
       backgroundColor: Colors.transparent,
       side: BorderSide(
         color: foregroundColor,
-        width: 2,
+        width: width,
       ),
       foregroundColor: foregroundColor,
       textStyle: TextStyle(
