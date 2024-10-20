@@ -120,7 +120,7 @@ class Themes {
       ),
       titleMedium: TextStyle(
         color: textHighlight,
-        fontSize: mediumFontSize,
+        fontSize: largeFontSize,
         fontWeight: FontWeight.w600,
       ),
       titleLarge: TextStyle(
@@ -293,16 +293,7 @@ class Themes {
 
   static BoxDecoration decorateContainer() {
     return BoxDecoration(
-      color: background,
-      gradient: LinearGradient(
-        begin: Alignment.topLeft, 
-        end: Alignment.bottomRight, 
-        colors: [
-          backgroundSecondary, 
-          containerHighlight,
-        ],
-      ),
-      borderRadius: BorderRadius.circular(32.0), 
+      borderRadius: BorderRadius.circular(16.0), 
       border: Border.all(color: border, width: 1.5),
     );
   }

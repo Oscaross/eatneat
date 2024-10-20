@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:eatneat/models/recipes/recipe.dart';
 import 'package:eatneat/models/recipes/recipe_ingredient.dart';
+import 'package:eatneat/ui/confirmation_dialog.dart';
 import 'package:eatneat/ui/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -96,7 +96,7 @@ class CookRecipePageState extends State<CookRecipePage> {
                     recipe.name,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -105,9 +105,9 @@ class CookRecipePageState extends State<CookRecipePage> {
                       // how long since we clicked 'start cooking'
                       buildIconAndText(Icons.timer, "20s"),
                       // how many instructions complete / how many total
-                      buildIconAndText(Icons.text_snippet, "2/5"),
+                      buildIconAndText(Icons.short_text_sharp, "2/5"),
                       // how many ingredients prepped / how many total
-                      buildIconAndText(Icons.shopping_cart, "$completedIngredientCount/${completedIngredients.length}"),
+                      buildIconAndText(Icons.egg, "$completedIngredientCount/${completedIngredients.length}"),
                     ],
                   ),
                 ]
@@ -134,66 +134,77 @@ class CookRecipePageState extends State<CookRecipePage> {
               builder: (context, val, child) {
                 return Text(val);
               },
-
             )
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton.icon(
-                  onPressed: () => setState(() {
-                    HapticFeedback.mediumImpact();
-                    contentToDisplay = DisplayableContent.ingredients;
-                  }),
-                  style: Themes.decorateTextButton(contentToDisplay == DisplayableContent.ingredients ? ButtonType.standout : ButtonType.subtle),
-                  label: Text("Ingredients"),
-                ),
-                SizedBox(width: 10),
-                TextButton(
-                  onPressed: () => setState(() {
-                    HapticFeedback.mediumImpact();
-                    contentToDisplay = DisplayableContent.instructions;
-                  }),
-                  style: Themes.decorateTextButton(contentToDisplay == DisplayableContent.instructions ? ButtonType.standout : ButtonType.subtle),
-                  child: Text("Instructions"),
-                ),
-              ]
-            ),
-          ),
-
+         
           buildMainContent(),
-
+      
           buildActionButtons(),
         ]
-      )
+      ),
+      // display the 'Ingredients' 'Instructions' tabs so users can swap pages
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: (contentToDisplay == DisplayableContent.ingredients) ? 0 : 1,
+        onTap: (index) {
+          switch(index) {
+            case 0:
+              setState(() {
+                contentToDisplay = DisplayableContent.ingredients;
+              });
+            case 1: 
+              setState(() {
+                contentToDisplay = DisplayableContent.instructions;
+              });
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.egg),
+            label: "Ingredients"
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.short_text_sharp),
+            label: "Instructions"
+          )
+        ]
+      ),
     );
   }
 
   Widget buildActionButtons() {
-    return Column(
-      children: [
-        FilledButton.icon(
-          icon: Icon(Icons.check),
-          label: Text("Finish Cooking"),
-          onPressed: () {
-
-          },
-          style: FilledButton.styleFrom(
-            fixedSize: Themes.getFullWidthButtonSize(context),
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Column(
+        children: [
+          FilledButton.icon(
+            icon: Icon(Icons.check),
+            label: Text("Finish Cooking"),
+            onPressed: () {
+              print("Onto the next stage for this recipe");
+            },
+            style: FilledButton.styleFrom(
+              fixedSize: Themes.getFullWidthButtonSize(context),
+            )
+          ),
+          FilledButton.icon(
+            icon: Icon(Icons.close),
+            label: Text("Cancel"),
+            onPressed: () {
+              ConfirmationDialog.showConfirmationScreen(
+                context,
+                null,
+                "Cancelling will lose all of your progress cooking this recipe.",
+                "Back",
+                "Cancel",
+                null,
+                () => print("Delete this recipe instance!"),
+              );
+            },
+            style: Themes.filledButtonCancelStyle(context),
           )
-        ),
-        FilledButton.icon(
-          icon: Icon(Icons.close),
-          label: Text("Cancel"),
-          onPressed: () {
-
-          },
-          style: Themes.filledButtonCancelStyle(context),
-        )
-
-      ]
+      
+        ]
+      ),
     );
   }
 
@@ -216,11 +227,11 @@ class CookRecipePageState extends State<CookRecipePage> {
         2: FlexColumnWidth(10),
       },
       children: [
-        // Guidance text for each field (ingredient name, quantity, and whether it's prepped or not)
+        // guidance text for each field (ingredient name, quantity, and whether it's prepped or not)
         TableRow(
           children: [
-            Text("Ingredient", style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
-            Text("Quantity", style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
+            Text("Ingredient", style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.left),
+            Text("Qty", style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
             Center(child: Icon(Icons.check)),
           ],
         ),
@@ -230,7 +241,7 @@ class CookRecipePageState extends State<CookRecipePage> {
             children: [
               TableCell(
                 verticalAlignment: TableCellVerticalAlignment.middle,
-                child: Center(child: Text(i.name)),
+                child: Text(i.name),
               ),
               TableCell(
                 verticalAlignment: TableCellVerticalAlignment.middle,

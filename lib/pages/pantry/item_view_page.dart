@@ -1,5 +1,6 @@
 import 'package:eatneat/models/pantry/pantry_category.dart';
 import 'package:eatneat/providers/pantry_provider.dart';
+import 'package:eatneat/ui/confirmation_dialog.dart';
 import 'package:eatneat/ui/magic_keyboard.dart';
 import 'package:eatneat/ui/themes.dart';
 import 'package:flutter/cupertino.dart';
@@ -198,7 +199,8 @@ class ItemViewPageState extends State<ItemViewPage> {
                   ),
 
                   Spacer(flex: spacingFlex),
-            
+
+                  // TODO: refactor to use the inbuilt Table system to ensure the text lines up 
                   // Widget to display quantity editor
                   Flexible(
                     flex: 3,
@@ -425,51 +427,27 @@ class ItemViewPageState extends State<ItemViewPage> {
                       label: Text((actionType == ActionType.add) ? "Cancel" : "Delete Item"),
                       icon: Icon((actionType == ActionType.add) ? Icons.cancel : Icons.delete),
                       onPressed: () {
-                        HapticFeedback.heavyImpact();
+                        ConfirmationDialog.showConfirmationScreen(
+                          context,
+                          null,
+                          (actionType == ActionType.add) ?
+                            "Cancelling will lose the current input, this action cannot be undone."
+                              :
+                            "Deleting an item is permanent, this action cannot be undone.",
+                          "Back",
+                          (actionType == ActionType.add) ? "Cancel" : "Delete",
+                          null,
+                          () {
+                            Navigator.pop(context); // remove dialog
 
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text("Heads up!"),
-                              content: Center(
-                                child: Text(
-                                  (actionType == ActionType.add) ? 
-                                    "Cancelling will lose the current input, this action cannot be undone."
-                                      :
-                                    "Deleting an item is permanent, this action cannot be undone."
-                                ),
-                              ),
-                              actions: [
-                                ButtonBar(
-                                  children: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop(); 
-                                      },
-                                      child: Text('Back'),
-                                    ),
+                            if(actionType == ActionType.edit) {
+                              assert(item != null, "Attempted to delete an item from the viewer page that does not exist!");
 
-                                    TextButton(
-                                      onPressed: () {
-
-                                        Navigator.pop(context); // remove dialog
-
-                                        if(actionType == ActionType.edit) {
-                                          assert(item != null, "Attempted to delete an item from the viewer page that does not exist!");
-
-                                          pantryProvider.removeItem(item!); // null safe because item is not null when we are in ActionType.edit (I hope)
-                                        }
-                                        
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text((actionType == ActionType.add) ? "Continue" : "Delete"),
-                                    ),
-                                  ]
-                                )
-                              ],
-                            );
-                          }
+                              pantryProvider.removeItem(item!); // null safe because item is not null when we are in ActionType.edit (I hope)
+                            }
+                            
+                            Navigator.pop(context);
+                          },
                         );
                       },
 
@@ -500,7 +478,6 @@ class ItemViewPageState extends State<ItemViewPage> {
                 case FocusableWidget.quantity:
                   _quantityController.value = TextEditingValue(text: val);
                 case _:
-
               }
             },
             onKeyboardDown: () {

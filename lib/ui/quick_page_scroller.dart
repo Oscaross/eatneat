@@ -150,7 +150,7 @@ class QuickPageScrollerState extends State<QuickPageScroller> {
 
   // called when the user scrolls naturally but without the widget itself
   void _onUserScroll() {
-    if(!_isActive) {
+    if(!_isActive && mounted) {
       setState(() {
         _currentPageIndex = (_controller.offset / _pageSize).toInt();
       });
